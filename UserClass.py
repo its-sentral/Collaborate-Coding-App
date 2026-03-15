@@ -32,16 +32,22 @@ class User(object):
     def register(self):
         pass
 
-    def setName(self):
-        pass
+    def setName(self,name):
+        self.name = name
 
-    def setPhoneNumber(self):
-        pass
+    def setPhoneNumber(self,pno):
+        self.phone = pno
 
-class Member(User):
+class Member(User): 
     def __init__(self, gmail, name, id, pno, memOf=list([])):
         User.__init__(self,gmail, name, id, pno)
         self.room : list = memOf
+        self.currRoom : Room = None
+
+    def openRoom(self,roomID):
+        if roomID in self.room:
+            idx = self.room.index(roomID)
+            self.currRoom = self.room[idx]
 
     def editCode(self):
         pass
@@ -61,8 +67,9 @@ class Member(User):
     def leaveRoom(self, RID : int):
         self.room.remove(RID)
 
-    def sendText(self):
-        pass
+    def sendText(self,text):
+        if self.currRoom:
+            self.currRoom.textSent(text,self)
 
     def startCall(self):
         pass

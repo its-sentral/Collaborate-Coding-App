@@ -3,9 +3,11 @@ from datetime import datetime
 
 class Room(object):
     def __init__(self, Rname, RID : int, admin:Admin, mem=[]):
+        self.WorkSys = Workshop()
+        self.ChatSys = Chat()
         self.roomName = Rname
         self.roomID = RID
-        self.member = mem
+        self.member = mem 
         self.admin = admin
 
     def removeMember(self,name:str):
@@ -19,6 +21,9 @@ class Room(object):
             if i.getName() == id:
                 i.leaveRoom(self.roomID)
                 break
+
+    def textSent(self,text,sender):
+        self.ChatSys.addConversation(text,sender)
 
 class Call(object):
     def __init__(self):

@@ -8,7 +8,6 @@ class LoginSystem:
     def forgotPassword():
         pass
 
-
 class RegisterSystem:
     def __init__(self):
         pass

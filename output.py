@@ -288,7 +288,7 @@ class Ui_Form(object):
 
         self.retranslateUi(Form)
 
-        self.MainPages.setCurrentIndex(2)
+        self.MainPages.setCurrentIndex(0)
         self.SubPages.setCurrentIndex(0)
 
 

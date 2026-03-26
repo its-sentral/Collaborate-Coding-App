@@ -1,8 +1,9 @@
 from include.classImport import *
 from include.lib import *
 
+from persistent import Persistent
 class Room(object):
-    def __init__(self, Rname, RID : str, admin:Admin, mem=[]):
+    def __init__(self, Rname, RID : str, admin: 'Admin', mem=[]):
         self.WorkSys = Workshop()
         self.ChatSys = Chat()
         self.roomName = Rname

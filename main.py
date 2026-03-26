@@ -9,7 +9,7 @@ from uiFiles.output import Ui_Form as Ui_Home
 class ColabCodingApp(QWidget):
     def __init__(self):
         super().__init__()
-        self.ui = Ui_Form()
+        self.ui = Ui_Home()
         self.ui.setupUi(self)
         self.currentUser = None 
         self.ui.MainPages.setCurrentIndex(0)

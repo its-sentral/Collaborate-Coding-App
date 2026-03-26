@@ -24,11 +24,13 @@ class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-        Form.resize(807, 601)
-        Form.setMinimumSize(QSize(680, 480))
+        Form.resize(600, 480)
+        Form.setMinimumSize(QSize(600, 480))
         self.MainPages = QStackedWidget(Form)
+
+        # page 1
         self.MainPages.setObjectName(u"MainPages")
-        self.MainPages.setGeometry(QRect(120, 50, 581, 461))
+        self.MainPages.setGeometry(QRect(10, 10, 581, 461))
         self.pageLogin = QWidget()
         self.pageLogin.setObjectName(u"pageLogin")
         self.loginConfirmBtn = QPushButton(self.pageLogin)
@@ -69,6 +71,8 @@ class Ui_Form(object):
         self.label_10.setGeometry(QRect(120, 220, 81, 16))
         self.label_10.setFont(font3)
         self.MainPages.addWidget(self.pageLogin)
+
+        # page 2
         self.pageRegister = QWidget()
         self.pageRegister.setObjectName(u"pageRegister")
         self.label_3 = QLabel(self.pageRegister)
@@ -105,6 +109,8 @@ class Ui_Form(object):
         self.label_13.setGeometry(QRect(110, 280, 141, 16))
         self.label_13.setFont(font3)
         self.MainPages.addWidget(self.pageRegister)
+
+        # page 3
         self.pageHome = QWidget()
         self.pageHome.setObjectName(u"pageHome")
         self.verticalLayoutWidget = QWidget(self.pageHome)
@@ -139,11 +145,17 @@ class Ui_Form(object):
 
         self.horizontalLayout.addWidget(self.homeLogoutBtn)
 
-        self.homeEditBtn = QPushButton(self.verticalLayoutWidget)
-        self.homeEditBtn.setObjectName(u"homeEditBtn")
-        self.homeEditBtn.setFont(font5)
+        self.homeAddRoomBtn = QPushButton(self.verticalLayoutWidget)
+        self.homeAddRoomBtn.setObjectName(u"homeAddRoomBtn")
+        self.homeAddRoomBtn.setFont(font5)
 
-        self.horizontalLayout.addWidget(self.homeEditBtn)
+        self.horizontalLayout.addWidget(self.homeAddRoomBtn)
+
+        self.homeCreateRoomBtn = QPushButton(self.verticalLayoutWidget)
+        self.homeCreateRoomBtn.setObjectName(u"homeCreateRoomBtn")
+        self.homeCreateRoomBtn.setFont(font5)
+
+        self.horizontalLayout.addWidget(self.homeCreateRoomBtn)
 
 
         self.verticalLayout.addLayout(self.horizontalLayout)
@@ -165,6 +177,8 @@ class Ui_Form(object):
         self.verticalLayout.addWidget(self.scrollArea)
 
         self.MainPages.addWidget(self.pageHome)
+        
+        # page 4
         self.pageCreateRoom = QWidget()
         self.pageCreateRoom.setObjectName(u"pageCreateRoom")
         self.createRoomCancleBtn = QPushButton(self.pageCreateRoom)
@@ -192,6 +206,8 @@ class Ui_Form(object):
         self.label_8.setGeometry(QRect(140, 210, 91, 16))
         self.label_8.setFont(font3)
         self.MainPages.addWidget(self.pageCreateRoom)
+
+        # page 5
         self.pageRoom = QWidget()
         self.pageRoom.setObjectName(u"pageRoom")
         self.roomChatBtn = QPushButton(self.pageRoom)
@@ -262,6 +278,14 @@ class Ui_Form(object):
         self.workshopRunBtn.setObjectName(u"workshopRunBtn")
         self.workshopRunBtn.setGeometry(QRect(120, 10, 75, 24))
         self.workshopRunBtn.setFont(font)
+        self.workshopImportBtn = QPushButton(self.pageWorkShop)
+        self.workshopImportBtn.setObjectName(u"workshopImportBtn")
+        self.workshopImportBtn.setGeometry(QRect(280, 10, 75, 24))
+        self.workshopImportBtn.setFont(font)
+        self.workshopExportBtn = QPushButton(self.pageWorkShop)
+        self.workshopExportBtn.setObjectName(u"workshopExportBtn")
+        self.workshopExportBtn.setGeometry(QRect(360, 10, 75, 24))
+        self.workshopExportBtn.setFont(font)
         self.SubPages.addWidget(self.pageWorkShop)
         self.pageMember = QWidget()
         self.pageMember.setObjectName(u"pageMember")
@@ -288,7 +312,7 @@ class Ui_Form(object):
 
         self.retranslateUi(Form)
 
-        self.MainPages.setCurrentIndex(0)
+        self.MainPages.setCurrentIndex(4)
         self.SubPages.setCurrentIndex(0)
 
 
@@ -303,14 +327,15 @@ class Ui_Form(object):
         self.label_9.setText(QCoreApplication.translate("Form", u"Username :", None))
         self.label_10.setText(QCoreApplication.translate("Form", u"Password : ", None))
         self.label_3.setText(QCoreApplication.translate("Form", u"Register", None))
-        self.registerConfirmBtn.setText(QCoreApplication.translate("Form", u"Register", None))
+        self.registerConfirmBtn.setText(QCoreApplication.translate("Form", u"Confirm", None))
         self.registerLoginBtn.setText(QCoreApplication.translate("Form", u"Login", None))
         self.label_11.setText(QCoreApplication.translate("Form", u"Username :", None))
         self.label_12.setText(QCoreApplication.translate("Form", u"Password : ", None))
         self.label_13.setText(QCoreApplication.translate("Form", u"Confirm Password :", None))
         self.homeUserName.setText(QCoreApplication.translate("Form", u"Name Surname", None))
         self.homeLogoutBtn.setText(QCoreApplication.translate("Form", u"logout", None))
-        self.homeEditBtn.setText(QCoreApplication.translate("Form", u"Edit", None))
+        self.homeAddRoomBtn.setText(QCoreApplication.translate("Form", u"Add", None))
+        self.homeCreateRoomBtn.setText(QCoreApplication.translate("Form", u"Create", None))
         self.createRoomCancleBtn.setText(QCoreApplication.translate("Form", u"Cancle", None))
         self.label_4.setText(QCoreApplication.translate("Form", u"Create Room", None))
         self.createRoomConfirmBtn.setText(QCoreApplication.translate("Form", u"Create", None))
@@ -325,6 +350,8 @@ class Ui_Form(object):
         self.enterOrLeaveCall.setText(QCoreApplication.translate("Form", u"Enter Call", None))
         self.label_6.setText(QCoreApplication.translate("Form", u"WorkSpace", None))
         self.workshopRunBtn.setText(QCoreApplication.translate("Form", u"Run", None))
+        self.workshopImportBtn.setText(QCoreApplication.translate("Form", u"Import", None))
+        self.workshopExportBtn.setText(QCoreApplication.translate("Form", u"Export", None))
         self.roomMemberBtn.setText(QCoreApplication.translate("Form", u"Members", None))
         self.roomName.setText(QCoreApplication.translate("Form", u"Place Holder", None))
         self.label_14.setText(QCoreApplication.translate("Form", u"Code : ", None))

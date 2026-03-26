@@ -1,0 +1,5 @@
+fastapi
+uvicorn
+ZODB
+transaction
+pydantic

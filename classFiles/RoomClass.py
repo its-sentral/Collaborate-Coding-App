@@ -1,6 +1,6 @@
 from UserClass import Admin
 from datetime import datetime
-from ..uiFiles.client import VideoCallApp
+from uiFiles.client import VideoCallApp
 
 class Room(object):
     def __init__(self, Rname, RID : int, admin:Admin, mem=[]):

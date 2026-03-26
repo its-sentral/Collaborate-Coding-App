@@ -65,35 +65,13 @@ class ColabCodingApp(QWidget):
 
         if success:
             self.currentUser = username
-            self.homeScreen = HomeWidget(self.currentUser, parent=self.ui.MainPages)
-            if self.ui.MainPages.widget(2):
-                oldWidget = self.ui.MainPages.widget(2)
-                self.ui.MainPages.removeWidget(oldWidget)
-                
-            self.ui.MainPages.insertWidget(2, self.homeScreen)
-        
+            self.ui.homeUserName.setText(f"User: {self.currentUser}")
             self.ui.MainPages.setCurrentIndex(2)
         else:
             print(f"Login failed: {data}")
 
     def createRoom(self):
         pass
-
-
-
-class HomeWidget(QWidget):
-    def __init__(self, username, parent=None):
-        super().__init__(parent)
-        self.ui = Ui_Home()
-        self.ui.setupUi(self)
-        
-        self.ui.userName.setText(username)
-        self.ui.logoutBtn.clicked.connect(self.logout)
-
-    def logout(self):
-        # We'll handle this in the main app
-        self.parent().setCurrentIndex(0)
-        
 
 if __name__ == "__main__":
    

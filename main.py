@@ -3,7 +3,7 @@ from PySide6.QtWidgets import QApplication, QWidget
 import requests
 from uiFiles.output import Ui_Form
 from classFiles.SystemClass import LoginSystem, RegisterSystem
-from uiFiles.homeUi import Ui_Form as Ui_Home
+from uiFiles.output import Ui_Form as Ui_Home
 
 
 class ColabCodingApp(QWidget):

@@ -29,8 +29,8 @@ class ColabCodingApp(QWidget):
         self.ui.loginConfirmBtn.clicked.connect(self.login)
         self.ui.registerConfirmBtn.clicked.connect(self.register)
         
-
         self.ui.createRoomConfirmBtn.clicked.connect(self.createRoom)
+
 
     def changeToRegister(self):
         self.ui.MainPages.setCurrentIndex(1)
@@ -55,7 +55,6 @@ class ColabCodingApp(QWidget):
             self.ui.MainPages.setCurrentIndex(0)
         else:
             print(f"Registration Failed: {message}")
-
     
     def login(self):
         username = self.ui.loginUsername.toPlainText().strip()
@@ -65,8 +64,8 @@ class ColabCodingApp(QWidget):
 
         if success:
             self.currentUser = username
-            self.ui.homeUserName.setText(f"User: {self.currentUser}")
             self.ui.MainPages.setCurrentIndex(2)
+            self.ui.homeUserName.setText(self.currentUser)
         else:
             print(f"Login failed: {data}")
 

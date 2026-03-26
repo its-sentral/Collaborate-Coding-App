@@ -47,7 +47,6 @@ class RegisterSystem:
             except Exception as e:
                 return False, f"Connection failed: {str(e)}"
 
-
 class ForgetPasswordSystem:
     def __init__(self):
         pass

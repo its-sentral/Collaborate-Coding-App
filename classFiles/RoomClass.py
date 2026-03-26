@@ -1,9 +1,9 @@
-from UserClass import Admin
-from datetime import datetime
-from uiFiles.client import VideoCallApp
+from include.classImport import *
+from include.lib import *
 
+from persistent import Persistent
 class Room(object):
-    def __init__(self, Rname, RID : int, admin:Admin, mem=[]):
+    def __init__(self, Rname, RID : str, admin: 'Admin', mem=[]):
         self.WorkSys = Workshop()
         self.ChatSys = Chat()
         self.roomName = Rname
@@ -30,8 +30,6 @@ class Call(object):
     def __init__(self):
         self.startTime = datetime.now()
         self.endTime = None
-        self.callServer = VideoCallApp()
-        self.callServer.show()
 
     def endCall(self):
         self.endTime = datetime.now()

@@ -1,5 +1,4 @@
-from RoomClass import Room
-import ZODB
+from include.classImport import *
 
 class User(object):
     def __init__(self,gmail,name,id,pno):

@@ -1,5 +1,6 @@
 from include.classImport import *
 from include.lib import *
+from ..uiFiles.client import VideoCallApp
 
 from persistent import Persistent
 class Room(object):
@@ -30,6 +31,14 @@ class Call(object):
     def __init__(self):
         self.startTime = datetime.now()
         self.endTime = None
+        self.callServer = VideoCallApp()
+
+    #My idea is that when user enter room and press call
+    #Room object will create Call object which create VideoCallApp
+    #And since VideoCallApp is a QWidget perhaps we can append as child
+    #into some space provided in the call section ?
+    def callingServer(self):
+        return self.callServer
 
     def endCall(self):
         self.endTime = datetime.now()

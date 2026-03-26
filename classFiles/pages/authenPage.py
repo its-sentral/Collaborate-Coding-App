@@ -25,8 +25,6 @@ class Authen(QMainWindow):
         self.ui.registerLoginBtn.clicked.connect(self.returnToLogin)
 
 
-
-
         adm = Admin("gmail1", "name1", 0, 0)
         data = [
             Room("Physics Lab", "A101", "Experiments and equipment", "#AA4444", adm),

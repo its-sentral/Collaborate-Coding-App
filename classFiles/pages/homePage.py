@@ -1,38 +1,28 @@
 from include.pyside6Import import *
-from include.classImport import *
 from include.lib import *
 from uiFiles.output import Ui_Form
+from classFiles.RoomClass import Room
+from classFiles.RoomBox import RoomBox
 
 
 # -------------------- Main Window --------------------
-class Home(QMainWindow):
-    def __init__(self, data, name):
-        super().__init__()
+class Home(QObject):
+    def __init__(self, user, ui :Ui_Form, window: QMainWindow):
+        super().__init__(window)
 
-        self.ui = Ui_Form()
-        self.ui.setupUi(self)
+        self.ui = ui
+        self.window = window
 
-        self.data = data
-        self.name = name
+        self.data = user.getRooms()
+        self.name = user.getName()
         self.filtered_rooms = []
 
 
-        # Make the vertical layout the main layout of the window
-        central = QWidget(self)
-        central.setLayout(self.ui.verticalLayout)
-        self.setCentralWidget(central)
-
-
-        self.ui.verticalLayoutWidget.deleteLater()
-
-
         # Header
-        self.ui.MainPages.setCurrentIndex(2)
         self.ui.homeUserName.setText(str(self.name))
 
         # Connect search bar to trigger search on every text change
         self.ui.homeSearchBar.textChanged.connect(self.performSearch)
-
 
         # Use the grid created by Designer
         self.grid = QGridLayout()
@@ -43,8 +33,18 @@ class Home(QMainWindow):
         self.performSearch()
 
         
+        self.ui.homeLogoutBtn.clicked.connect(self.gotoLogout)
+        self.ui.homeAddRoomBtn.clicked.connect(self.goToAddRoom)
+        self.ui.homeCreateRoomBtn.clicked.connect(self.goToCreateRoom)
+    
+    def gotoLogout(self):
+        self.ui.MainPages.setCurrentIndex(0)
 
-        
+    def goToAddRoom(self):
+        self.ui.MainPages.setCurrentIndex(4)
+    
+    def goToCreateRoom(self):
+        self.ui.MainPages.setCurrentIndex(3)
 
 
     # -------------------- Search --------------------
@@ -57,9 +57,9 @@ class Home(QMainWindow):
         else:
             self.filtered_rooms = [
                 v for v in self.data
-                if text in v.getName().lower()
-                or text in v.getDesc().lower()
-                or text in str(v.getCode()).lower()
+                if text in v.getRoomName().lower()
+                or text in v.getDescription().lower()
+                or text in str(v.getRoomID()).lower()
             ]
 
         self.rebuildGrid(True)
@@ -102,9 +102,3 @@ class Home(QMainWindow):
             if col >= self.colAmount:
                 col = 0
                 row += 1
-
-
-    # -------------------- Responsive Resize --------------------
-    def resizeEvent(self, event):
-        super().resizeEvent(event)
-        self.rebuildGrid()

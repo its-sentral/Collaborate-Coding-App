@@ -4,6 +4,9 @@ import requests
 from uiFiles.output import Ui_Form
 from classFiles.SystemClass import LoginSystem, RegisterSystem
 from uiFiles.output import Ui_Form as Ui_Home
+from include.pyside6Import import *
+from classFiles.pages.authenPage import Authen
+
 
 
 class ColabCodingApp(QWidget):
@@ -74,8 +77,8 @@ class ColabCodingApp(QWidget):
         pass
 
 if __name__ == "__main__":
-   
-    app = QApplication(sys.argv)    
-    window = ColabCodingApp()
+    app = QApplication(sys.argv)
+    window = Authen()
+    window.resize(600, 420)
     window.show()
     sys.exit(app.exec())

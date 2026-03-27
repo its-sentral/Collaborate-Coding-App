@@ -1,16 +1,62 @@
-from include.classImport import *
 from include.lib import *
-from ..uiFiles.client import VideoCallApp
-from persistent import Persistent
+from classFiles.UserClass import Admin
 
 class Room(object):
-    def __init__(self, Rname, RID : str, admin: 'Admin', mem=[]):
+    def __init__(self, Rname, RID : str, desc, color, admin:Admin, mem=[]):
         self.WorkSys = Workshop()
         self.ChatSys = Chat()
         self.roomName = Rname
         self.roomID = RID
         self.member = mem 
         self.admin = admin
+        self.description = desc
+        self.color = color
+
+        self.admin.assignRoom(self)
+
+    # --- Admin ---
+    def getAdmin(self):
+        return self.admin
+    def setAdmin(self, admin):
+        self._admin = admin
+
+    # --- Room Name ---
+    def getRoomName(self):
+        return self.roomName
+    def setRoomName(self, name):
+        self.roomName = name
+
+    # --- Room ID ---
+    def getRoomID(self):
+        return self.roomID
+    def setRoomID(self, rid):
+        self.roomID = rid
+
+    # --- Member ---
+    def getMember(self):
+        return self.member
+    def setMember(self, mem):
+        self.member = mem
+
+    # --- Description ---
+    def getDescription(self):
+        return self.description
+    def setDescription(self, desc):
+        self.description = desc
+
+    # --- Color ---
+    def getColor(self):
+        return self.color
+    def setColor(self, color):
+        self.color = color
+
+    # --- Systems (Getters only) ---
+    def getWorkSys(self):
+        return self.WorkSys
+    def getChatSys(self):
+        return self.ChatSys
+    
+
 
     def removeMember(self,name:str):
         for i in self.member:
@@ -31,14 +77,6 @@ class Call(object):
     def __init__(self):
         self.startTime = datetime.now()
         self.endTime = None
-        self.callServer = VideoCallApp()
-
-    #My idea is that when user enter room and press call
-    #Room object will create Call object which create VideoCallApp
-    #And since VideoCallApp is a QWidget perhaps we can append as child
-    #into some space provided in the call section ?
-    def callingServer(self):
-        return self.callServer
 
     def endCall(self):
         self.endTime = datetime.now()

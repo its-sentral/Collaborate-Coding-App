@@ -1,11 +1,14 @@
 from include.pyside6Import import *
-from classFiles.RoomClass import Room
+from classFiles.RoomClass import RoomObj
 
 # -------------------- Room Card --------------------
-class RoomBox(QWidget): 
-    def __init__(self, room: Room): 
+class RoomBox(QWidget):
+    clicked = Signal(object)
+    def __init__(self, room: RoomObj): 
         super().__init__() 
         self.room = room 
+
+
         layout = QVBoxLayout(self) 
         layout.setContentsMargins(6, 6, 6, 6) 
         layout.setSpacing(4) 
@@ -33,11 +36,6 @@ class RoomBox(QWidget):
         self.setMouseTracking(True) 
         
         
-        # ####################################################################################
-        # ---------------------- Sound Homework Part 1 ---------------------- # 
-        # self.QSE = QSoundEffect() # self.QSE.setSource(QUrl.fromLocalFile("rabbit_hit.wav")) 
-        # ####################################################################################
-        # ----------------------------- Animation Homework --------------------------------------- # when enter hover state 
     def enterEvent(self, event):
         if self.baseGeometry is None: 
             self.baseGeometry = self.geometry() 
@@ -52,10 +50,8 @@ class RoomBox(QWidget):
         self.anim.setStartValue(self.geometry()) 
         self.anim.setEndValue(scaledRect) 
         self.anim.start() 
-            
-    #####################################################################
-    # ---------------------- Sound Homework Part 2 ----------------------
-    # self.QSE.play() event.accept() # Leave hover state 
+
+
     
     def leaveEvent(self, event): 
         if self.baseGeometry: 
@@ -66,8 +62,5 @@ class RoomBox(QWidget):
             event.accept() 
         
     def mousePressEvent(self, event): 
-        dialog = QDialog(self) 
-        dialog.setWindowTitle("Room Page") 
-        layout = QVBoxLayout(dialog) 
-        layout.addWidget(QLabel(f"Room Page: {self.room.getRoomID()} - {self.room.getRoomName()}")) 
-        dialog.exec()
+        self.clicked.emit(self.room.getRoomID())
+        super().mousePressEvent(event)

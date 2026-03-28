@@ -1,7 +1,7 @@
 from include.lib import *
 from classFiles.UserClass import Admin
 
-class Room(object):
+class RoomObj(object):
     def __init__(self, Rname, RID : str, desc, color, admin:Admin, mem=[]):
         self.WorkSys = Workshop()
         self.ChatSys = Chat()

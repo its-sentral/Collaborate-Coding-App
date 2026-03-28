@@ -467,7 +467,7 @@ class Ui_Form(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidget = QWidget()
         self.scrollAreaWidget.setObjectName(u"scrollAreaWidget")
-        self.scrollAreaWidget.setGeometry(QRect(0, 0, 98, 28))
+        self.scrollAreaWidget.setGeometry(QRect(0, 0, 577, 419))
         self.scrollArea.setWidget(self.scrollAreaWidget)
 
         self.VLHome.addWidget(self.scrollArea)
@@ -679,6 +679,10 @@ class Ui_Form(object):
 
         self.horizontalLayout_17.addWidget(self.label_16)
 
+        self.horizontalSpacer_50 = QSpacerItem(10, 5, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_17.addItem(self.horizontalSpacer_50)
+
         self.joinRoomCode = QTextEdit(self.verticalLayoutWidget_4)
         self.joinRoomCode.setObjectName(u"joinRoomCode")
         sizePolicy1.setHeightForWidth(self.joinRoomCode.sizePolicy().hasHeightForWidth())
@@ -700,23 +704,23 @@ class Ui_Form(object):
 
         self.horizontalLayout_15.addItem(self.horizontalSpacer_19)
 
-        self.joinRoomConfirm = QPushButton(self.verticalLayoutWidget_4)
-        self.joinRoomConfirm.setObjectName(u"joinRoomConfirm")
-        sizePolicy3.setHeightForWidth(self.joinRoomConfirm.sizePolicy().hasHeightForWidth())
-        self.joinRoomConfirm.setSizePolicy(sizePolicy3)
-
-        self.horizontalLayout_15.addWidget(self.joinRoomConfirm)
-
-        self.horizontalSpacer_20 = QSpacerItem(40, 5, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout_15.addItem(self.horizontalSpacer_20)
-
         self.joinRoomCancleBtn = QPushButton(self.verticalLayoutWidget_4)
         self.joinRoomCancleBtn.setObjectName(u"joinRoomCancleBtn")
         sizePolicy3.setHeightForWidth(self.joinRoomCancleBtn.sizePolicy().hasHeightForWidth())
         self.joinRoomCancleBtn.setSizePolicy(sizePolicy3)
 
         self.horizontalLayout_15.addWidget(self.joinRoomCancleBtn)
+
+        self.horizontalSpacer_20 = QSpacerItem(40, 5, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_15.addItem(self.horizontalSpacer_20)
+
+        self.joinRoomConfirm = QPushButton(self.verticalLayoutWidget_4)
+        self.joinRoomConfirm.setObjectName(u"joinRoomConfirm")
+        sizePolicy3.setHeightForWidth(self.joinRoomConfirm.sizePolicy().hasHeightForWidth())
+        self.joinRoomConfirm.setSizePolicy(sizePolicy3)
+
+        self.horizontalLayout_15.addWidget(self.joinRoomConfirm)
 
         self.horizontalSpacer_18 = QSpacerItem(80, 5, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
 
@@ -865,7 +869,7 @@ class Ui_Form(object):
         self.chatHistoryArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents_2 = QWidget()
         self.scrollAreaWidgetContents_2.setObjectName(u"scrollAreaWidgetContents_2")
-        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 477, 308))
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 477, 336))
         self.chatHistoryArea.setWidget(self.scrollAreaWidgetContents_2)
 
         self.VLChat.addWidget(self.chatHistoryArea)
@@ -877,20 +881,12 @@ class Ui_Form(object):
         self.horizontalLayout_37 = QHBoxLayout()
         self.horizontalLayout_37.setObjectName(u"horizontalLayout_37")
         self.horizontalLayout_37.setContentsMargins(-1, 0, 0, -1)
-        self.chatSendTextArea = QScrollArea(self.verticalLayoutWidget_11)
-        self.chatSendTextArea.setObjectName(u"chatSendTextArea")
-        sizePolicy8 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
-        sizePolicy8.setHorizontalStretch(0)
-        sizePolicy8.setVerticalStretch(0)
-        sizePolicy8.setHeightForWidth(self.chatSendTextArea.sizePolicy().hasHeightForWidth())
-        self.chatSendTextArea.setSizePolicy(sizePolicy8)
-        self.chatSendTextArea.setWidgetResizable(True)
-        self.scrollAreaWidgetContents = QWidget()
-        self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 394, 54))
-        self.chatSendTextArea.setWidget(self.scrollAreaWidgetContents)
+        self.chatSendTextEdit = QTextEdit(self.verticalLayoutWidget_11)
+        self.chatSendTextEdit.setObjectName(u"chatSendTextEdit")
+        sizePolicy1.setHeightForWidth(self.chatSendTextEdit.sizePolicy().hasHeightForWidth())
+        self.chatSendTextEdit.setSizePolicy(sizePolicy1)
 
-        self.horizontalLayout_37.addWidget(self.chatSendTextArea)
+        self.horizontalLayout_37.addWidget(self.chatSendTextEdit)
 
         self.chatSendTextConfirmBtn = QPushButton(self.verticalLayoutWidget_11)
         self.chatSendTextConfirmBtn.setObjectName(u"chatSendTextConfirmBtn")
@@ -917,11 +913,11 @@ class Ui_Form(object):
         self.VLCall.setContentsMargins(40, 40, 40, 40)
         self.enterOrLeaveCall = QPushButton(self.verticalLayoutWidget_10)
         self.enterOrLeaveCall.setObjectName(u"enterOrLeaveCall")
-        sizePolicy9 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
-        sizePolicy9.setHorizontalStretch(0)
-        sizePolicy9.setVerticalStretch(0)
-        sizePolicy9.setHeightForWidth(self.enterOrLeaveCall.sizePolicy().hasHeightForWidth())
-        self.enterOrLeaveCall.setSizePolicy(sizePolicy9)
+        sizePolicy8 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+        sizePolicy8.setHorizontalStretch(0)
+        sizePolicy8.setVerticalStretch(0)
+        sizePolicy8.setHeightForWidth(self.enterOrLeaveCall.sizePolicy().hasHeightForWidth())
+        self.enterOrLeaveCall.setSizePolicy(sizePolicy8)
 
         self.VLCall.addWidget(self.enterOrLeaveCall)
 
@@ -948,11 +944,11 @@ class Ui_Form(object):
 
         self.workshopRunBtn = QPushButton(self.verticalLayoutWidget_12)
         self.workshopRunBtn.setObjectName(u"workshopRunBtn")
-        sizePolicy10 = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Fixed)
-        sizePolicy10.setHorizontalStretch(0)
-        sizePolicy10.setVerticalStretch(0)
-        sizePolicy10.setHeightForWidth(self.workshopRunBtn.sizePolicy().hasHeightForWidth())
-        self.workshopRunBtn.setSizePolicy(sizePolicy10)
+        sizePolicy9 = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Fixed)
+        sizePolicy9.setHorizontalStretch(0)
+        sizePolicy9.setVerticalStretch(0)
+        sizePolicy9.setHeightForWidth(self.workshopRunBtn.sizePolicy().hasHeightForWidth())
+        self.workshopRunBtn.setSizePolicy(sizePolicy9)
         self.workshopRunBtn.setFont(font3)
 
         self.horizontalLayout_38.addWidget(self.workshopRunBtn)
@@ -963,16 +959,16 @@ class Ui_Form(object):
 
         self.workshopImportBtn = QPushButton(self.verticalLayoutWidget_12)
         self.workshopImportBtn.setObjectName(u"workshopImportBtn")
-        sizePolicy10.setHeightForWidth(self.workshopImportBtn.sizePolicy().hasHeightForWidth())
-        self.workshopImportBtn.setSizePolicy(sizePolicy10)
+        sizePolicy9.setHeightForWidth(self.workshopImportBtn.sizePolicy().hasHeightForWidth())
+        self.workshopImportBtn.setSizePolicy(sizePolicy9)
         self.workshopImportBtn.setFont(font3)
 
         self.horizontalLayout_38.addWidget(self.workshopImportBtn)
 
         self.workshopExportBtn = QPushButton(self.verticalLayoutWidget_12)
         self.workshopExportBtn.setObjectName(u"workshopExportBtn")
-        sizePolicy10.setHeightForWidth(self.workshopExportBtn.sizePolicy().hasHeightForWidth())
-        self.workshopExportBtn.setSizePolicy(sizePolicy10)
+        sizePolicy9.setHeightForWidth(self.workshopExportBtn.sizePolicy().hasHeightForWidth())
+        self.workshopExportBtn.setSizePolicy(sizePolicy9)
         self.workshopExportBtn.setFont(font3)
 
         self.horizontalLayout_38.addWidget(self.workshopExportBtn)
@@ -1015,7 +1011,7 @@ class Ui_Form(object):
 
         self.retranslateUi(Form)
 
-        self.MainPages.setCurrentIndex(5)
+        self.MainPages.setCurrentIndex(4)
         self.SubPages.setCurrentIndex(0)
 
 
@@ -1046,8 +1042,8 @@ class Ui_Form(object):
         self.createRoomConfirmBtn.setText(QCoreApplication.translate("Form", u"Create", None))
         self.label_15.setText(QCoreApplication.translate("Form", u"Join Room", None))
         self.label_16.setText(QCoreApplication.translate("Form", u"Room Code:", None))
-        self.joinRoomConfirm.setText(QCoreApplication.translate("Form", u"Confirm", None))
         self.joinRoomCancleBtn.setText(QCoreApplication.translate("Form", u"Cancle", None))
+        self.joinRoomConfirm.setText(QCoreApplication.translate("Form", u"Confirm", None))
         self.roomHomeBtn.setText(QCoreApplication.translate("Form", u"Home", None))
         self.roomCode.setText(QCoreApplication.translate("Form", u"Code : ", None))
         self.roomName.setText(QCoreApplication.translate("Form", u"Place Holder", None))

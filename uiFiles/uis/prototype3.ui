@@ -44,7 +44,7 @@
        </sizepolicy>
       </property>
       <property name="currentIndex">
-       <number>5</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="pageLogin">
        <property name="sizePolicy">
@@ -1026,8 +1026,8 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>98</width>
-              <height>28</height>
+              <width>577</width>
+              <height>419</height>
              </rect>
             </property>
            </widget>
@@ -1532,6 +1532,22 @@
             </widget>
            </item>
            <item>
+            <spacer name="horizontalSpacer_50">
+             <property name="orientation">
+              <enum>Qt::Orientation::Horizontal</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Policy::Fixed</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>10</width>
+               <height>5</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
             <widget class="QTextEdit" name="joinRoomCode">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Expanding" vsizetype="Ignored">
@@ -1584,7 +1600,7 @@
             </spacer>
            </item>
            <item>
-            <widget class="QPushButton" name="joinRoomConfirm">
+            <widget class="QPushButton" name="joinRoomCancleBtn">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
                <horstretch>0</horstretch>
@@ -1592,7 +1608,7 @@
               </sizepolicy>
              </property>
              <property name="text">
-              <string>Confirm</string>
+              <string>Cancle</string>
              </property>
             </widget>
            </item>
@@ -1613,7 +1629,7 @@
             </spacer>
            </item>
            <item>
-            <widget class="QPushButton" name="joinRoomCancleBtn">
+            <widget class="QPushButton" name="joinRoomConfirm">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
                <horstretch>0</horstretch>
@@ -1621,7 +1637,7 @@
               </sizepolicy>
              </property>
              <property name="text">
-              <string>Cancle</string>
+              <string>Confirm</string>
              </property>
             </widget>
            </item>
@@ -1932,7 +1948,7 @@
                      <x>0</x>
                      <y>0</y>
                      <width>477</width>
-                     <height>308</height>
+                     <height>336</height>
                     </rect>
                    </property>
                   </widget>
@@ -1963,26 +1979,13 @@
                    <number>0</number>
                   </property>
                   <item>
-                   <widget class="QScrollArea" name="chatSendTextArea">
+                   <widget class="QTextEdit" name="chatSendTextEdit">
                     <property name="sizePolicy">
-                     <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                     <sizepolicy hsizetype="Expanding" vsizetype="Ignored">
                       <horstretch>0</horstretch>
                       <verstretch>0</verstretch>
                      </sizepolicy>
                     </property>
-                    <property name="widgetResizable">
-                     <bool>true</bool>
-                    </property>
-                    <widget class="QWidget" name="scrollAreaWidgetContents">
-                     <property name="geometry">
-                      <rect>
-                       <x>0</x>
-                       <y>0</y>
-                       <width>394</width>
-                       <height>54</height>
-                      </rect>
-                     </property>
-                    </widget>
                    </widget>
                   </item>
                   <item>

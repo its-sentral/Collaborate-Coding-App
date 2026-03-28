@@ -3,6 +3,7 @@ from include.lib import *
 from uiFiles.output import Ui_Form
 from classFiles.RoomClass import RoomObj
 from classFiles.UserClass import User, Member, Admin
+from ..client import VideoCallApp
 
 class RoomPage(QObject):
     def __init__(self, user, ui :Ui_Form, window: QMainWindow, room: RoomObj):
@@ -23,6 +24,10 @@ class RoomPage(QObject):
         self.ui.roomWorkshopBtn.clicked.connect(self.goToWorkShop)
         self.ui.roomMemberBtn.clicked.connect(self.goToMember)
         self.ui.roomHomeBtn.clicked.connect(self.backToHome)
+
+        self.ui.VLCall.setContentsMargins(0, 0, 0, 0)
+        self.ui.VLCall.addChildWidget(VideoCallApp())
+
 
     def goToChat(self):
         self.ui.SubPages.setCurrentIndex(0)

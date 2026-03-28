@@ -8,7 +8,7 @@ import queue
 import numpy as np
 from PySide6.QtCore import QTimer, Signal, QObject, Qt
 from PySide6.QtGui import QImage, QPixmap
-from PySide6.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout, QPushButton
+from PySide6.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout, QPushButton, QSizePolicy
 import time
 
 # --- CONFIGURATION ---
@@ -28,17 +28,20 @@ class VideoCallApp(QWidget):
         self.resize(600, 500)
         
         layout = QVBoxLayout()
+        layout.setContentsMargins(0, 0, 0, 0)
+        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.status_label = QLabel("Status: Idle")
-        layout.addWidget(self.status_label)
+        layout.addWidget(self.status_label,stretch=0)
         
         self.remote_video_label = QLabel("Waiting for video...")
         self.remote_video_label.setAlignment(Qt.AlignCenter)
         self.remote_video_label.setStyleSheet("background: black; color: white;")
-        layout.addWidget(self.remote_video_label)
+        self.remote_video_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        layout.addWidget(self.remote_video_label,stretch=1)
         
         self.btn_connect = QPushButton("Join Room")
         self.btn_connect.clicked.connect(self.start_connection)
-        layout.addWidget(self.btn_connect)
+        layout.addWidget(self.btn_connect,stretch=0)
         self.setLayout(layout)
 
         # --- AUDIO BUFFERING SETUP ---

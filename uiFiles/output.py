@@ -7,7 +7,6 @@
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
-
 from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
@@ -173,7 +172,7 @@ class Ui_Form(object):
         self.scrollAreaWidget.setObjectName(u"scrollAreaWidget")
         self.scrollAreaWidget.setGeometry(QRect(0, 0, 577, 425))
         self.scrollArea.setWidget(self.scrollAreaWidget)
-
+            
         self.verticalLayout.addWidget(self.scrollArea)
 
         self.MainPages.addWidget(self.pageHome)
@@ -357,4 +356,16 @@ class Ui_Form(object):
         self.label_14.setText(QCoreApplication.translate("Form", u"Code : ", None))
         self.roomCode.setText(QCoreApplication.translate("Form", u"code place Holder", None))
     # retranslateUi
+    
+if __name__ == "__main__":
+    import sys
+    
+    app = QApplication(sys.argv)
 
+    MainWindow = QWidget()
+
+    ui = Ui_Form()
+    ui.setupUi(MainWindow)
+    
+    MainWindow.show()
+    sys.exit(app.exec())

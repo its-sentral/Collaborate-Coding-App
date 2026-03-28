@@ -1,13 +1,8 @@
 from include.lib import *
 from classFiles.UserClass import Admin
 
-from persistent import Persistent
-class Room(object):
-<<<<<<< HEAD
-    def __init__(self, Rname, RID : str, admin: 'Admin', mem=[]):
-=======
+class RoomObj(object):
     def __init__(self, Rname, RID : str, desc, color, admin:Admin, mem=[]):
->>>>>>> main
         self.WorkSys = Workshop()
         self.ChatSys = Chat()
         self.roomName = Rname

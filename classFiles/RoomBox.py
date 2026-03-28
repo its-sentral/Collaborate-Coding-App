@@ -21,10 +21,6 @@ class RoomBox(QFrame):
         desc.setWordWrap(True) 
 
         desc.setStyleSheet( "background-color:#4C4C4C;" "color:white;" "padding:6px;" ) 
-        # self.setStyleSheet( "background-color:#2E2E2E;" # Card background 
-        #                    "border:2px solid #888;" # Border color 
-        #                    "border-radius:12px;" # Rounded corners 
-        #                    ) 
 
         self.setStyleSheet("""
             #roomCard {
@@ -44,37 +40,9 @@ class RoomBox(QFrame):
         self.setMinimumSize(220, 140) 
         self.setMaximumSize(440, 280) 
         self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum) # Handle Hover 
-        # self.anim = QPropertyAnimation(self, b"geometry") 
-        # self.anim.setDuration(400) 
-        # self.anim.setEasingCurve(QEasingCurve.OutCubic) 
         self.baseGeometry = None 
         self.setMouseTracking(True) 
-        
-        
-    def enterEvent(self, event):
-        if self.baseGeometry is None: 
-            self.baseGeometry = self.geometry() 
-        rect = self.baseGeometry 
-        scale = 1.1 
-        newWidth = int(rect.width() * scale) 
-        newHeight = int(rect.height() * scale) 
-        dx = (newWidth - rect.width()) // 2 
-        dy = (newHeight - rect.height()) // 2 
-        scaledRect = QRect( rect.x() - dx, rect.y() - dy, newWidth, newHeight ) 
-        # self.anim.stop() 
-        # self.anim.setStartValue(self.geometry()) 
-        # self.anim.setEndValue(scaledRect) 
-        # self.anim.start() 
 
-
-    
-    # def leaveEvent(self, event): 
-    #     if self.baseGeometry: 
-    #         self.anim.stop() 
-    #         self.anim.setStartValue(self.geometry()) 
-    #         self.anim.setEndValue(self.baseGeometry) 
-    #         self.anim.start() 
-    #         event.accept() 
         
     def mousePressEvent(self, event): 
         self.clicked.emit(self.room.getRoomID())

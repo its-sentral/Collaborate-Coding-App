@@ -2,16 +2,18 @@ from include.pyside6Import import *
 from classFiles.RoomClass import RoomObj
 
 # -------------------- Room Card --------------------
-class RoomBox(QWidget):
+class RoomBox(QFrame):
     clicked = Signal(object)
     def __init__(self, room: RoomObj): 
         super().__init__() 
         self.room = room 
 
+        self.setObjectName("roomCard")
 
         layout = QVBoxLayout(self) 
         layout.setContentsMargins(6, 6, 6, 6) 
         layout.setSpacing(4) 
+        
 
         title = QLabel(f"{self.room.getRoomID()} : {self.room.getRoomName()}") 
         title.setStyleSheet( f"background-color:{self.room.getColor()};" "font-weight:bold;" "padding:6px;" ) 
@@ -19,19 +21,32 @@ class RoomBox(QWidget):
         desc.setWordWrap(True) 
 
         desc.setStyleSheet( "background-color:#4C4C4C;" "color:white;" "padding:6px;" ) 
-        self.setStyleSheet( "background-color:#2E2E2E;" # Card background 
-                           "border:2px solid #888;" # Border color 
-                           "border-radius:12px;" # Rounded corners 
-                           ) 
+        # self.setStyleSheet( "background-color:#2E2E2E;" # Card background 
+        #                    "border:2px solid #888;" # Border color 
+        #                    "border-radius:12px;" # Rounded corners 
+        #                    ) 
+
+        self.setStyleSheet("""
+            #roomCard {
+                background-color: #2E2E2E;
+                border: 2px solid #888;
+                border-radius: 12px;
+            }
+            #roomCard:hover {
+                border: 2px solid #FFF;
+                background-color: #3A3A3A;
+            }
+        """)
+
         layout.addWidget(title, stretch=3) 
         layout.addWidget(desc, stretch=7)
 
         self.setMinimumSize(220, 140) 
         self.setMaximumSize(440, 280) 
-        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding) # Handle Hover 
-        self.anim = QPropertyAnimation(self, b"geometry") 
-        self.anim.setDuration(400) 
-        self.anim.setEasingCurve(QEasingCurve.OutCubic) 
+        self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum) # Handle Hover 
+        # self.anim = QPropertyAnimation(self, b"geometry") 
+        # self.anim.setDuration(400) 
+        # self.anim.setEasingCurve(QEasingCurve.OutCubic) 
         self.baseGeometry = None 
         self.setMouseTracking(True) 
         
@@ -46,20 +61,20 @@ class RoomBox(QWidget):
         dx = (newWidth - rect.width()) // 2 
         dy = (newHeight - rect.height()) // 2 
         scaledRect = QRect( rect.x() - dx, rect.y() - dy, newWidth, newHeight ) 
-        self.anim.stop() 
-        self.anim.setStartValue(self.geometry()) 
-        self.anim.setEndValue(scaledRect) 
-        self.anim.start() 
+        # self.anim.stop() 
+        # self.anim.setStartValue(self.geometry()) 
+        # self.anim.setEndValue(scaledRect) 
+        # self.anim.start() 
 
 
     
-    def leaveEvent(self, event): 
-        if self.baseGeometry: 
-            self.anim.stop() 
-            self.anim.setStartValue(self.geometry()) 
-            self.anim.setEndValue(self.baseGeometry) 
-            self.anim.start() 
-            event.accept() 
+    # def leaveEvent(self, event): 
+    #     if self.baseGeometry: 
+    #         self.anim.stop() 
+    #         self.anim.setStartValue(self.geometry()) 
+    #         self.anim.setEndValue(self.baseGeometry) 
+    #         self.anim.start() 
+    #         event.accept() 
         
     def mousePressEvent(self, event): 
         self.clicked.emit(self.room.getRoomID())

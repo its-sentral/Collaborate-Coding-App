@@ -466,7 +466,7 @@ class Ui_Form(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidget = QWidget()
         self.scrollAreaWidget.setObjectName(u"scrollAreaWidget")
-        self.scrollAreaWidget.setGeometry(QRect(0, 0, 577, 419))
+        self.scrollAreaWidget.setGeometry(QRect(0, 0, 98, 28))
         self.scrollArea.setWidget(self.scrollAreaWidget)
 
         self.VLHome.addWidget(self.scrollArea)
@@ -742,22 +742,37 @@ class Ui_Form(object):
         self.VLRoom.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_34 = QHBoxLayout()
         self.horizontalLayout_34.setObjectName(u"horizontalLayout_34")
-        self.label = QLabel(self.verticalLayoutWidget_7)
-        self.label.setObjectName(u"label")
+        self.roomHomeBtn = QPushButton(self.verticalLayoutWidget_7)
+        self.roomHomeBtn.setObjectName(u"roomHomeBtn")
         sizePolicy7 = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Preferred)
         sizePolicy7.setHorizontalStretch(0)
         sizePolicy7.setVerticalStretch(0)
-        sizePolicy7.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
-        self.label.setSizePolicy(sizePolicy7)
-        self.label.setFont(font)
+        sizePolicy7.setHeightForWidth(self.roomHomeBtn.sizePolicy().hasHeightForWidth())
+        self.roomHomeBtn.setSizePolicy(sizePolicy7)
+        self.roomHomeBtn.setFont(font2)
 
-        self.horizontalLayout_34.addWidget(self.label)
+        self.horizontalLayout_34.addWidget(self.roomHomeBtn)
+
+        self.horizontalSpacer_49 = QSpacerItem(10, 20, QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_34.addItem(self.horizontalSpacer_49)
+
+        self.roomCode = QLabel(self.verticalLayoutWidget_7)
+        self.roomCode.setObjectName(u"roomCode")
+        sizePolicy7.setHeightForWidth(self.roomCode.sizePolicy().hasHeightForWidth())
+        self.roomCode.setSizePolicy(sizePolicy7)
+        font6 = QFont()
+        font6.setPointSize(15)
+        font6.setBold(True)
+        self.roomCode.setFont(font6)
+
+        self.horizontalLayout_34.addWidget(self.roomCode)
 
         self.roomName = QLabel(self.verticalLayoutWidget_7)
         self.roomName.setObjectName(u"roomName")
         sizePolicy3.setHeightForWidth(self.roomName.sizePolicy().hasHeightForWidth())
         self.roomName.setSizePolicy(sizePolicy3)
-        self.roomName.setFont(font)
+        self.roomName.setFont(font6)
 
         self.horizontalLayout_34.addWidget(self.roomName)
 
@@ -766,20 +781,6 @@ class Ui_Form(object):
 
         self.horizontalLayout_33 = QHBoxLayout()
         self.horizontalLayout_33.setObjectName(u"horizontalLayout_33")
-        self.label_14 = QLabel(self.verticalLayoutWidget_7)
-        self.label_14.setObjectName(u"label_14")
-        sizePolicy7.setHeightForWidth(self.label_14.sizePolicy().hasHeightForWidth())
-        self.label_14.setSizePolicy(sizePolicy7)
-        self.label_14.setFont(font2)
-
-        self.horizontalLayout_33.addWidget(self.label_14)
-
-        self.roomCode = QLabel(self.verticalLayoutWidget_7)
-        self.roomCode.setObjectName(u"roomCode")
-        self.roomCode.setFont(font2)
-
-        self.horizontalLayout_33.addWidget(self.roomCode)
-
 
         self.VLRoom.addLayout(self.horizontalLayout_33)
 
@@ -831,7 +832,7 @@ class Ui_Form(object):
         self.pageChat.setSizePolicy(sizePolicy)
         self.verticalLayoutWidget_11 = QWidget(self.pageChat)
         self.verticalLayoutWidget_11.setObjectName(u"verticalLayoutWidget_11")
-        self.verticalLayoutWidget_11.setGeometry(QRect(0, 0, 481, 401))
+        self.verticalLayoutWidget_11.setGeometry(QRect(0, 0, 481, 421))
         self.VLChat = QVBoxLayout(self.verticalLayoutWidget_11)
         self.VLChat.setObjectName(u"VLChat")
         self.VLChat.setContentsMargins(0, 0, 0, 0)
@@ -844,10 +845,10 @@ class Ui_Form(object):
 
         self.label_5 = QLabel(self.verticalLayoutWidget_11)
         self.label_5.setObjectName(u"label_5")
-        font6 = QFont()
-        font6.setPointSize(14)
-        font6.setBold(True)
-        self.label_5.setFont(font6)
+        font7 = QFont()
+        font7.setPointSize(14)
+        font7.setBold(True)
+        self.label_5.setFont(font7)
 
         self.horizontalLayout_36.addWidget(self.label_5)
 
@@ -863,7 +864,7 @@ class Ui_Form(object):
         self.chatHistoryArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents_2 = QWidget()
         self.scrollAreaWidgetContents_2.setObjectName(u"scrollAreaWidgetContents_2")
-        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 477, 288))
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 477, 308))
         self.chatHistoryArea.setWidget(self.scrollAreaWidgetContents_2)
 
         self.VLChat.addWidget(self.chatHistoryArea)
@@ -908,7 +909,7 @@ class Ui_Form(object):
         self.pageCall.setSizePolicy(sizePolicy)
         self.verticalLayoutWidget_10 = QWidget(self.pageCall)
         self.verticalLayoutWidget_10.setObjectName(u"verticalLayoutWidget_10")
-        self.verticalLayoutWidget_10.setGeometry(QRect(0, 0, 481, 401))
+        self.verticalLayoutWidget_10.setGeometry(QRect(0, 0, 481, 421))
         self.VLCall = QVBoxLayout(self.verticalLayoutWidget_10)
         self.VLCall.setSpacing(0)
         self.VLCall.setObjectName(u"VLCall")
@@ -930,7 +931,7 @@ class Ui_Form(object):
         self.pageWorkShop.setSizePolicy(sizePolicy)
         self.verticalLayoutWidget_12 = QWidget(self.pageWorkShop)
         self.verticalLayoutWidget_12.setObjectName(u"verticalLayoutWidget_12")
-        self.verticalLayoutWidget_12.setGeometry(QRect(0, 0, 481, 401))
+        self.verticalLayoutWidget_12.setGeometry(QRect(0, 0, 481, 421))
         self.VLWorkShop = QVBoxLayout(self.verticalLayoutWidget_12)
         self.VLWorkShop.setObjectName(u"VLWorkShop")
         self.VLWorkShop.setContentsMargins(0, 0, 0, 0)
@@ -990,7 +991,7 @@ class Ui_Form(object):
         self.pageMember.setSizePolicy(sizePolicy)
         self.verticalLayoutWidget_9 = QWidget(self.pageMember)
         self.verticalLayoutWidget_9.setObjectName(u"verticalLayoutWidget_9")
-        self.verticalLayoutWidget_9.setGeometry(QRect(0, 0, 481, 401))
+        self.verticalLayoutWidget_9.setGeometry(QRect(0, 0, 481, 421))
         self.VLMember = QVBoxLayout(self.verticalLayoutWidget_9)
         self.VLMember.setObjectName(u"VLMember")
         self.VLMember.setContentsMargins(0, 0, 0, 0)
@@ -1014,7 +1015,7 @@ class Ui_Form(object):
         self.retranslateUi(Form)
 
         self.MainPages.setCurrentIndex(5)
-        self.SubPages.setCurrentIndex(2)
+        self.SubPages.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(Form)
@@ -1046,10 +1047,9 @@ class Ui_Form(object):
         self.label_16.setText(QCoreApplication.translate("Form", u"Room Code:", None))
         self.joinRoomConfirm.setText(QCoreApplication.translate("Form", u"Confirm", None))
         self.joinRoomCancleBtn.setText(QCoreApplication.translate("Form", u"Cancle", None))
-        self.label.setText(QCoreApplication.translate("Form", u"Room : ", None))
+        self.roomHomeBtn.setText(QCoreApplication.translate("Form", u"Home", None))
+        self.roomCode.setText(QCoreApplication.translate("Form", u"Code : ", None))
         self.roomName.setText(QCoreApplication.translate("Form", u"Place Holder", None))
-        self.label_14.setText(QCoreApplication.translate("Form", u"Code : ", None))
-        self.roomCode.setText(QCoreApplication.translate("Form", u"code place Holder", None))
         self.roomChatBtn.setText(QCoreApplication.translate("Form", u"Chat", None))
         self.roomCallBtn.setText(QCoreApplication.translate("Form", u"Call", None))
         self.roomWorkshopBtn.setText(QCoreApplication.translate("Form", u"Workshop", None))

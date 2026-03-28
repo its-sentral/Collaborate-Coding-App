@@ -2,7 +2,7 @@ from include.pyside6Import import *
 from include.lib import *
 from uiFiles.output import Ui_Form
 from classFiles.pages.homePage import Home
-from classFiles.RoomClass import Room
+from classFiles.RoomClass import RoomObj
 from classFiles.UserClass import Admin, User, Member
 
 
@@ -17,12 +17,13 @@ class Authen(QMainWindow):
         self.ui.setupUi(self)
 
 
-
         # Make the vertical layout the main layout of the window
         central = QWidget(self)
         central.setLayout(self.ui.forStretchVerticalLayout)
+        central.setContentsMargins(10, 10, 10, 10)
         self.setCentralWidget(central)
         self.ui.verticalLayoutWidget_2.deleteLater()
+
 
         
 
@@ -39,14 +40,14 @@ class Authen(QMainWindow):
 
         adm = Admin("gmail1", "name1", 0, 0)
         data = [
-            Room("Physics Lab", "A101", "Experiments and equipment", "#AA4444", adm),
-            Room("Computer Room", "B202", "Coding and projects", "#4488AA", adm),
-            Room("Art Studio", "C303", "Creative workspace", "#44AA88", adm),
-            Room("Math Room", "D404", "Problem solving zone", "#AA8844", adm),
-            Room("Chemistry Lab", "E505", "Chemical experiments", "#8844AA", adm),
-            Room("Biology Lab", "F606", "Microscopes and specimens", "#44AA44", adm),
-            Room("Library", "G707", "Books and study area", "#AAAA44", adm),
-            Room("Music Room", "H808", "Instruments and practice", "#44AAAA", adm),
+            RoomObj("Physics Lab", "A101", "Experiments and equipment", "#AA4444", adm),
+            RoomObj("Computer Room", "B202", "Coding and projects", "#4488AA", adm),
+            RoomObj("Art Studio", "C303", "Creative workspace", "#44AA88", adm),
+            RoomObj("Math Room", "D404", "Problem solving zone", "#AA8844", adm),
+            RoomObj("Chemistry Lab", "E505", "Chemical experiments", "#8844AA", adm),
+            RoomObj("Biology Lab", "F606", "Microscopes and specimens", "#44AA44", adm),
+            RoomObj("Library", "G707", "Books and study area", "#AAAA44", adm),
+            RoomObj("Music Room", "H808", "Instruments and practice", "#44AAAA", adm),
         ]
         self.user = User("123@g.com", "Mrs.Tester 101", 1, 50, data)
 

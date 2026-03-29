@@ -18,13 +18,11 @@ class Home(QObject):
         self.window = parentWindow
         self.currentRoom = None
 
-
+        
         self.user = user
+        
         self.filtered_rooms = []
 
-
-        # Header
-        self.ui.homeUserName.setText(str(self.user.getName()))
 
         # Connect search bar to trigger search on every text change
         self.ui.homeSearchBar.textChanged.connect(self.performSearch)

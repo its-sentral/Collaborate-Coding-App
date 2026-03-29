@@ -23,30 +23,31 @@ class RegisterSystem:
     def __init__(self,baseUrl):
         self.url = f"{baseUrl}/register"
 
-    def addUser(self, username, password, confirmPassword):
+    def addUser(self, username, gmail, phone, password, confirmPassword):
             if password != confirmPassword:
                 return False, "Passwords do not match!"
     
-            if not username or not password:
+            if not username or not gmail or not password:
                 return False, "Fields cannot be empty!"
-            
+            payload = {
+                "username": username,     
+                "gmail": gmail,
+                "phone": phone,
+                "password": password,
+                "id": 999,           
+                "rooms": []          
+            }
             try:
     
-                response = requests.post(self.url, json={
-                    "username": username, 
-                    "password": password
-                }, timeout=5)
+                response = requests.post(self.url, json=payload, timeout=5)
 
                 if response.status_code == 200:
-                    return True, "Success"
-                elif response.status_code == 400:
-                    return False, "Username already exists!"
-                else:
-                    return False, "Server error. Try again later."
-                    
+                    return True, response.json()
+                error_data = response.json()
+                return False, error_data.get("detail", "Registration failed")
+                
             except Exception as e:
                 return False, f"Connection failed: {str(e)}"
-
 class ForgetPasswordSystem:
     def __init__(self):
         pass

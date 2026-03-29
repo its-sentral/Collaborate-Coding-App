@@ -18,11 +18,13 @@ class Home(QObject):
         self.window = parentWindow
         self.currentRoom = None
 
-        
+
         self.user = user
-        
         self.filtered_rooms = []
 
+
+        # Header
+        self.ui.homeUserName.setText(str(self.user.getName()))
 
         # Connect search bar to trigger search on every text change
         self.ui.homeSearchBar.textChanged.connect(self.performSearch)
@@ -209,7 +211,9 @@ class Home(QObject):
         row = col = 0
         for room in self.filtered_rooms:
             card = RoomBox(room)
+            
             card.clicked.connect(self.handleRoomSelection)
+            
             self.grid.addWidget(card, row, col)
 
             col += 1

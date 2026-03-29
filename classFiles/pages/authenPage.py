@@ -14,6 +14,10 @@ class Authen(QMainWindow):
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
 
+
+        central_widget = QWidget()
+        self.setCentralWidget(central_widget)
+        
         self.ui = Ui_Form()
         self.ui.setupUi(central_widget)
     

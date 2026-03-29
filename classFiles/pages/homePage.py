@@ -209,7 +209,9 @@ class Home(QObject):
         row = col = 0
         for room in self.filtered_rooms:
             card = RoomBox(room)
+            
             card.clicked.connect(self.handleRoomSelection)
+            
             self.grid.addWidget(card, row, col)
 
             col += 1

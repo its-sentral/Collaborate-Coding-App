@@ -6,9 +6,6 @@ sio = socketio.AsyncServer(async_mode='asgi', cors_allowed_origins='*')
 app = FastAPI()
 sio_app = socketio.ASGIApp(sio, app)
 
-# --- STATE MANAGEMENT ---
-# A set to keep track of all connected session IDs (sids).
-# If you add usernames later, you can change this to a dictionary: {sid: "username"}
 active_users = set()
 
 async def broadcast_user_update():

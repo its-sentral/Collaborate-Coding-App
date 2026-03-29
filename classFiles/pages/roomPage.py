@@ -145,8 +145,6 @@ class RoomPage(QObject):
 
     def goToChat(self):
         self.ui.SubPages.setCurrentIndex(0)
-        self.ui.VLCall.removeWidget(self.videoWidget)
-        self.videoWidget.deleteLater()
 
     def goToCall(self):
         self.videoWidget = VideoCallApp()
@@ -158,13 +156,9 @@ class RoomPage(QObject):
 
     def goToWorkShop(self):
         self.ui.SubPages.setCurrentIndex(2)
-        self.ui.VLCall.removeWidget(self.videoWidget)
-        self.videoWidget.deleteLater()
 
     def goToMember(self):
         self.ui.SubPages.setCurrentIndex(3)
-        self.ui.VLCall.removeWidget(self.videoWidget)
-        self.videoWidget.deleteLater()
     
     def backToHome(self):
         self.ui.MainPages.setCurrentIndex(2)

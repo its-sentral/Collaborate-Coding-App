@@ -12,7 +12,7 @@ from PySide6.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout, QPushB
 import time
 
 # --- CONFIGURATION ---
-SERVER_URL = "https://server-call-test.onrender.com" 
+SERVER_URL = "https://ccp-servertest.onrender.com" 
 
 
 # Lowered for better performance over internet
@@ -21,6 +21,8 @@ CHUNK = 1024
 
 class NetworkSignals(QObject):
     update_video = Signal(str)
+    update_user_count = Signal(int)
+    update_status = Signal(str)
 
 class VideoCallApp(QWidget):
     def __init__(self):
@@ -32,12 +34,22 @@ class VideoCallApp(QWidget):
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.status_label = QLabel("Status: Idle")
         layout.addWidget(self.status_label,stretch=0)
+
+        self.currentUser = QLabel()
+        self.currentUser.setText("Waiting to join")
+        layout.addWidget(self.currentUser,stretch=0)
+
+        self.is_muted = False
+        self.btn_mute = QPushButton("Mute Microphone")
+        self.btn_mute.clicked.connect(self.toggle_mute)
+        self.btn_mute.setEnabled(False)
+        layout.addWidget(self.btn_mute, stretch=0)
         
-        self.remote_video_label = QLabel("Waiting for video...")
-        self.remote_video_label.setAlignment(Qt.AlignCenter)
-        self.remote_video_label.setStyleSheet("background: black; color: white;")
-        self.remote_video_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        layout.addWidget(self.remote_video_label,stretch=1)
+        # self.remote_video_label = QLabel("Waiting for video...")
+        # self.remote_video_label.setAlignment(Qt.AlignCenter)
+        # self.remote_video_label.setStyleSheet("background: black; color: white;")
+        # self.remote_video_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        # layout.addWidget(self.remote_video_label,stretch=1)
         
         self.btn_connect = QPushButton("Join Room")
         self.btn_connect.clicked.connect(self.start_connection)
@@ -57,20 +69,23 @@ class VideoCallApp(QWidget):
         )
         self.signals = NetworkSignals()
         self.signals.update_video.connect(self.display_remote_frame)
+        self.signals.update_user_count.connect(self.update_user_label)
+        self.signals.update_status.connect(self.update_status_label)
 
         # --- EVENT HANDLERS ---
         @self.sio.on('connect')
         def on_connect():
             print("✅ CONNECTED")
-            self.status_label.setText("Status: Connected!")
+            # Emit a signal instead of touching the UI directly
+            self.signals.update_status.emit("Status: Connected!")
+            
+            # Now tell the server we are ready to join and be counted!
             self.sio.emit('join_room', "global_room")
 
         @self.sio.on('user_update')
         def on_user_update(data):
             count = data['count']
-            users = data['users']
-            print(f"👥 Users in call: {count}")
-            print(f"User IDs: {users}")
+            self.currentUser.setText(f"Users in call: {count}")
 
         @self.sio.on('receive_video')
         def on_video(data):
@@ -97,6 +112,17 @@ class VideoCallApp(QWidget):
         self.cap = cv2.VideoCapture(0)
         self.is_running = False
 
+    def toggle_mute(self):
+        # Flip the boolean (True becomes False, False becomes True)
+        self.is_muted = not self.is_muted 
+        
+        if self.is_muted:
+            self.btn_mute.setText("Unmute Microphone")
+            self.btn_mute.setStyleSheet("background-color: #ff4444; color: white; font-weight: bold;")
+        else:
+            self.btn_mute.setText("Mute Microphone")
+            self.btn_mute.setStyleSheet("")
+
     def start_connection(self):
         if self.is_running: return
         try:
@@ -109,8 +135,15 @@ class VideoCallApp(QWidget):
             threading.Thread(target=self.audio_playback_worker, daemon=True).start()
             
             self.btn_connect.setEnabled(False)
+            self.btn_mute.setEnabled(True)
         except Exception as e:
             print(f"❌ Connection Failed: {e}")
+
+    def update_user_label(self, count):
+        self.currentUser.setText(f"Participants: {count}")
+
+    def update_status_label(self, status_text):
+        self.status_label.setText(status_text)
 
     def audio_playback_worker(self):
         print("🔊 Playback Worker Active")
@@ -138,10 +171,8 @@ class VideoCallApp(QWidget):
         while self.is_running:
             try:
                 data = self.mic.read(CHUNK, exception_on_overflow=False)
-                # Only send if we are actually connected
-                if self.sio.connected:
-                    # Send the 'data' as raw bytes, not a string
-                    self.sio.emit('send_audio', {'room': "global room", 'audio': data})
+                if self.sio.connected and not self.is_muted:
+                    self.sio.emit('send_audio', {'room': "global_room", 'audio': data})
             except:
                 break
 

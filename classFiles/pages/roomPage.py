@@ -1,4 +1,5 @@
 from include.pyside6Import import *
+from PySide6.QtCore import Qt
 from include.lib import *
 from uiFiles.output import Ui_Form
 from classFiles.RoomClass import RoomObj
@@ -144,16 +145,28 @@ class RoomPage(QObject):
 
     def goToChat(self):
         self.ui.SubPages.setCurrentIndex(0)
+        self.ui.VLCall.removeWidget(self.videoWidget)
+        self.videoWidget.deleteLater()
 
     def goToCall(self):
-        self.ui.VLCall.addChildWidget(VideoCallApp())
+        self.videoWidget = VideoCallApp()
+        self.videoWidget.setMinimumHeight(341)
+        self.videoWidget.setMinimumWidth(401)
+        self.ui.VLCall.addChildWidget(self.videoWidget)
+        self.ui.VLCall.addWidget(self.videoWidget,alignment=Qt.AlignCenter)
         self.ui.SubPages.setCurrentIndex(1)
 
     def goToWorkShop(self):
         self.ui.SubPages.setCurrentIndex(2)
+        self.ui.VLCall.removeWidget(self.videoWidget)
+        self.videoWidget.deleteLater()
 
     def goToMember(self):
         self.ui.SubPages.setCurrentIndex(3)
+        self.ui.VLCall.removeWidget(self.videoWidget)
+        self.videoWidget.deleteLater()
     
     def backToHome(self):
         self.ui.MainPages.setCurrentIndex(2)
+        self.ui.VLCall.removeWidget(self.videoWidget)
+        self.videoWidget.deleteLater()

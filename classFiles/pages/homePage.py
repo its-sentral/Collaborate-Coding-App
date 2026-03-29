@@ -49,14 +49,38 @@ class Home(QObject):
         # create room
         self.ui.createRoomConfirmBtn.clicked.connect(self.createNewRoom)
         self.ui.createRoomCancleBtn.clicked.connect(self.backToHome)
-        
+
         self.performSearch()
     def backToHome(self):
         self.ui.MainPages.setCurrentIndex(2)
 
     def addNewRoom(self):
-        pass
-        self.backToHome()
+        roomId = self.ui.joinRoomCode.toPlainText().strip()
+        if not roomId:
+            print("Please enter a Room ID")
+            return
+        
+        payload = {
+            "username": self.user.getName(),
+            "roomID": roomId
+        }
+        try:
+            # 2. Tell the server this user wants to join
+            response = requests.post(f"{roomServerOne}/join_room", json=payload, timeout=10)
+            
+            if response.status_code == 200:
+                print(f"Successfully joined room {roomId}!")
+                
+                # 3. Refresh the local data so the new room appears on the Home grid
+                self.syncWithServer() 
+                
+                # 4. Go back to Home
+                self.backToHome()
+            else:
+                print(f"Failed to join: {response.json().get('detail', 'Unknown error')}")
+                
+        except Exception as e:
+            print(f"Error joining room: {e}")
     
     def createNewRoom(self):
         roomName = self.ui.createRoomName.toPlainText().strip()
@@ -102,6 +126,7 @@ class Home(QObject):
 
                 self.user.rooms.append(new_local_room)
                 self.performSearch()
+                self.syncWithServer()
                 self.backToHome()
                 
             else:
@@ -115,14 +140,16 @@ class Home(QObject):
         self.ui.homeAddRoomBtn.clicked.disconnect()
         self.ui.homeCreateRoomBtn.clicked.disconnect()
         
-        # 2. Wipe the UI Grid so the next user doesn't see "Ghost Rooms"
+        self.ui.joinRoomConfirm.clicked.disconnect()
+        self.ui.joinRoomCancleBtn.clicked.disconnect()
+        self.ui.createRoomConfirmBtn.clicked.disconnect()
+        self.ui.createRoomCancleBtn.clicked.disconnect()
+    
         self.clearGrid()
         
-        # 3. Reset your data lists
         self.user = None
         self.filtered_rooms = []
         
-        # 4. Go to the login page
         self.ui.MainPages.setCurrentIndex(0)
         
         print("Logout successful: Home state has been reset and signals disconnected.")

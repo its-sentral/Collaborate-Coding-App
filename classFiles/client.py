@@ -65,6 +65,13 @@ class VideoCallApp(QWidget):
             self.status_label.setText("Status: Connected!")
             self.sio.emit('join_room', "global_room")
 
+        @self.sio.on('user_update')
+        def on_user_update(data):
+            count = data['count']
+            users = data['users']
+            print(f"👥 Users in call: {count}")
+            print(f"User IDs: {users}")
+
         @self.sio.on('receive_video')
         def on_video(data):
             self.signals.update_video.emit(data['image'])

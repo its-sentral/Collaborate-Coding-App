@@ -13,19 +13,12 @@ class Authen(QMainWindow):
         self.user = None
         self.home = None
 
-        self.ui = Ui_Form()
-        self.ui.setupUi(self)
 
-
-        # Make the vertical layout the main layout of the window
-        central = QWidget(self)
-        central.setLayout(self.ui.forStretchVerticalLayout)
-        central.setContentsMargins(10, 10, 10, 10)
-        self.setCentralWidget(central)
-        self.ui.verticalLayoutWidget_2.deleteLater()
-
-
+        central_widget = QWidget()
+        self.setCentralWidget(central_widget)
         
+        self.ui = Ui_Form()
+        self.ui.setupUi(central_widget)
 
 
         self.ui.MainPages.setCurrentIndex(0)

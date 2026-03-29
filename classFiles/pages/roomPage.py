@@ -1,10 +1,8 @@
 from include.pyside6Import import *
-from PySide6.QtCore import Qt
 from include.lib import *
 from uiFiles.output import Ui_Form
 from classFiles.RoomClass import RoomObj
 from classFiles.UserClass import User, Member, Admin
-from ..client import VideoCallApp
 
 class CodeEditor(QPlainTextEdit): # Switched to QPlainTextEdit for stability
     def __init__(self, parent=None):
@@ -129,8 +127,6 @@ class RoomPage(QObject):
         self.ui.roomMemberBtn.clicked.connect(self.goToMember)
         self.ui.roomHomeBtn.clicked.connect(self.backToHome)
 
-        self.ui.SubPages.setContentsMargins(0, 0, 0, 0)
-
         # Replace the existing workshopCodeSpace with the custom one
         parent = self.ui.workshopCodeSpace.parent()
         layout = self.ui.workshopCodeSpace.parent().layout()
@@ -147,11 +143,6 @@ class RoomPage(QObject):
         self.ui.SubPages.setCurrentIndex(0)
 
     def goToCall(self):
-        self.videoWidget = VideoCallApp()
-        self.videoWidget.setMinimumHeight(341)
-        self.videoWidget.setMinimumWidth(401)
-        self.ui.VLCall.addChildWidget(self.videoWidget)
-        self.ui.VLCall.addWidget(self.videoWidget,alignment=Qt.AlignCenter)
         self.ui.SubPages.setCurrentIndex(1)
 
     def goToWorkShop(self):
@@ -162,5 +153,3 @@ class RoomPage(QObject):
     
     def backToHome(self):
         self.ui.MainPages.setCurrentIndex(2)
-        self.ui.VLCall.removeWidget(self.videoWidget)
-        self.videoWidget.deleteLater()

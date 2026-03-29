@@ -31,19 +31,25 @@ class VideoCallApp(QWidget):
         
         layout = QVBoxLayout()
         layout.setContentsMargins(0, 0, 0, 0)
+        self.setMinimumHeight(350)
+        self.setMinimumWidth(400)
+        self.setMaximumHeight(16777215)
+        self.setMaximumWidth(16777215)
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.status_label = QLabel("Status: Idle")
-        layout.addWidget(self.status_label,stretch=0)
+        self.status_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(self.status_label,stretch=1)
 
         self.currentUser = QLabel()
         self.currentUser.setText("Waiting to join")
-        layout.addWidget(self.currentUser,stretch=0)
+        self.currentUser.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(self.currentUser,stretch=1)
 
         self.is_muted = False
         self.btn_mute = QPushButton("Mute Microphone")
         self.btn_mute.clicked.connect(self.toggle_mute)
         self.btn_mute.setEnabled(False)
-        layout.addWidget(self.btn_mute, stretch=0)
+        layout.addWidget(self.btn_mute, stretch=1)
         
         # self.remote_video_label = QLabel("Waiting for video...")
         # self.remote_video_label.setAlignment(Qt.AlignCenter)
@@ -53,7 +59,13 @@ class VideoCallApp(QWidget):
         
         self.btn_connect = QPushButton("Join Room")
         self.btn_connect.clicked.connect(self.start_connection)
-        layout.addWidget(self.btn_connect,stretch=0)
+        layout.addWidget(self.btn_connect,stretch=1)
+
+        self.btn_leave = QPushButton("Leave Call")
+        self.btn_leave.clicked.connect(self.leave_call)
+        self.btn_leave.setEnabled(False)
+        layout.addWidget(self.btn_leave, stretch=1)
+
         self.setLayout(layout)
 
         # --- AUDIO BUFFERING SETUP ---
@@ -126,7 +138,6 @@ class VideoCallApp(QWidget):
     def start_connection(self):
         if self.is_running: return
         try:
-            # Removing transports=['websocket'] helps bypass network blocks
             self.sio.connect(SERVER_URL, wait_timeout=20) 
             self.is_running = True
             
@@ -134,10 +145,37 @@ class VideoCallApp(QWidget):
             threading.Thread(target=self.send_audio_loop, daemon=True).start()
             threading.Thread(target=self.audio_playback_worker, daemon=True).start()
             
+            # --- UPDATE YOUR BUTTON STATES HERE ---
             self.btn_connect.setEnabled(False)
-            self.btn_mute.setEnabled(True)
+            self.btn_leave.setEnabled(True)
+            self.btn_mute.setEnabled(True) # If you added the mute button!
+            
         except Exception as e:
             print(f"❌ Connection Failed: {e}")
+
+    def leave_call(self):
+        print("Leaving call...")
+        
+        self.is_running = False 
+        
+        if self.sio.connected:
+            self.sio.emit('manual_leave')
+            time.sleep(0.5) 
+            self.sio.disconnect()
+            
+        self.btn_connect.setEnabled(True)
+        self.btn_leave.setEnabled(False)
+        
+        if hasattr(self, 'btn_mute'):
+            self.btn_mute.setEnabled(False)
+            self.is_muted = False
+            self.btn_mute.setText("Mute Microphone")
+            self.btn_mute.setStyleSheet("")
+            
+        self.signals.update_status.emit("Status: Idle")
+        self.signals.update_user_count.emit(0)
+        self.currentUser.setText("Waiting to join")
+        
 
     def update_user_label(self, count):
         self.currentUser.setText(f"Participants: {count}")

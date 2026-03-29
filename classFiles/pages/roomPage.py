@@ -147,12 +147,9 @@ class RoomPage(QObject):
 
     def goToCall(self):
         if not self.callCreated:
-            self.callCreated = not self.callCreated
+            self.callCreated = True
             self.videoWidget = VideoCallApp()
-            self.videoWidget.setMinimumHeight(341)
-            self.videoWidget.setMinimumWidth(401)
-            self.ui.VLCall.addChildWidget(self.videoWidget)
-            self.ui.VLCall.addWidget(self.videoWidget,alignment=Qt.AlignCenter)
+            self.ui.VLCall.addWidget(self.videoWidget,stretch=1)
         self.ui.SubPages.setCurrentIndex(1)
 
     def goToWorkShop(self):
@@ -162,6 +159,8 @@ class RoomPage(QObject):
         self.ui.SubPages.setCurrentIndex(3)
     
     def backToHome(self):
+        self.callCreated = False
         self.ui.MainPages.setCurrentIndex(2)
+        self.videoWidget.leave_call()
         self.ui.VLCall.removeWidget(self.videoWidget)
         self.videoWidget.deleteLater()

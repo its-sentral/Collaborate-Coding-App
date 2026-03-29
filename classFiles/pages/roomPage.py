@@ -3,6 +3,8 @@ from include.lib import *
 from uiFiles.output import Ui_Form
 from classFiles.RoomClass import RoomObj
 from classFiles.UserClass import User, Member, Admin
+from PySide6.QtCore import QStringListModel
+import requests
 
 class CodeEditor(QPlainTextEdit): # Switched to QPlainTextEdit for stability
     def __init__(self, parent=None):
@@ -150,6 +152,29 @@ class RoomPage(QObject):
 
     def goToMember(self):
         self.ui.SubPages.setCurrentIndex(3)
+        self.ui.listView.clearSelection()
+        try:
+            room_id = self.room.getRoomID()
+            response = requests.get(f"https://serveroneroom.onrender.com/get_members?roomID={room_id}", timeout=5)
+            
+            if response.status_code == 200:
+                member_names = response.json().get("members", [])
+                
+                
+                self.room.setMember(member_names)
+                model = QStringListModel()
+                display_list = []
+                for name in member_names:
+                   
+                    prefix = "👑 " if name == self.room.getAdmin().getName() else "👤 "
+                    display_list.append(f"{prefix}{name}")
+                model.setStringList(display_list)
+                self.ui.listView.setModel(model)
+                    
+            else:
+                print("Failed to fetch members from server")
+        except Exception as e:
+            print(f"Error updating member list: {e}")
     
     def backToHome(self):
         self.ui.MainPages.setCurrentIndex(2)

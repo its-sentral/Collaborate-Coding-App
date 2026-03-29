@@ -3,6 +3,7 @@ from include.lib import *
 from uiFiles.output import Ui_Form
 from classFiles.RoomClass import RoomObj
 from classFiles.UserClass import User, Member, Admin
+from ..client import VideoCallApp
 
 class CodeEditor(QPlainTextEdit): # Switched to QPlainTextEdit for stability
     def __init__(self, parent=None):
@@ -116,6 +117,8 @@ class RoomPage(QObject):
         self.window = window
         self.room = room
 
+        self.callCreated = False
+
         self.ui.MainPages.setCurrentIndex(5)
         self.ui.SubPages.setCurrentIndex(0)
         self.ui.roomName.setText(self.room.getRoomName())
@@ -143,6 +146,13 @@ class RoomPage(QObject):
         self.ui.SubPages.setCurrentIndex(0)
 
     def goToCall(self):
+        if not self.callCreated:
+            self.callCreated = not self.callCreated
+            self.videoWidget = VideoCallApp()
+            self.videoWidget.setMinimumHeight(341)
+            self.videoWidget.setMinimumWidth(401)
+            self.ui.VLCall.addChildWidget(self.videoWidget)
+            self.ui.VLCall.addWidget(self.videoWidget,alignment=Qt.AlignCenter)
         self.ui.SubPages.setCurrentIndex(1)
 
     def goToWorkShop(self):
@@ -153,3 +163,5 @@ class RoomPage(QObject):
     
     def backToHome(self):
         self.ui.MainPages.setCurrentIndex(2)
+        self.ui.VLCall.removeWidget(self.videoWidget)
+        self.videoWidget.deleteLater()

@@ -98,3 +98,12 @@ def get_all_users():
         "total_users": len(all_users_list),
         "users": all_users_list
     }
+
+@app.post("/update_user_rooms")
+def update_user_rooms(data: UpdateRoomRequest):
+    user = root.users.get(data.username)
+    if user:
+        if data.roomID not in user.rooms:
+            user.rooms.append(data.roomID) # Permanent save in ZODB
+            transaction.commit()
+    return {"status": "updated"}

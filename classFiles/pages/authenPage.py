@@ -10,11 +10,15 @@ from classFiles.SystemClass import LoginSystem, RegisterSystem
 class Authen(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.user = None
-        self.home = None
+
+        central_widget = QWidget()
+        self.setCentralWidget(central_widget)
 
         self.ui = Ui_Form()
-        self.ui.setupUi(self)
+        self.ui.setupUi(central_widget)
+    
+        self.user = None
+        self.home = Home(None, self.ui, self)
 
 
         self.ui.MainPages.setCurrentIndex(0)
@@ -63,8 +67,11 @@ class Authen(QMainWindow):
                             pno=u_info['phone'],
                             memOf=u_info['rooms'] 
                         )
+            self.home.user = self.user
+            self.home.syncWithServer()
+            self.home.updatedHome()
             self.ui.MainPages.setCurrentIndex(2)
-            self.home = Home(self.user, self.ui, self)
+           
         else:
             print(f"Login failed: {data}")
        

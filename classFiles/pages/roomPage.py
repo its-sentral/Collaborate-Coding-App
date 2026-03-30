@@ -8,6 +8,7 @@ from PySide6.QtCore import QStringListModel, QTimer
 from .demo import CollabEditor
 from dotenv import load_dotenv
 import requests, os
+from shiboken6 import isValid
 
 load_dotenv()
 
@@ -164,8 +165,14 @@ class RoomPage(QObject):
         self.ui.workshopRunBtn.clicked.connect(self.compile_code)
 
     def handleImport(self):
-       self.workshop_tool.importCode(self.window, self.work.editor)
-    
+        if hasattr(self, 'work') and isValid(self.work.editor):
+            try:
+                self.workshop_tool.importCode(self.window, self.work.editor)
+            except RuntimeError:
+                    print("C++ object deleted during import.")
+        else:
+            print("Blocked: Editor no longer exists.")
+
     def handleExport(self):
         self.workshop_tool.exportCode(self.work.editor)
     def compile_code(self):

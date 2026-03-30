@@ -302,6 +302,10 @@ class RoomPage(QObject):
             self.videoWidget = None
             self.callCreated = False
 
+        if hasattr(self, 'work') and self.work:
+            self.ui.VLCall.removeWidget(self.work)
+            self.work.deleteLater()
+
         try:
             self.ui.roomChatBtn.clicked.disconnect()
             self.ui.roomCallBtn.clicked.disconnect()

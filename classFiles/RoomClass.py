@@ -1,5 +1,8 @@
 from include.lib import *
 from classFiles.UserClass import Admin
+from PySide6.QtWidgets import QFileDialog
+import os
+from pathlib import Path
 
 class RoomObj(object):
     def __init__(self, Rname, RID : str, desc, color, admin:Admin, mem=[],server_url=None):
@@ -95,11 +98,41 @@ class Workshop(object):
     def __init__(self):
         pass
 
-    def importCode(self,file):
-        pass
+    def importCode(self,parentWindow, editorWidget):
+        filePath, _ = QFileDialog.getOpenFileName(
+            parentWindow, 
+            "Import Script", 
+            "", 
+            "Python Files (*.py);;Text Files (*.txt);;All Files (*)"
+        )
+        if filePath:
+            try:
+                with open(filePath, 'r', encoding='utf-8') as f:
+                    code = f.read()
+                    editorWidget.setPlainText(code) # This triggers textChanged sync!
+                    print(f"Imported: {filePath}")
+            except Exception as e:
+                print(f"Error importing: {e}")
 
-    def exportCode(self):
-        pass
+    def exportCode(self,editorWidget):
+        try:
+            
+            downloads_path = str(Path.home() / "Downloads")
+            
+            file_name = "roomworkshop.py"
+            full_path = os.path.join(downloads_path, file_name)
+
+           
+            code_content = editorWidget.toPlainText()
+
+           
+            with open(full_path, 'w', encoding='utf-8') as f:
+                f.write(code_content)
+            
+            print(f"Success! File saved to: {full_path}")
+            
+        except Exception as e:
+            print(f"Instant Export Error: {e}")
 
 class Conversation(object):
     def __init__(self,content,sender):

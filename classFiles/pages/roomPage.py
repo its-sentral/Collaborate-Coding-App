@@ -1,7 +1,7 @@
 from include.pyside6Import import *
 from include.lib import *
 from uiFiles.output import Ui_Form
-from classFiles.RoomClass import RoomObj
+from classFiles.RoomClass import RoomObj, Workshop
 from classFiles.UserClass import User, Member, Admin
 from ..client import VideoCallApp
 from PySide6.QtCore import QStringListModel, QTimer
@@ -147,17 +147,27 @@ class RoomPage(QObject):
         self.ui.roomMemberBtn.clicked.connect(self.goToMember)
         self.ui.roomHomeBtn.clicked.connect(self.backToHome)
 
+        self.ui.workshopImportBtn.clicked.connect(self.handleImport)
+
+        self.ui.workshopExportBtn.clicked.connect(self.handleExport)
+
         self.work = CollabEditor()
         self.ui.VLWorkShop.addWidget(self.work,stretch=1)
-
+        self.workshop_tool = Workshop()
         self.ui.chatSendTextConfirmBtn.clicked.connect(self.sendChatMessage)
         self.chat_timer = QTimer()
         self.chat_timer.timeout.connect(self.refreshChat)
+        
         self.chat_timer.start(3000)
 
 
         self.ui.workshopRunBtn.clicked.connect(self.compile_code)
 
+    def handleImport(self):
+       self.workshop_tool.importCode(self.window, self.work.editor)
+    
+    def handleExport(self):
+        self.workshop_tool.exportCode(self.work.editor)
     def compile_code(self):
         CLIENT_ID = os.getenv("CLIENT_ID")
         CLIENT_SECRET = os.getenv("CLIENT_SECRET")

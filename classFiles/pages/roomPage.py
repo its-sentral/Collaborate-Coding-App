@@ -6,8 +6,8 @@ from classFiles.UserClass import User, Member, Admin
 from PySide6.QtCore import QStringListModel, QTimer
 import requests
 
-motherServer = "https://collaborate-coding-app.onrender.com/"
-roomServerOne = "https://serveroneroom.onrender.com"
+motherServer = "https://collaborate-coding-app.onrender.com"
+
 
 
 
@@ -122,7 +122,8 @@ class RoomPage(QObject):
         self.ui = ui
         self.window = window
         self.room = room
-
+        print(f"DEBUG: Entering room with URL: {self.room.server_url}")
+        
         self.chatContents = QWidget()
         self.chatLayout = QVBoxLayout(self.chatContents)
         self.chatLayout.setAlignment(Qt.AlignTop)
@@ -170,8 +171,8 @@ class RoomPage(QObject):
             }
         
         try:
-        
-            url = f"{roomServerOne}/send_chat" 
+            base_url = self.room.getServerURL()
+            url = f"{base_url}/send_chat" 
             res = requests.post(url, json=payload, timeout=5)
             
             if res.status_code == 200:
@@ -190,7 +191,8 @@ class RoomPage(QObject):
             self.chat_timer.stop()
             return
         try:
-            url = f"{roomServerOne}/get_chat"
+            base_url = self.room.getServerURL()
+            url = f"{base_url}/get_chat"
             params = {"roomID": self.room.getRoomID()}
             res = requests.get(url, params=params, timeout=5)
 
@@ -203,8 +205,6 @@ class RoomPage(QObject):
                     widget = item.widget()
                     if widget:
                         widget.deleteLater()
-
-              
                 for msg in messages:
                     
                     chat_text = f"<b>{msg['sender']}</b>: {msg['content']} <br><small style='color:gray'>{msg['time']}</small>"
@@ -243,7 +243,8 @@ class RoomPage(QObject):
         self.ui.listView.clearSelection()
         try:
             room_id = self.room.getRoomID()
-            response = requests.get(f"https://serveroneroom.onrender.com/get_members?roomID={room_id}", timeout=5)
+            base_url = self.room.getServerURL()
+            response = requests.get(f"{base_url}/get_members?roomID={room_id}", timeout=5)
             
             if response.status_code == 200:
                 member_names = response.json().get("members", [])

@@ -6,7 +6,7 @@ import transaction
 from BTrees.OOBTree import OOBTree
 from typing import List
 from classFiles.UserClass import User
-
+#add som commit
 app = FastAPI()
 
 db_path = "/data/database.fs" if os.path.exists("/data") else "database.fs"

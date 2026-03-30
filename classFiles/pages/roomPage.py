@@ -122,6 +122,7 @@ class RoomPage(QObject):
         self.room = room
 
         self.callCreated = False
+        self.open_output_windows = []
 
         self.ui.MainPages.setCurrentIndex(5)
         self.ui.SubPages.setCurrentIndex(0)
@@ -167,6 +168,10 @@ class RoomPage(QObject):
     def display_code_output(self, result):
         print("=== EXECUTION OUTPUT ===")
         print(result)
+        
+        new_window = OutputWindow(result)
+        self.open_output_windows.append(new_window)
+        new_window.show()
         self.ui.workshopRunBtn.setEnabled(True)
 
     def goToChat(self):
@@ -219,7 +224,6 @@ class JDoodleCompilerThread(QThread):
     def run(self):
         print("[Thread] 1. Background thread started!")
         
-        # Check if the .env variables actually loaded
         if not self.client_id or not self.client_secret:
             self.compilation_finished.emit("Error: CLIENT_ID or CLIENT_SECRET is missing. Check your .env file!")
             return
@@ -262,3 +266,24 @@ class JDoodleCompilerThread(QThread):
             
         print("[Thread] 4. Emitting result back to main app...")
         self.compilation_finished.emit(result)
+
+class OutputWindow(QWidget):
+    def __init__(self, result_text):
+        super().__init__()
+        self.setWindowTitle("JDoodle Output")
+        self.resize(500, 400)
+        layout = QVBoxLayout(self)
+        self.text_area = QPlainTextEdit()
+        self.text_area.setReadOnly(True)
+        self.text_area.setPlainText(result_text)
+        self.text_area.setStyleSheet("""
+            QPlainTextEdit {
+                background-color: #1e1e1e;
+                color: #d4d4d4;
+                font-family: 'Consolas', 'Monaco', monospace;
+                font-size: 14px;
+                border: 1px solid #333333;
+            }
+        """)
+        
+        layout.addWidget(self.text_area)

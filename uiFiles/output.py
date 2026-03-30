@@ -1012,12 +1012,6 @@ class Ui_Form(object):
         self.VLCall.setSpacing(0)
         self.VLCall.setObjectName(u"VLCall")
         self.VLCall.setContentsMargins(40, 40, 40, 40)
-        self.enterOrLeaveCall = QPushButton(self.pageCall)
-        self.enterOrLeaveCall.setObjectName(u"enterOrLeaveCall")
-        sizePolicy3.setHeightForWidth(self.enterOrLeaveCall.sizePolicy().hasHeightForWidth())
-        self.enterOrLeaveCall.setSizePolicy(sizePolicy3)
-
-        self.VLCall.addWidget(self.enterOrLeaveCall)
 
 
         self.verticalLayout_9.addLayout(self.VLCall)

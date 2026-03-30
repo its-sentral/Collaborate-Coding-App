@@ -4,6 +4,10 @@ from uiFiles.output import Ui_Form
 from classFiles.RoomClass import RoomObj
 from classFiles.UserClass import User, Member, Admin
 from ..client import VideoCallApp
+from dotenv import load_dotenv
+import requests, os
+
+load_dotenv()
 
 class CodeEditor(QPlainTextEdit): # Switched to QPlainTextEdit for stability
     def __init__(self, parent=None):
@@ -25,8 +29,8 @@ class CodeEditor(QPlainTextEdit): # Switched to QPlainTextEdit for stability
                 color: #d4d4d4;
                 font-family: 'Consolas', 'Monaco', monospace;
                 font-size: 14px;
-                border: 1px solid #333333;  /* Adds the outer border */
-                border-radius: 2px;         /* Optional: slightly rounded corners */
+                border: 1px solid #333333;
+                border-radius: 2px;
             }
         """)
 
@@ -133,6 +137,8 @@ class RoomPage(QObject):
         # Replace the existing workshopCodeSpace with the custom one
         parent = self.ui.workshopCodeSpace.parent()
         layout = self.ui.workshopCodeSpace.parent().layout()
+
+        self.ui.workshopRunBtn.clicked.connect(self.compile_code)
         
         # Create the new editor
         self.codeSpace = CodeEditor(parent)
@@ -141,6 +147,27 @@ class RoomPage(QObject):
         layout.replaceWidget(self.ui.workshopCodeSpace, self.codeSpace)
         self.ui.workshopCodeSpace.deleteLater()
         self.ui.workshopCodeSpace = self.codeSpace # Re-assign for consistency
+
+
+    def compile_code(self):
+        CLIENT_ID = os.getenv("CLIENT_ID")
+        CLIENT_SECRET = os.getenv("CLIENT_SECRET")
+        
+        code = self.ui.workshopCodeSpace.toPlainText()
+
+        # Disable the run button so the user doesn't spam it while waiting
+        self.ui.workshopRunBtn.setEnabled(False)
+        print("Compiling code in the cloud... Please wait.")
+
+        # Create and start the background thread
+        self.compiler_thread = JDoodleCompilerThread(code, CLIENT_ID, CLIENT_SECRET)
+        self.compiler_thread.compilation_finished.connect(self.display_code_output)
+        self.compiler_thread.start()
+        
+    def display_code_output(self, result):
+        print("=== EXECUTION OUTPUT ===")
+        print(result)
+        self.ui.workshopRunBtn.setEnabled(True)
 
     def goToChat(self):
         self.ui.SubPages.setCurrentIndex(0)
@@ -173,8 +200,65 @@ class RoomPage(QObject):
             self.ui.roomWorkshopBtn.clicked.disconnect()
             self.ui.roomMemberBtn.clicked.disconnect()
             self.ui.roomHomeBtn.clicked.disconnect()
+            self.ui.workshopRunBtn.clicked.disconnect()
         except RuntimeError:
             pass # Failsafe in case they are already disconnected
 
         # 3. Switch back to the Home page
         self.ui.MainPages.setCurrentIndex(2)
+
+class JDoodleCompilerThread(QThread):
+    compilation_finished = Signal(str)
+
+    def __init__(self, code_to_compile, client_id, client_secret, parent=None):
+        super().__init__(parent)
+        self.code_to_compile = code_to_compile
+        self.client_id = client_id
+        self.client_secret = client_secret
+
+    def run(self):
+        print("[Thread] 1. Background thread started!")
+        
+        # Check if the .env variables actually loaded
+        if not self.client_id or not self.client_secret:
+            self.compilation_finished.emit("Error: CLIENT_ID or CLIENT_SECRET is missing. Check your .env file!")
+            return
+
+        url = "https://api.jdoodle.com/v1/execute"
+        payload = {
+            "clientId": self.client_id,
+            "clientSecret": self.client_secret,
+            "script": self.code_to_compile,
+            "language": "python3",
+            "versionIndex": "4"
+        }
+        
+        try:
+            print("[Thread] 2. Sending code to JDoodle...")
+            
+            # ADDED TIMEOUT: If JDoodle doesn't respond in 15 seconds, force an error!
+            response = requests.post(url, json=payload, timeout=15) 
+            
+            print(f"[Thread] 3. Got response! Status Code: {response.status_code}")
+            
+            try:
+                response_data = response.json()
+            except Exception:
+                # If JDoodle crashes and returns HTML instead of JSON
+                self.compilation_finished.emit(f"Server Error. Raw response: {response.text}")
+                return
+
+            if response.status_code == 200:
+                result = response_data.get("output", "No output returned.")
+            else:
+                result = f"API Error {response.status_code}: {response_data.get('error', 'Unknown Error')}"
+                
+        except requests.exceptions.Timeout:
+            result = "Error: The request timed out. JDoodle took more than 15 seconds to respond."
+            print("[Thread] ERROR: Request timed out!")
+        except Exception as e:
+            result = f"Failed to connect to JDoodle: {e}"
+            print(f"[Thread] ERROR: Exception caught: {e}")
+            
+        print("[Thread] 4. Emitting result back to main app...")
+        self.compilation_finished.emit(result)

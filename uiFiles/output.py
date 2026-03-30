@@ -1070,12 +1070,6 @@ class Ui_Form(object):
 
         self.VLWorkShop.addLayout(self.horizontalLayout_38)
 
-        self.workshopCodeSpace = QTextEdit(self.pageWorkShop)
-        self.workshopCodeSpace.setObjectName(u"workshopCodeSpace")
-
-        self.VLWorkShop.addWidget(self.workshopCodeSpace)
-
-
         self.verticalLayout_12.addLayout(self.VLWorkShop)
 
         self.SubPages.addWidget(self.pageWorkShop)

@@ -5,14 +5,13 @@ from classFiles.RoomClass import RoomObj
 from classFiles.UserClass import User, Member, Admin
 from ..client import VideoCallApp
 from PySide6.QtCore import QStringListModel, QTimer
+from .demo import CollabEditor
 from dotenv import load_dotenv
 import requests, os
 
 load_dotenv()
 
 motherServer = "https://collaborate-coding-app.onrender.com"
-
-
 
 
 class CodeEditor(QPlainTextEdit): # Switched to QPlainTextEdit for stability
@@ -148,32 +147,22 @@ class RoomPage(QObject):
         self.ui.roomMemberBtn.clicked.connect(self.goToMember)
         self.ui.roomHomeBtn.clicked.connect(self.backToHome)
 
+        self.work = CollabEditor()
+        self.ui.VLWorkShop.addWidget(self.work,stretch=1)
 
         self.ui.chatSendTextConfirmBtn.clicked.connect(self.sendChatMessage)
         self.chat_timer = QTimer()
         self.chat_timer.timeout.connect(self.refreshChat)
         self.chat_timer.start(3000)
 
-        # Replace the existing workshopCodeSpace with the custom one
-        parent = self.ui.workshopCodeSpace.parent()
-        layout = self.ui.workshopCodeSpace.parent().layout()
 
         self.ui.workshopRunBtn.clicked.connect(self.compile_code)
-        
-        # Create the new editor
-        self.codeSpace = CodeEditor(parent)
-        
-        # Replace it in the layout (assuming it's in a layout)
-        layout.replaceWidget(self.ui.workshopCodeSpace, self.codeSpace)
-        self.ui.workshopCodeSpace.deleteLater()
-        self.ui.workshopCodeSpace = self.codeSpace # Re-assign for consistency
-
 
     def compile_code(self):
         CLIENT_ID = os.getenv("CLIENT_ID")
         CLIENT_SECRET = os.getenv("CLIENT_SECRET")
         
-        code = self.ui.workshopCodeSpace.toPlainText()
+        code = self.work.getText()
 
         # Disable the run button so the user doesn't spam it while waiting
         self.ui.workshopRunBtn.setEnabled(False)
@@ -301,7 +290,6 @@ class RoomPage(QObject):
             print(f"Error updating member list: {e}")
     
     def backToHome(self):
-
         if hasattr(self, 'chat_timer'):
             self.chat_timer.stop()
         self.user = None

@@ -9,6 +9,17 @@ from classFiles.UserClass import Admin
 
 motherServer = "https://your-mother-server.onrender.com"
 roomServerOne = "https://serveroneroom.onrender.com"
+
+UI_COLORS = [
+    "#3498db", # Blue
+    "#e74c3c", # Red
+    "#2ecc71", # Green
+    "#f1c40f", # Yellow
+    "#9b59b6", # Purple
+    "#1abc9c", # Teal
+    "#e67e22", # Orange
+    "#34495e"  # Dark Blue/Gray
+]
 # -------------------- Main Window --------------------
 class Home(QObject):
     def __init__(self, user, ui :Ui_Form, parentWindow):
@@ -17,10 +28,16 @@ class Home(QObject):
         self.ui = ui
         self.window = parentWindow
         self.currentRoom = None
+        self.servers = [
+           "https://serveroneroom.onrender.com",
+           "https://servertworoom.onrender.com"
 
+        ]
+        self.creation_count = 0
         
         self.user = user
-        
+        self.server_url = ""
+
         self.filtered_rooms = []
 
 
@@ -49,11 +66,30 @@ class Home(QObject):
         # create room
         self.ui.createRoomConfirmBtn.clicked.connect(self.createNewRoom)
         self.ui.createRoomCancleBtn.clicked.connect(self.backToHome)
+        # info_res = requests.get(f"{roomServerOne}/room_info", params={"username": self.user.getName()})
+        # if info_res.status_code == 200:
+        #     data = info_res.json()
+        #     new_room = RoomObj(
+        #         Rname=data["name"],
+        #         RID=data["roomID"],
+        #         desc=data["description"],
+        #         color=data["color"],
+        #         admin=Admin(name="Admin", gmail="ea", id="12", pno="9"),
+        #         mem=[] 
+        #     )
+        #     self.user.rooms.append(new_room)
+        #     self.performSearch() 
+        #     self.backToHome()
 
         self.performSearch()
     def backToHome(self):
         self.ui.MainPages.setCurrentIndex(2)
+    def randomColor():
+        r = random.randint(0,255)
+        g = random.randint(0,255)
+        b = random.randint(0,255)
 
+        return(r,g,b)
     def addNewRoom(self):
         roomId = self.ui.joinRoomCode.toPlainText().strip()
         if not roomId:
@@ -64,30 +100,61 @@ class Home(QObject):
             "username": self.user.getName(),
             "roomID": roomId
         }
+        found_room = False
+
         try:
-            # 2. Tell the server this user wants to join
-            response = requests.post(f"{roomServerOne}/join_room", json=payload, timeout=10)
             
-            if response.status_code == 200:
-                print(f"Successfully joined room {roomId}!")
+            for base_url in self.servers:
+                print(f"Checking server: {base_url} for Room {roomId}...")
                 
-                # 3. Refresh the local data so the new room appears on the Home grid
-                self.syncWithServer() 
+                try:
                 
-                # 4. Go back to Home
+                    join_url = f"{base_url}/join_room"
+                    response = requests.post(join_url, json=payload, timeout=5)
+                    
+                    if response.status_code == 200:
+                        print(f"Successfully joined room {roomId} on {base_url}!")
+                        
+                        info_res = requests.get(f"{base_url}/room_info", params={"username": self.user.getName()})
+                        
+                        if info_res.status_code == 200:
+                            data = info_res.json()
+                            
+                            new_room = RoomObj(
+                                Rname=data["name"],
+                                RID=data["roomID"],
+                                desc=data.get("description", ""),
+                                color=data.get("color"),
+                                admin=Admin(name=data.get("admin_name", "Admin"), gmail="", id="", pno=""),
+                               
+                                server_url=base_url 
+                            )
+                            
+                            self.user.rooms.append(new_room)
+                            found_room = True
+                            break 
+                except Exception as e:
+                    print(f"Server {base_url} skipped: {e}")
+                    continue
+
+            if found_room:
+                self.performSearch() 
                 self.backToHome()
             else:
-                print(f"Failed to join: {response.json().get('detail', 'Unknown error')}")
-                
+                print("Room ID not found on any available server.")
+                    
         except Exception as e:
             print(f"Error joining room: {e}")
-    
+
+
     def createNewRoom(self):
         roomName = self.ui.createRoomName.toPlainText().strip()
         roomDesc = self.ui.createRoomDescription.toPlainText().strip()
 
+        server_index = self.creation_count % 2
+        selected_server_url = self.servers[server_index]
         roomID = str(random.randint(0,100))
-        roomColor = "#3498db"
+        roomColor = random.choice(UI_COLORS)
 
         if not roomName:
             print("ROOM CAN'T BE EMPTY")
@@ -106,10 +173,11 @@ class Home(QObject):
         }
         try:
            
-            response = requests.post(f"{roomServerOne}/claim_server", json=payload, timeout=10)
+            response = requests.post(f"{selected_server_url}/claim_server", json=payload, timeout=10)
             
             if response.status_code == 200:
                 print(f"Success: Room '{roomName}' is now live on Render!")
+                self.creation_count += 1
                 local_admin = Admin(
                         gmail=self.user.getGmail(),
                         name=self.user.getName(),
@@ -121,12 +189,12 @@ class Home(QObject):
                     RID=payload["roomID"],
                     desc=payload["description"],
                     color=payload["color"],
-                    admin=local_admin
+                    admin=local_admin,
+                    server_url=selected_server_url
                 )
 
                 self.user.rooms.append(new_local_room)
                 self.performSearch()
-                self.syncWithServer()
                 self.backToHome()
                 
             else:
@@ -136,6 +204,9 @@ class Home(QObject):
 
     
     def gotoLogout(self):
+
+        if hasattr(self, 'chat_timer'):
+            self.chat_timer.stop()
         self.ui.homeLogoutBtn.clicked.disconnect()
         self.ui.homeAddRoomBtn.clicked.disconnect()
         self.ui.homeCreateRoomBtn.clicked.disconnect()
@@ -188,20 +259,20 @@ class Home(QObject):
                     widget.deleteLater()
 
     def rebuildGrid(self, ignore=False):
-        # 1. Calculate columns based on current window width
+       
         someCardWidth = 300
         available_width = self.ui.scrollArea.viewport().width()
         columns = max(2, available_width // someCardWidth)
 
-        # 2. THE FIX: Only 'return' if the window didn't resize AND we aren't forcing a refresh
+     
         if self.colAmount is not None and columns == self.colAmount and not ignore:
             return
 
-        # 3. Update the state and WIPE the old UI
+       
         self.colAmount = columns
         self.clearGrid()
 
-        # 4. If the user has no rooms, stop here (screen is now clean and empty)
+        
         if not self.filtered_rooms:
             print("Grid cleared: No rooms found for this user.")
             return
@@ -221,11 +292,8 @@ class Home(QObject):
         self.grid.activate()
 
         self.ui.scrollAreaWidget.adjustSize()
-        
-        # This tells the UI to repaint everything in the grid
         self.ui.scrollAreaWidget.update()
-        
-        # Ensure the widget inside the scroll area is actually visible
+
         self.ui.scrollAreaWidget.show()
         print(f"Successfully drew {len(self.filtered_rooms)} room(s).")
 
@@ -236,47 +304,67 @@ class Home(QObject):
                 break
     
     def syncWithServer(self):
+        print(f"Checking all servers for {self.user.getName()}...")
+        self.user.rooms = [] # Start fresh
+        
+    
+        server_urls = [
+            "https://serveroneroom.onrender.com",
+            "https://servertworoom.onrender.com"
+        ]
 
-        print(f"Checking server for {self.user.getName()}...")
         try:
-
-            url = "https://serveroneroom.onrender.com/room_info"
-            params = {"username": self.user.getName()}
-            
-            response = requests.get(url, params=params, timeout=10)
-            
-            if response.status_code == 200:
-                data = response.json()
+            for base_url in server_urls:
+                url = f"{base_url}/room_info"
+                params = {"username": self.user.getName()}
                 
-                if data.get("status") == "active":
+                try:
+                    response = requests.get(url, params=params, timeout=5)
+                    
+                    if response.status_code == 200:
+                        data = response.json()
+                        
+                        if data.get("status") == "active":
+                            # Determine the Admin
+                            if data.get("role") == "admin":
+                                admin_obj = Admin(
+                                    gmail=self.user.getGmail(),
+                                    name=self.user.getName(),
+                                    id=self.user.getID(),
+                                    pno=self.user.getPhoneNo()
+                                )
+                            else:
+                                admin_obj = Admin(
+                                    name=data.get("admin_name", "Unknown Admin"),
+                                    gmail="", id="", pno="" 
+                                )
+                            
+                            # Create the Room Object
+                            new_room = RoomObj(
+                                Rname=data["name"],
+                                RID=data["roomID"],
+                                desc=data.get("description", ""),
+                                color=data.get("color", "#3498db"),
+                                admin=admin_obj,
+                                server_url=base_url
+                            )
 
-                    creator_data = self.user
-                    if data.get("role") == "admin":
-                        creator_data = Admin(
-                            gmail=self.user.getGmail(),
-                            name=self.user.getName(),
-                            id=self.user.getID(),
-                            pno=self.user.getPhoneNo()
-                        )
+                            # CRITICAL: Attach the server URL so the app 
+                            # knows which server to use for THIS specific room
+                            new_room.server_url = base_url
+                            
+                            self.user.rooms.append(new_room)
+                            print(f"Room '{data['name']}' found and synced from {base_url}!")
+                            
+                            # If you only allow ONE active room per user across all servers, 
+                            # you can 'break' the loop here.
+                            # break 
 
-                    new_room = RoomObj(
-                        Rname=data["name"],
-                        RID=data["roomID"],
-                        desc=data.get("description", ""),
-                        color=data.get("color", "#3498db"),
-                        admin=creator_data
-                    )
+                except Exception as e:
+                    print(f"Could not reach server {base_url}: {e}")
 
-                    # 3. Update the user's local room list
-                    self.user.rooms = [new_room]
-                    print("Room found and synced!")
-                else:
-                    # No active room for this user
-                    self.user.rooms = []
-                    print("No active rooms found on server.")
-
-                # 4. Refresh the UI Grid
-                self.performSearch() 
+            # After checking all servers, refresh the UI
+            self.performSearch() 
 
         except Exception as e:
-            print(f"Sync Error: {e}")
+            print(f"General Sync Error: {e}")

@@ -2,7 +2,7 @@ from include.lib import *
 from classFiles.UserClass import Admin
 
 class RoomObj(object):
-    def __init__(self, Rname, RID : str, desc, color, admin:Admin, mem=[]):
+    def __init__(self, Rname, RID : str, desc, color, admin:Admin, mem=[],server_url=None):
         self.WorkSys = Workshop()
         self.ChatSys = Chat()
         self.roomName = Rname
@@ -11,9 +11,13 @@ class RoomObj(object):
         self.admin = admin
         self.description = desc
         self.color = color
-
+        self.server_url = server_url
         self.admin.assignRoom(self)
 
+
+    def getServerURL(self):
+        return self.server_url
+    
     # --- Admin ---
     def getAdmin(self):
         return self.admin

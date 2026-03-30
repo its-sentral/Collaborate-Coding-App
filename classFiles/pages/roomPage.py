@@ -4,10 +4,16 @@ from uiFiles.output import Ui_Form
 from classFiles.RoomClass import RoomObj
 from classFiles.UserClass import User, Member, Admin
 from ..client import VideoCallApp
+from PySide6.QtCore import QStringListModel, QTimer
 from dotenv import load_dotenv
 import requests, os
 
 load_dotenv()
+
+motherServer = "https://collaborate-coding-app.onrender.com"
+
+
+
 
 class CodeEditor(QPlainTextEdit): # Switched to QPlainTextEdit for stability
     def __init__(self, parent=None):
@@ -120,6 +126,13 @@ class RoomPage(QObject):
         self.ui = ui
         self.window = window
         self.room = room
+        print(f"DEBUG: Entering room with URL: {self.room.server_url}")
+        
+        self.chatContents = QWidget()
+        self.chatLayout = QVBoxLayout(self.chatContents)
+        self.chatLayout.setAlignment(Qt.AlignTop)
+        self.ui.chatHistoryArea.setWidget(self.chatContents)
+        self.ui.chatHistoryArea.setWidgetResizable(True)
 
         self.callCreated = False
         self.open_output_windows = []
@@ -134,6 +147,12 @@ class RoomPage(QObject):
         self.ui.roomWorkshopBtn.clicked.connect(self.goToWorkShop)
         self.ui.roomMemberBtn.clicked.connect(self.goToMember)
         self.ui.roomHomeBtn.clicked.connect(self.backToHome)
+
+
+        self.ui.chatSendTextConfirmBtn.clicked.connect(self.sendChatMessage)
+        self.chat_timer = QTimer()
+        self.chat_timer.timeout.connect(self.refreshChat)
+        self.chat_timer.start(3000)
 
         # Replace the existing workshopCodeSpace with the custom one
         parent = self.ui.workshopCodeSpace.parent()
@@ -173,6 +192,75 @@ class RoomPage(QObject):
         self.open_output_windows.append(new_window)
         new_window.show()
         self.ui.workshopRunBtn.setEnabled(True)
+    def sendChatMessage(self):
+        text = self.ui.chatSendTextEdit.toPlainText().strip()
+        if not text:
+                    return
+    
+        payload = {
+                "username": self.user.getName(),
+                "text": text,
+                "roomID": self.room.getRoomID()
+            }
+        
+        try:
+            base_url = self.room.getServerURL()
+            url = f"{base_url}/send_chat" 
+            res = requests.post(url, json=payload, timeout=5)
+            
+            if res.status_code == 200:
+                self.ui.chatSendTextEdit.clear()
+                self.refreshChat()
+        except Exception as e:
+            print(f"Chat Error: {e}")
+
+    def refreshChat(self):
+        try:
+            if self.chatLayout is None:
+                self.chat_timer.stop()
+                return
+        except RuntimeError:
+            print("UI deleted, stopping chat timer.")
+            self.chat_timer.stop()
+            return
+        try:
+            base_url = self.room.getServerURL()
+            url = f"{base_url}/get_chat"
+            params = {"roomID": self.room.getRoomID()}
+            res = requests.get(url, params=params, timeout=5)
+
+            if res.status_code == 200:
+                messages = res.json()
+
+               
+                while self.chatLayout.count():
+                    item = self.chatLayout.takeAt(0)
+                    widget = item.widget()
+                    if widget:
+                        widget.deleteLater()
+                for msg in messages:
+                    
+                    chat_text = f"<b>{msg['sender']}</b>: {msg['content']} <br><small style='color:gray'>{msg['time']}</small>"
+                    
+                    lbl = QLabel(chat_text)
+                    lbl.setWordWrap(True) # Wrap long text
+                    lbl.setStyleSheet("""
+                        background-color: #3e3e3e; 
+                        color: white; 
+                        padding: 8px; 
+                        border-radius: 10px; 
+                        margin-bottom: 2px;
+                    """)
+                    
+                    self.chatLayout.addWidget(lbl)
+
+              
+                self.ui.chatHistoryArea.verticalScrollBar().setValue(
+                    self.ui.chatHistoryArea.verticalScrollBar().maximum()
+                )
+
+        except Exception as e:
+            print(f"Chat Refresh Error: {e}")
 
     def goToChat(self):
         self.ui.SubPages.setCurrentIndex(0)
@@ -189,16 +277,42 @@ class RoomPage(QObject):
 
     def goToMember(self):
         self.ui.SubPages.setCurrentIndex(3)
+        self.ui.listView.clearSelection()
+        try:
+            room_id = self.room.getRoomID()
+            base_url = self.room.getServerURL()
+            response = requests.get(f"{base_url}/get_members?roomID={room_id}", timeout=5)
+            
+            if response.status_code == 200:
+                member_names = response.json().get("members", [])
+                
+                
+                model = QStringListModel()
+                display_list = []
+                for name in member_names:
+                   
+                    prefix = "👑 " if name == self.room.getAdmin().getName() else "👤 "
+                    display_list.append(f"{prefix}{name}")
+                model.setStringList(display_list)
+                self.ui.listView.setModel(model)
+            else:
+                print("Failed to fetch members from server")
+        except Exception as e:
+            print(f"Error updating member list: {e}")
     
     def backToHome(self):
+
+        if hasattr(self, 'chat_timer'):
+            self.chat_timer.stop()
+        self.user = None
+
         if self.callCreated and hasattr(self, 'videoWidget') and self.videoWidget:
             self.videoWidget.leave_call()
             self.ui.VLCall.removeWidget(self.videoWidget)
             self.videoWidget.deleteLater()
-            self.videoWidget = None  # Completely clear the reference
+            self.videoWidget = None
             self.callCreated = False
 
-        # 2. Disconnect the signals so they don't stack up the next time you enter a room!
         try:
             self.ui.roomChatBtn.clicked.disconnect()
             self.ui.roomCallBtn.clicked.disconnect()
@@ -209,7 +323,6 @@ class RoomPage(QObject):
         except RuntimeError:
             pass # Failsafe in case they are already disconnected
 
-        # 3. Switch back to the Home page
         self.ui.MainPages.setCurrentIndex(2)
 
 class JDoodleCompilerThread(QThread):

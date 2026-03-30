@@ -86,8 +86,8 @@ class Authen(QMainWindow):
     def createNewUser(self):
         username = self.ui.registerUsername.toPlainText().strip()
         passwrod = self.ui.registerPassword.toPlainText().strip()
-        gmail = self.ui.registerUsername_2.toPlainText().strip()
-        phone = self.ui.registerUsername_3.toPlainText().strip()
+        gmail = self.ui.registerGmail.toPlainText().strip()
+        phone = self.ui.registerPhoneNumber.toPlainText().strip()
         confirmPassword = self.ui.registerConfirmPassword.toPlainText().strip()
 
         success, message = self.regSys.addUser(username,gmail,phone, passwrod, confirmPassword)

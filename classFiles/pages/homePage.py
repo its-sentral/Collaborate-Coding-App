@@ -159,6 +159,9 @@ class Home(QObject):
 
     
     def gotoLogout(self):
+
+        if hasattr(self, 'chat_timer'):
+            self.chat_timer.stop()
         self.ui.homeLogoutBtn.clicked.disconnect()
         self.ui.homeAddRoomBtn.clicked.disconnect()
         self.ui.homeCreateRoomBtn.clicked.disconnect()

@@ -9,6 +9,17 @@ from classFiles.UserClass import Admin
 
 motherServer = "https://your-mother-server.onrender.com"
 roomServerOne = "https://serveroneroom.onrender.com"
+
+UI_COLORS = [
+    "#3498db", # Blue
+    "#e74c3c", # Red
+    "#2ecc71", # Green
+    "#f1c40f", # Yellow
+    "#9b59b6", # Purple
+    "#1abc9c", # Teal
+    "#e67e22", # Orange
+    "#34495e"  # Dark Blue/Gray
+]
 # -------------------- Main Window --------------------
 class Home(QObject):
     def __init__(self, user, ui :Ui_Form, parentWindow):
@@ -73,7 +84,12 @@ class Home(QObject):
         self.performSearch()
     def backToHome(self):
         self.ui.MainPages.setCurrentIndex(2)
+    def randomColor():
+        r = random.randint(0,255)
+        g = random.randint(0,255)
+        b = random.randint(0,255)
 
+        return(r,g,b)
     def addNewRoom(self):
         roomId = self.ui.joinRoomCode.toPlainText().strip()
         if not roomId:
@@ -108,7 +124,7 @@ class Home(QObject):
                                 Rname=data["name"],
                                 RID=data["roomID"],
                                 desc=data.get("description", ""),
-                                color=data.get("color", "#3498db"),
+                                color=data.get("color"),
                                 admin=Admin(name=data.get("admin_name", "Admin"), gmail="", id="", pno=""),
                                
                                 server_url=base_url 
@@ -138,7 +154,7 @@ class Home(QObject):
         server_index = self.creation_count % 2
         selected_server_url = self.servers[server_index]
         roomID = str(random.randint(0,100))
-        roomColor = "#3498db"
+        roomColor = random.choice(UI_COLORS)
 
         if not roomName:
             print("ROOM CAN'T BE EMPTY")

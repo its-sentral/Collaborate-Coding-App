@@ -3,6 +3,13 @@ from include.lib import *
 from uiFiles.output import Ui_Form
 from classFiles.RoomClass import RoomObj
 from classFiles.UserClass import User, Member, Admin
+from PySide6.QtCore import QStringListModel, QTimer
+import requests
+
+motherServer = "https://collaborate-coding-app.onrender.com/"
+roomServerOne = "https://serveroneroom.onrender.com"
+
+
 
 class CodeEditor(QPlainTextEdit): # Switched to QPlainTextEdit for stability
     def __init__(self, parent=None):
@@ -116,6 +123,12 @@ class RoomPage(QObject):
         self.window = window
         self.room = room
 
+        self.chatContents = QWidget()
+        self.chatLayout = QVBoxLayout(self.chatContents)
+        self.chatLayout.setAlignment(Qt.AlignTop)
+        self.ui.chatHistoryArea.setWidget(self.chatContents)
+        self.ui.chatHistoryArea.setWidgetResizable(True)
+
         self.ui.MainPages.setCurrentIndex(5)
         self.ui.SubPages.setCurrentIndex(0)
         self.ui.roomName.setText(self.room.getRoomName())
@@ -126,6 +139,12 @@ class RoomPage(QObject):
         self.ui.roomWorkshopBtn.clicked.connect(self.goToWorkShop)
         self.ui.roomMemberBtn.clicked.connect(self.goToMember)
         self.ui.roomHomeBtn.clicked.connect(self.backToHome)
+
+
+        self.ui.chatSendTextConfirmBtn.clicked.connect(self.sendChatMessage)
+        self.chat_timer = QTimer()
+        self.chat_timer.timeout.connect(self.refreshChat)
+        self.chat_timer.start(3000)
 
         # Replace the existing workshopCodeSpace with the custom one
         parent = self.ui.workshopCodeSpace.parent()
@@ -139,6 +158,77 @@ class RoomPage(QObject):
         self.ui.workshopCodeSpace.deleteLater()
         self.ui.workshopCodeSpace = self.codeSpace # Re-assign for consistency
 
+    def sendChatMessage(self):
+        text = self.ui.chatSendTextEdit.toPlainText().strip()
+        if not text:
+                    return
+    
+        payload = {
+                "username": self.user.getName(),
+                "text": text,
+                "roomID": self.room.getRoomID()
+            }
+        
+        try:
+        
+            url = f"{roomServerOne}/send_chat" 
+            res = requests.post(url, json=payload, timeout=5)
+            
+            if res.status_code == 200:
+                self.ui.chatSendTextEdit.clear()
+                self.refreshChat()
+        except Exception as e:
+            print(f"Chat Error: {e}")
+
+    def refreshChat(self):
+        try:
+            if self.chatLayout is None:
+                self.chat_timer.stop()
+                return
+        except RuntimeError:
+            print("UI deleted, stopping chat timer.")
+            self.chat_timer.stop()
+            return
+        try:
+            url = f"{roomServerOne}/get_chat"
+            params = {"roomID": self.room.getRoomID()}
+            res = requests.get(url, params=params, timeout=5)
+
+            if res.status_code == 200:
+                messages = res.json()
+
+               
+                while self.chatLayout.count():
+                    item = self.chatLayout.takeAt(0)
+                    widget = item.widget()
+                    if widget:
+                        widget.deleteLater()
+
+              
+                for msg in messages:
+                    
+                    chat_text = f"<b>{msg['sender']}</b>: {msg['content']} <br><small style='color:gray'>{msg['time']}</small>"
+                    
+                    lbl = QLabel(chat_text)
+                    lbl.setWordWrap(True) # Wrap long text
+                    lbl.setStyleSheet("""
+                        background-color: #3e3e3e; 
+                        color: white; 
+                        padding: 8px; 
+                        border-radius: 10px; 
+                        margin-bottom: 2px;
+                    """)
+                    
+                    self.chatLayout.addWidget(lbl)
+
+              
+                self.ui.chatHistoryArea.verticalScrollBar().setValue(
+                    self.ui.chatHistoryArea.verticalScrollBar().maximum()
+                )
+
+        except Exception as e:
+            print(f"Chat Refresh Error: {e}")
+
     def goToChat(self):
         self.ui.SubPages.setCurrentIndex(0)
 
@@ -150,6 +240,31 @@ class RoomPage(QObject):
 
     def goToMember(self):
         self.ui.SubPages.setCurrentIndex(3)
+        self.ui.listView.clearSelection()
+        try:
+            room_id = self.room.getRoomID()
+            response = requests.get(f"https://serveroneroom.onrender.com/get_members?roomID={room_id}", timeout=5)
+            
+            if response.status_code == 200:
+                member_names = response.json().get("members", [])
+                
+                
+                model = QStringListModel()
+                display_list = []
+                for name in member_names:
+                   
+                    prefix = "👑 " if name == self.room.getAdmin().getName() else "👤 "
+                    display_list.append(f"{prefix}{name}")
+                model.setStringList(display_list)
+                self.ui.listView.setModel(model)
+            else:
+                print("Failed to fetch members from server")
+        except Exception as e:
+            print(f"Error updating member list: {e}")
     
     def backToHome(self):
+        if hasattr(self, 'chat_timer'):
+            self.chat_timer.stop()
+        self.user = None
+
         self.ui.MainPages.setCurrentIndex(2)

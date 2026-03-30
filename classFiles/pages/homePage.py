@@ -49,6 +49,20 @@ class Home(QObject):
         # create room
         self.ui.createRoomConfirmBtn.clicked.connect(self.createNewRoom)
         self.ui.createRoomCancleBtn.clicked.connect(self.backToHome)
+        # info_res = requests.get(f"{roomServerOne}/room_info", params={"username": self.user.getName()})
+        # if info_res.status_code == 200:
+        #     data = info_res.json()
+        #     new_room = RoomObj(
+        #         Rname=data["name"],
+        #         RID=data["roomID"],
+        #         desc=data["description"],
+        #         color=data["color"],
+        #         admin=Admin(name="Admin", gmail="ea", id="12", pno="9"),
+        #         mem=[] 
+        #     )
+        #     self.user.rooms.append(new_room)
+        #     self.performSearch() 
+        #     self.backToHome()
 
         self.performSearch()
     def backToHome(self):
@@ -65,23 +79,33 @@ class Home(QObject):
             "roomID": roomId
         }
         try:
-            # 2. Tell the server this user wants to join
+            #Tell the server this user wants to join
             response = requests.post(f"{roomServerOne}/join_room", json=payload, timeout=10)
             
             if response.status_code == 200:
                 print(f"Successfully joined room {roomId}!")
                 
-                # 3. Refresh the local data so the new room appears on the Home grid
-                self.syncWithServer() 
-                
-                # 4. Go back to Home
-                self.backToHome()
+                info_res = requests.get(f"{roomServerOne}/room_info", params={"username": self.user.getName()})
+                if info_res.status_code == 200:
+                    data = info_res.json()
+                    new_room = RoomObj(
+                        Rname=data["name"],
+                        RID=data["roomID"],
+                        desc=data["description"],
+                        color=data["color"],
+                        admin=Admin(name="Admin", gmail="ea", id="12", pno="9"),
+                        mem=[] 
+                    )
+                    self.user.rooms.append(new_room)
+                    self.performSearch() 
+                    self.backToHome()
             else:
                 print(f"Failed to join: {response.json().get('detail', 'Unknown error')}")
                 
         except Exception as e:
             print(f"Error joining room: {e}")
-    
+
+
     def createNewRoom(self):
         roomName = self.ui.createRoomName.toPlainText().strip()
         roomDesc = self.ui.createRoomDescription.toPlainText().strip()
@@ -126,7 +150,6 @@ class Home(QObject):
 
                 self.user.rooms.append(new_local_room)
                 self.performSearch()
-                self.syncWithServer()
                 self.backToHome()
                 
             else:
@@ -136,6 +159,9 @@ class Home(QObject):
 
     
     def gotoLogout(self):
+
+        if hasattr(self, 'chat_timer'):
+            self.chat_timer.stop()
         self.ui.homeLogoutBtn.clicked.disconnect()
         self.ui.homeAddRoomBtn.clicked.disconnect()
         self.ui.homeCreateRoomBtn.clicked.disconnect()
@@ -188,20 +214,20 @@ class Home(QObject):
                     widget.deleteLater()
 
     def rebuildGrid(self, ignore=False):
-        # 1. Calculate columns based on current window width
+       
         someCardWidth = 300
         available_width = self.ui.scrollArea.viewport().width()
         columns = max(2, available_width // someCardWidth)
 
-        # 2. THE FIX: Only 'return' if the window didn't resize AND we aren't forcing a refresh
+     
         if self.colAmount is not None and columns == self.colAmount and not ignore:
             return
 
-        # 3. Update the state and WIPE the old UI
+       
         self.colAmount = columns
         self.clearGrid()
 
-        # 4. If the user has no rooms, stop here (screen is now clean and empty)
+        
         if not self.filtered_rooms:
             print("Grid cleared: No rooms found for this user.")
             return
@@ -221,11 +247,8 @@ class Home(QObject):
         self.grid.activate()
 
         self.ui.scrollAreaWidget.adjustSize()
-        
-        # This tells the UI to repaint everything in the grid
         self.ui.scrollAreaWidget.update()
-        
-        # Ensure the widget inside the scroll area is actually visible
+
         self.ui.scrollAreaWidget.show()
         print(f"Successfully drew {len(self.filtered_rooms)} room(s).")
 
@@ -252,22 +275,27 @@ class Home(QObject):
 
                     creator_data = self.user
                     if data.get("role") == "admin":
-                        creator_data = Admin(
+                        admin_obj = Admin(
                             gmail=self.user.getGmail(),
                             name=self.user.getName(),
                             id=self.user.getID(),
                             pno=self.user.getPhoneNo()
                         )
-
+                    else:
+                        admin_obj = Admin(
+                                        name=data.get("admin_name", "Unknown Admin"),
+                                        gmail="", id="", pno="" 
+                                    )
+                        
                     new_room = RoomObj(
                         Rname=data["name"],
                         RID=data["roomID"],
                         desc=data.get("description", ""),
                         color=data.get("color", "#3498db"),
-                        admin=creator_data
+                        admin=admin_obj
                     )
 
-                    # 3. Update the user's local room list
+                  
                     self.user.rooms = [new_room]
                     print("Room found and synced!")
                 else:
@@ -275,7 +303,6 @@ class Home(QObject):
                     self.user.rooms = []
                     print("No active rooms found on server.")
 
-                # 4. Refresh the UI Grid
                 self.performSearch() 
 
         except Exception as e:

@@ -64,7 +64,7 @@ class Authen(QMainWindow):
         if success:
             print(f"FULL SERVER RESPONSE: {data}")
             u_info = data.get('user_data')
-            self.user = User(
+            self.user = Member(
                             gmail=u_info['gmail'],
                             name=u_info['name'],
                             id=u_info['id'],

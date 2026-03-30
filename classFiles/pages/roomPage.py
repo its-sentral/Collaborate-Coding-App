@@ -147,7 +147,7 @@ class RoomPage(QObject):
 
     def goToCall(self):
         if not self.callCreated:
-            self.callCreated = True
+            self.callCreated = not self.callCreated
             self.videoWidget = VideoCallApp()
             self.ui.VLCall.addWidget(self.videoWidget,stretch=1)
         self.ui.SubPages.setCurrentIndex(1)
@@ -159,8 +159,22 @@ class RoomPage(QObject):
         self.ui.SubPages.setCurrentIndex(3)
     
     def backToHome(self):
-        self.callCreated = False
+        if self.callCreated and hasattr(self, 'videoWidget') and self.videoWidget:
+            self.videoWidget.leave_call()
+            self.ui.VLCall.removeWidget(self.videoWidget)
+            self.videoWidget.deleteLater()
+            self.videoWidget = None  # Completely clear the reference
+            self.callCreated = False
+
+        # 2. Disconnect the signals so they don't stack up the next time you enter a room!
+        try:
+            self.ui.roomChatBtn.clicked.disconnect()
+            self.ui.roomCallBtn.clicked.disconnect()
+            self.ui.roomWorkshopBtn.clicked.disconnect()
+            self.ui.roomMemberBtn.clicked.disconnect()
+            self.ui.roomHomeBtn.clicked.disconnect()
+        except RuntimeError:
+            pass # Failsafe in case they are already disconnected
+
+        # 3. Switch back to the Home page
         self.ui.MainPages.setCurrentIndex(2)
-        self.videoWidget.leave_call()
-        self.ui.VLCall.removeWidget(self.videoWidget)
-        self.videoWidget.deleteLater()

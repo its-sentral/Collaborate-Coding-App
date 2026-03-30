@@ -181,6 +181,7 @@ class RoomPage(QObject):
         self.open_output_windows.append(new_window)
         new_window.show()
         self.ui.workshopRunBtn.setEnabled(True)
+        
     def sendChatMessage(self):
         text = self.ui.chatSendTextEdit.toPlainText().strip()
         if not text:

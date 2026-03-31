@@ -7,7 +7,6 @@
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
-
 from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
@@ -1155,10 +1154,10 @@ class Ui_Form(object):
         self.roomHomeBtn.setText(QCoreApplication.translate("Form", u"Home", None))
         self.roomCode.setText(QCoreApplication.translate("Form", u"Code : ", None))
         self.roomName.setText(QCoreApplication.translate("Form", u"Place Holder", None))
-        self.roomChatBtn.setText(QCoreApplication.translate("Form", u"Chat", None))
-        self.roomCallBtn.setText(QCoreApplication.translate("Form", u"Call", None))
-        self.roomWorkshopBtn.setText(QCoreApplication.translate("Form", u"Workshop", None))
-        self.roomMemberBtn.setText(QCoreApplication.translate("Form", u"Members", None))
+        self.roomChatBtn.setText(QCoreApplication.translate("Form", u"💬  Chat", None))
+        self.roomCallBtn.setText(QCoreApplication.translate("Form", u"📞  Call", None))
+        self.roomWorkshopBtn.setText(QCoreApplication.translate("Form", u"💻  Workshop", None))
+        self.roomMemberBtn.setText(QCoreApplication.translate("Form", u"👥  Members", None))
         self.label_5.setText(QCoreApplication.translate("Form", u"Chat", None))
         self.chatSendTextConfirmBtn.setText(QCoreApplication.translate("Form", u"<", None))
         self.label_6.setText(QCoreApplication.translate("Form", u"WorkSpace", None))

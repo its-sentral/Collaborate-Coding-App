@@ -5,6 +5,13 @@ from classFiles.pages.homePage import Home
 from classFiles.RoomClass import RoomObj
 from classFiles.UserClass import Admin, User, Member
 from classFiles.SystemClass import LoginSystem, RegisterSystem
+class MyApp(QWidget):
+    def __init__(self):
+        super().__init__()
+        # Set up the UI from the generated file
+        self.ui = Ui_Form()
+        self.ui.setupUi(self)
+
 
 # -------------------- Authentication Window --------------------
 class Authen(QMainWindow):

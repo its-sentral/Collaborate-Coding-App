@@ -7,7 +7,7 @@ import requests
 import random
 from classFiles.UserClass import Admin
 
-motherServer = "https://your-mother-server.onrender.com"
+motherServer = "https://collaborate-coding-app.onrender.com"
 roomServerOne = "https://serveroneroom.onrender.com"
 
 UI_COLORS = [

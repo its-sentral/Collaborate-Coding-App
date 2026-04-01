@@ -874,7 +874,14 @@ class Ui_Form(object):
         self.roomName.setFont(font6)
 
         self.horizontalLayout_34.addWidget(self.roomName)
+        self.roomLeaveBtn = QPushButton(self.pageRoom)
+        self.roomLeaveBtn.setObjectName(u"roomLeaveBtn")
+        sizePolicy8.setHeightForWidth(self.roomLeaveBtn.sizePolicy().hasHeightForWidth())
+        self.roomLeaveBtn.setSizePolicy(sizePolicy8)
+        # Reusing font2 (Size 11, Bold) used for other navigational buttons
+        self.roomLeaveBtn.setFont(font2) 
 
+        self.horizontalLayout_34.addWidget(self.roomLeaveBtn)
 
         self.VLRoom.addLayout(self.horizontalLayout_34)
 
@@ -1152,6 +1159,7 @@ class Ui_Form(object):
         self.joinRoomCancleBtn.setText(QCoreApplication.translate("Form", u"Cancle", None))
         self.joinRoomConfirm.setText(QCoreApplication.translate("Form", u"Confirm", None))
         self.roomHomeBtn.setText(QCoreApplication.translate("Form", u"Home", None))
+        self.roomLeaveBtn.setText(QCoreApplication.translate("Form", u"Leave Room", None))
         self.roomCode.setText(QCoreApplication.translate("Form", u"Code : ", None))
         self.roomName.setText(QCoreApplication.translate("Form", u"Place Holder", None))
         self.roomChatBtn.setText(QCoreApplication.translate("Form", u"💬  Chat", None))

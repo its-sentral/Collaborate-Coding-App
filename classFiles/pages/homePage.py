@@ -202,7 +202,18 @@ class Home(QObject):
         except Exception as e:
             print(f"Failed to connect to Room Server: {e}")
 
-    
+    def resetRoom(self):
+        print("DEBUG: Deleting Room Object and clearing session.")
+            
+        if hasattr(self, 'current_room'):
+            del self.current_room 
+        
+        
+        if hasattr(self, 'room_controller'):
+            self.room_controller = None
+            
+        self.ui.joinRoomIDInput.clear()
+        self.ui.createRoomNameInput.clear()       
     def gotoLogout(self):
 
         if hasattr(self, 'chat_timer'):

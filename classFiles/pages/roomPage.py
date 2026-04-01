@@ -150,7 +150,7 @@ class RoomPage(QObject):
         self.ui.roomWorkshopBtn.clicked.connect(self.goToWorkShop)
         self.ui.roomMemberBtn.clicked.connect(self.goToMember)
         self.ui.roomHomeBtn.clicked.connect(self.backToHome)
-
+        self.ui.roomLeaveBtn.clicked.connect(self.leaveRoom)
         self.ui.workshopImportBtn.clicked.connect(self.handleImport)
 
         self.ui.workshopExportBtn.clicked.connect(self.handleExport)
@@ -168,6 +168,24 @@ class RoomPage(QObject):
 
         self.ui.workshopRunBtn.clicked.connect(self.compile_code)
 
+    def leaveRoom(self):
+        self.chat_timer.stop()
+        leave_data = {
+                "username": self.user.name,
+                "roomID": self.room.getRoomID()
+            }
+        try:
+            print(f"DEBUG: Leaving room {self.room.getRoomID()}")
+            url = f"{self.room.server_url}/leave_room"
+            response = requests.post(url, json=leave_data)
+            if response.status_code == 200:
+                print("Successfully left the room on server.")
+                
+                self.backToHome()
+            else:
+                print(f"Server error during leave: {response.text}")
+        except Exception as e:
+            print(f"Error leaving server: {e}")
     def handleImport(self):
         if hasattr(self, 'work') and isValid(self.work.editor):
             try:

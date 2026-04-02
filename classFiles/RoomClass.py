@@ -3,9 +3,12 @@ from classFiles.UserClass import Admin
 from PySide6.QtWidgets import QFileDialog
 import os
 from pathlib import Path
+from PySide6.QtCore import QObject, Signal
 
-class RoomObj(object):
+class RoomObj(QObject):
+    room_deleted_signal = Signal(object)
     def __init__(self, Rname, RID : str, desc, color, admin:Admin, mem=[],server_url=None):
+        super().__init__()
         self.WorkSys = Workshop()
         self.ChatSys = Chat()
         self.roomName = Rname
@@ -17,7 +20,11 @@ class RoomObj(object):
         self.server_url = server_url
         self.admin.assignRoom(self)
 
-
+    def leaveRoom(self):
+        print("DEBUG: About to emit signal...")
+        print(f"DEBUG: RoomPage is emitting from RoomObj at Memory ID: {id(self)}")
+        self.room_deleted_signal.emit(self)
+        print("DEBUG: Signal emitted!")
     def getServerURL(self):
         return self.server_url
     

@@ -9,6 +9,7 @@ from .demo import CollabEditor
 from dotenv import load_dotenv
 import requests, os
 from shiboken6 import isValid
+from PySide6.QtCore import QObject, Signal
 
 load_dotenv()
 
@@ -122,6 +123,7 @@ class LineNumberArea(QWidget):
 
 
 class RoomPage(QObject):
+    
     def __init__(self, user, ui :Ui_Form, window: QMainWindow, room: RoomObj):
         super().__init__(window)
 
@@ -169,7 +171,8 @@ class RoomPage(QObject):
         self.ui.workshopRunBtn.clicked.connect(self.compile_code)
 
     def leaveRoom(self):
-        self.chat_timer.stop()
+        if hasattr(self, 'chat_timer'):
+            self.chat_timer.stop()
         leave_data = {
                 "username": self.user.name,
                 "roomID": self.room.getRoomID()
@@ -179,13 +182,18 @@ class RoomPage(QObject):
             url = f"{self.room.server_url}/leave_room"
             response = requests.post(url, json=leave_data)
             if response.status_code == 200:
+                self.room.leaveRoom()
                 print("Successfully left the room on server.")
-                
-                self.backToHome()
             else:
                 print(f"Server error during leave: {response.text}")
+            self.ui.MainPages.setCurrentIndex(2)
+            self.room = None
         except Exception as e:
-            print(f"Error leaving server: {e}")
+            print(f"Error leaving server: {e}")\
+
+
+
+
     def handleImport(self):
         if hasattr(self, 'work') and isValid(self.work.editor):
             try:

@@ -51,7 +51,7 @@ class Authen(QMainWindow):
 
 
 
-        # set image
+        # set image login
         pixmap = QPixmap("uiFiles\image\AuthenSideImage.jpg")
         pixmap.scaled(4, 3, Qt.KeepAspectRatioByExpanding, Qt.SmoothTransformation)
         self.ui.loginImage.setPixmap(pixmap)
@@ -63,6 +63,15 @@ class Authen(QMainWindow):
         self.ui.FrameLoginArea.setStyleSheet(f"background-color: {loginAreaColor};")
 
         self.setStyleSheet(f"background-color: {mainBackGroundColor};")
+
+        # set image register
+        pixmap = QPixmap("uiFiles\image\AuthenSideImage.jpg")
+        pixmap.scaled(4, 3, Qt.KeepAspectRatioByExpanding, Qt.SmoothTransformation)
+        self.ui.registerImage.setPixmap(pixmap)
+        self.ui.registerImage.setScaledContents(False)
+        self.ui.FrameRegister.setStyleSheet(f"background-color: {mainBackGroundColor}; border-top-right-radius: 30px; border-bottom-right-radius: 30px;")
+        self.ui.FrameRegisterImageContainer.setStyleSheet("border-radius: 20px;")
+        self.ui.FrameRegisterArea.setStyleSheet(f"background-color: {loginAreaColor};")
 
 
 

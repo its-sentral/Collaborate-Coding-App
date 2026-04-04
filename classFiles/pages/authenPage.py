@@ -5,6 +5,11 @@ from classFiles.pages.homePage import Home
 from classFiles.RoomClass import RoomObj
 from classFiles.UserClass import Admin, User, Member
 from classFiles.SystemClass import LoginSystem, RegisterSystem
+
+mainBackGroundColor = "#2550B0"
+loginAreaColor = "#0B1D42"
+
+
 class MyApp(QWidget):
     def __init__(self):
         super().__init__()
@@ -43,6 +48,22 @@ class Authen(QMainWindow):
         self.baseUrl = "https://collaborate-coding-app.onrender.com"
         self.loginSys = LoginSystem(self.baseUrl)
         self.regSys = RegisterSystem(self.baseUrl)
+
+
+
+        # set image
+        pixmap = QPixmap("uiFiles\image\AuthenSideImage.jpg")
+        pixmap.scaled(4, 3, Qt.KeepAspectRatioByExpanding, Qt.SmoothTransformation)
+        self.ui.loginImage.setPixmap(pixmap)
+        self.ui.loginImage.setScaledContents(False)
+
+        self.ui.FrameLogin.setStyleSheet(f"background-color: {mainBackGroundColor}; border-top-right-radius: 30px; border-bottom-right-radius: 30px;")
+        self.ui.FrameLoginImage.setStyleSheet("border-radius: 20px;")
+
+        self.ui.FrameLoginArea.setStyleSheet(f"background-color: {loginAreaColor};")
+
+        self.setStyleSheet(f"background-color: {mainBackGroundColor};")
+
 
 
         # adm = Admin("gmail1", "name1", 0, 0)

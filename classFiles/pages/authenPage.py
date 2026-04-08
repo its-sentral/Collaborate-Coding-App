@@ -151,12 +151,12 @@ class Authen(QMainWindow):
 
     def createNewUser(self):
         username = self.ui.registerUsername.toPlainText().strip()
-        passwrod = self.ui.registerPassword.toPlainText().strip()
+        password = self.ui.registerPassword.toPlainText().strip()
         gmail = self.ui.registerGmail.toPlainText().strip()
         phone = self.ui.registerPhoneNumber.toPlainText().strip()
         confirmPassword = self.ui.registerConfirmPassword.toPlainText().strip()
 
-        success, message = self.regSys.addUser(username,gmail,phone, passwrod, confirmPassword)
+        success, message = self.regSys.addUser(username,gmail,phone, password, confirmPassword)
         if success:
             print("Registration Successful!")
             self.ui.MainPages.setCurrentIndex(0)

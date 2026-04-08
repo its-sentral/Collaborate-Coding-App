@@ -36,7 +36,7 @@ class UserSchema(BaseModel):
 @app.post("/register")
 def register(data: UserSchema):
     
-    if data.username in root.users:
+    if data.username in root.users: 
             raise HTTPException(status_code=400, detail="Username already exists")
 
     new_user = User(

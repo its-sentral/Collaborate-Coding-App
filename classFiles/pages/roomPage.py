@@ -152,7 +152,7 @@ class RoomPage(QObject):
         self.ui.roomWorkshopBtn.clicked.connect(self.goToWorkShop)
         self.ui.roomMemberBtn.clicked.connect(self.goToMember)
         self.ui.roomHomeBtn.clicked.connect(self.backToHome)
-        self.ui.roomLeaveBtn.clicked.connect(self.leaveRoom)
+        self.ui.pushButton.clicked.connect(self.leaveRoom)
         self.ui.workshopImportBtn.clicked.connect(self.handleImport)
 
         self.ui.workshopExportBtn.clicked.connect(self.handleExport)
@@ -351,6 +351,7 @@ class RoomPage(QObject):
         if hasattr(self, 'work') and self.work:
             self.ui.VLCall.removeWidget(self.work)
             self.work.deleteLater()
+            del self.work
 
         try:
             self.ui.roomChatBtn.clicked.disconnect()
@@ -359,7 +360,6 @@ class RoomPage(QObject):
             self.ui.roomMemberBtn.clicked.disconnect()
             self.ui.roomHomeBtn.clicked.disconnect()
             self.ui.workshopRunBtn.clicked.disconnect()
-            del self.work
         except RuntimeError:
             pass # Failsafe in case they are already disconnected
 

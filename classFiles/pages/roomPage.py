@@ -158,7 +158,6 @@ class RoomPage(QObject):
         self.ui.workshopExportBtn.clicked.connect(self.handleExport)
 
         self.work = CollabEditor(self.room.getRoomID())
-        print(self.room.getRoomID)
         self.ui.VLWorkShop.addWidget(self.work,stretch=1)
         self.workshop_tool = Workshop()
         self.ui.chatSendTextConfirmBtn.clicked.connect(self.sendChatMessage)
@@ -360,7 +359,7 @@ class RoomPage(QObject):
             self.ui.roomMemberBtn.clicked.disconnect()
             self.ui.roomHomeBtn.clicked.disconnect()
             self.ui.workshopRunBtn.clicked.disconnect()
-            del(self.work)
+            del self.work
         except RuntimeError:
             pass # Failsafe in case they are already disconnected
 

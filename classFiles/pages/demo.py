@@ -9,7 +9,7 @@ from PySide6.QtGui import QSyntaxHighlighter, QTextCharFormat, QColor
 
 
 class CollabEditor(QWidget):
-    def __init__(self,roomid):
+    def __init__(self,roomID):
         super().__init__()
         self.setWindowTitle("PySide6 Workshop Demo")
         self.resize(800, 600)
@@ -41,7 +41,7 @@ class CollabEditor(QWidget):
 
         self.editor.textChanged.connect(self.send_code_update)
         
-        self.server_url = f"wss://worshop-demo-branch.onrender.com/ws/{roomid}" 
+        self.server_url = f"wss://worshop-demo-branch.onrender.com/ws/{roomID}" 
         self.socket.open(QUrl(self.server_url))
 
     def getText(self):

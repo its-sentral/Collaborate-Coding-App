@@ -6,6 +6,20 @@ from classFiles.RoomClass import RoomObj
 from classFiles.UserClass import Admin, User, Member
 from classFiles.SystemClass import LoginSystem, RegisterSystem
 
+mainBackGroundColor = "#2550B0"
+authenAreaColor = "#0B1D42"
+goToRegisterOrLoginBtnColor = "#4488AA"
+confirmBtnColor = "#44AA88"
+
+
+class MyApp(QWidget):
+    def __init__(self):
+        super().__init__()
+        # Set up the UI from the generated file
+        self.ui = Ui_Form()
+        self.ui.setupUi(self)
+
+
 # -------------------- Authentication Window --------------------
 class Authen(QMainWindow):
     def __init__(self):
@@ -38,6 +52,47 @@ class Authen(QMainWindow):
         self.regSys = RegisterSystem(self.baseUrl)
 
 
+
+        # Setup Login Page
+        pixmap = QPixmap("uiFiles\image\AuthenSideImage.jpg")
+        pixmap.scaled(4, 3, Qt.KeepAspectRatioByExpanding, Qt.SmoothTransformation)
+        self.ui.loginImage.setPixmap(pixmap)
+        self.ui.loginImage.setScaledContents(False)
+
+        self.ui.FrameLogin.setStyleSheet(f"background-color: {mainBackGroundColor}; border-top-right-radius: 30px; border-bottom-right-radius: 30px;")
+        self.ui.FrameLoginImage.setStyleSheet("border-radius: 20px;")
+
+
+        self.ui.FrameLoginArea.setStyleSheet(f"background-color: {authenAreaColor};")
+        self.setTextBox(self.ui.loginUsername)
+        self.setTextBox(self.ui.loginPassword)
+        self.setStyleSheet(f"background-color: {mainBackGroundColor};")
+
+        self.setButton(self.ui.loginConfirmBtn, confirmBtnColor)
+        self.setButton(self.ui.loginRegisterBtn, goToRegisterOrLoginBtnColor)
+
+
+        # Setup Register Page
+        self.ui.registerImage.setPixmap(pixmap)
+        self.ui.registerImage.setScaledContents(False)
+        self.ui.FrameRegister.setStyleSheet(f"background-color: {mainBackGroundColor}; border-top-right-radius: 30px; border-bottom-right-radius: 30px;")
+        self.ui.FrameRegisterImageContainer.setStyleSheet("border-radius: 20px;")
+        self.ui.FrameRegisterArea.setStyleSheet(f"background-color: {authenAreaColor};")
+
+        self.setTextBox(self.ui.registerUsername)
+        self.setTextBox(self.ui.registerGmail)
+        self.setTextBox(self.ui.registerPhoneNumber)
+        self.setTextBox(self.ui.registerPassword)
+        self.setTextBox(self.ui.registerConfirmPassword)
+
+        self.setButton(self.ui.registerConfirmBtn, confirmBtnColor)
+        self.setButton(self.ui.registerLoginBtn, goToRegisterOrLoginBtnColor)
+
+
+
+
+
+
         # adm = Admin("gmail1", "name1", 0, 0)
         # data = [
         #     Room("Physics Lab", "A101", "Experiments and equipment", "#AA4444", adm),
@@ -51,7 +106,18 @@ class Authen(QMainWindow):
         # ]
         # self.user = User("123@g.com", "Mrs.Tester 101", 1, 50, data)
 
-        
+    def setTextBox(self, obj):
+        obj.setStyleSheet("border-radius: 10px; background-color: #fff; color: #000; font-size: 18px; font-weight: bold;")
+        obj.setCursorWidth(2)
+        obj.setContentsMargins(5, 5, 5, 5)
+
+
+    def setButton(self, obj, color):
+        obj.setStyleSheet(f"border-radius: 10px; background-color: {color}; color: #000; font-size: 18px; font-weight: bold;")
+        obj.setCursor(Qt.PointingHandCursor)
+        obj.setContentsMargins(5, 5, 5, 5)
+
+
     def loginConfirm(self):
         username = self.ui.loginUsername.toPlainText().strip()
         password = self.ui.loginPassword.toPlainText().strip()

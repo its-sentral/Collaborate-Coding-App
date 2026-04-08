@@ -7,7 +7,7 @@ import requests
 import random
 from classFiles.UserClass import Admin
 
-motherServer = "https://your-mother-server.onrender.com"
+motherServer = "https://collaborate-coding-app.onrender.com"
 roomServerOne = "https://serveroneroom.onrender.com"
 
 UI_COLORS = [
@@ -129,7 +129,7 @@ class Home(QObject):
                                
                                 server_url=base_url 
                             )
-                            
+                            new_room.room_deleted_signal.connect(self.handleLeaveRoom)
                             self.user.rooms.append(new_room)
                             found_room = True
                             break 
@@ -192,7 +192,8 @@ class Home(QObject):
                     admin=local_admin,
                     server_url=selected_server_url
                 )
-
+                print(f"DEBUG: Home connected to RoomObj at Memory ID: {id(new_local_room)}")
+                new_local_room.room_deleted_signal.connect(self.handleLeaveRoom)
                 self.user.rooms.append(new_local_room)
                 self.performSearch()
                 self.backToHome()
@@ -201,8 +202,31 @@ class Home(QObject):
                 print(f"Server rejected: {response.text}")
         except Exception as e:
             print(f"Failed to connect to Room Server: {e}")
+    def handleLeaveRoom(self, room_to_delete):
+                
+        if room_to_delete in self.user.rooms:
+            self.user.rooms.remove(room_to_delete)
+        
+        # 2. If you have a variable specifically holding the "active" room, clear it
+        if hasattr(self, 'current_active_room') and self.current_active_room == room_to_delete:
+            self.current_active_room = None
 
-    
+        # 3. Refresh your UI list so the deleted room disappears from the screen
+        self.performSearch() 
+        
+        print("Room successfully wiped from memory.")
+    def resetRoom(self):
+        print("DEBUG: Deleting Room Object and clearing session.")
+            
+        if hasattr(self, 'current_room'):
+            del self.current_room 
+        
+        
+        if hasattr(self, 'room_controller'):
+            self.room_controller = None
+            
+        self.ui.joinRoomIDInput.clear()
+        self.ui.createRoomNameInput.clear()       
     def gotoLogout(self):
 
         if hasattr(self, 'chat_timer'):
@@ -348,7 +372,7 @@ class Home(QObject):
                                 admin=admin_obj,
                                 server_url=base_url
                             )
-
+                            new_room.room_deleted_signal.connect(self.handleLeaveRoom)
                             # CRITICAL: Attach the server URL so the app 
                             # knows which server to use for THIS specific room
                             new_room.server_url = base_url

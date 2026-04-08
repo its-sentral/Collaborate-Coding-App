@@ -9,6 +9,7 @@ from .demo import CollabEditor
 from dotenv import load_dotenv
 import requests, os
 from shiboken6 import isValid
+from PySide6.QtCore import QObject, Signal
 
 load_dotenv()
 
@@ -31,14 +32,18 @@ class CodeEditor(QPlainTextEdit): # Switched to QPlainTextEdit for stability
         # Inside CodeEditor.__init__
         self.setStyleSheet("""
             QPlainTextEdit {
-                background-color: #1e1e1e;
-                color: #d4d4d4;
+                background-color: #1e1e2e;
+                color: #cdd6f4;
                 font-family: 'Consolas', 'Monaco', monospace;
                 font-size: 14px;
-                border: 1px solid #333333;
-                border-radius: 2px;
+                border: 2px solid #313244;
+                border-radius: 8px;
+                padding: 4px;
             }
-        """)
+            QPlainTextEdit:focus {
+                border: 2px solid #89b4fa; /* Glows blue when typing */
+            }
+            """)
 
     def lineNumberAreaWidth(self):
         digits = 1
@@ -69,7 +74,7 @@ class CodeEditor(QPlainTextEdit): # Switched to QPlainTextEdit for stability
         extraSelections = []
         if not self.isReadOnly():
             selection = QTextEdit.ExtraSelection()
-            lineColor = QColor("#2a2d2e") # VS Code dark gray highlight
+            lineColor = QColor("#313244") # VS Code dark gray highlight
             selection.format.setBackground(lineColor)
             selection.format.setProperty(QTextFormat.FullWidthSelection, True)
             selection.cursor = self.textCursor()
@@ -79,8 +84,7 @@ class CodeEditor(QPlainTextEdit): # Switched to QPlainTextEdit for stability
 
     def lineNumberAreaPaintEvent(self, event: QPaintEvent):
         painter = QPainter(self.lineNumberArea)
-        # 1. Fill background
-        painter.fillRect(event.rect(), QColor("#1e1e1e"))
+        painter.fillRect(event.rect(), QColor("#181825"))
 
         block = self.firstVisibleBlock()
         blockNumber = block.blockNumber()
@@ -90,7 +94,7 @@ class CodeEditor(QPlainTextEdit): # Switched to QPlainTextEdit for stability
         while block.isValid() and top <= event.rect().bottom():
             if block.isVisible() and bottom >= event.rect().top():
                 number = str(blockNumber + 1)
-                painter.setPen(QColor("#858585")) # VS Code dim text
+                painter.setPen(QColor("#a6adc8")) # VS Code dim text
                 painter.drawText(0, top, self.lineNumberArea.width() - 8, self.fontMetrics().height(),
                                  Qt.AlignRight, number)
 
@@ -100,7 +104,7 @@ class CodeEditor(QPlainTextEdit): # Switched to QPlainTextEdit for stability
             blockNumber += 1
 
 
-        painter.setPen(QColor("#333333"))
+        painter.setPen(QColor("#45475a"))
         painter.drawLine(event.rect().width() - 1, event.rect().top(), 
                          event.rect().width() - 1, event.rect().bottom())
         
@@ -119,6 +123,7 @@ class LineNumberArea(QWidget):
 
 
 class RoomPage(QObject):
+    
     def __init__(self, user, ui :Ui_Form, window: QMainWindow, room: RoomObj):
         super().__init__(window)
 
@@ -147,12 +152,13 @@ class RoomPage(QObject):
         self.ui.roomWorkshopBtn.clicked.connect(self.goToWorkShop)
         self.ui.roomMemberBtn.clicked.connect(self.goToMember)
         self.ui.roomHomeBtn.clicked.connect(self.backToHome)
-
+        self.ui.roomLeaveBtn.clicked.connect(self.leaveRoom)
         self.ui.workshopImportBtn.clicked.connect(self.handleImport)
 
         self.ui.workshopExportBtn.clicked.connect(self.handleExport)
 
-        self.work = CollabEditor()
+        self.work = CollabEditor(self.room.getRoomID())
+        print(self.room.getRoomID)
         self.ui.VLWorkShop.addWidget(self.work,stretch=1)
         self.workshop_tool = Workshop()
         self.ui.chatSendTextConfirmBtn.clicked.connect(self.sendChatMessage)
@@ -163,6 +169,30 @@ class RoomPage(QObject):
 
 
         self.ui.workshopRunBtn.clicked.connect(self.compile_code)
+
+    def leaveRoom(self):
+        if hasattr(self, 'chat_timer'):
+            self.chat_timer.stop()
+        leave_data = {
+                "username": self.user.name,
+                "roomID": self.room.getRoomID()
+            }
+        try:
+            print(f"DEBUG: Leaving room {self.room.getRoomID()}")
+            url = f"{self.room.server_url}/leave_room"
+            response = requests.post(url, json=leave_data)
+            if response.status_code == 200:
+                self.room.leaveRoom()
+                print("Successfully left the room on server.")
+            else:
+                print(f"Server error during leave: {response.text}")
+            self.ui.MainPages.setCurrentIndex(2)
+            self.room = None
+        except Exception as e:
+            print(f"Error leaving server: {e}")\
+
+
+
 
     def handleImport(self):
         if hasattr(self, 'work') and isValid(self.work.editor):
@@ -330,6 +360,7 @@ class RoomPage(QObject):
             self.ui.roomMemberBtn.clicked.disconnect()
             self.ui.roomHomeBtn.clicked.disconnect()
             self.ui.workshopRunBtn.clicked.disconnect()
+            del(self.work)
         except RuntimeError:
             pass # Failsafe in case they are already disconnected
 

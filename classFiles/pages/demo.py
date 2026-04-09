@@ -6,7 +6,113 @@ from PySide6.QtWebSockets import QWebSocket
 from PySide6.QtCore import QUrl, Qt
 from PySide6.QtGui import QFont, QFontDatabase
 from PySide6.QtGui import QSyntaxHighlighter, QTextCharFormat, QColor
+from PySide6.QtCore import QRect, QSize
+from PySide6.QtGui import QPainter, QColor, QTextFormat, QPaintEvent
+from PySide6.QtWidgets import QTextEdit
 
+class LineNumberArea(QWidget):
+    def __init__(self, editor):
+        super().__init__(editor)
+        self.codeEditor = editor
+
+    def sizeHint(self):
+        return QSize(self.codeEditor.lineNumberAreaWidth(), 0)
+
+    def paintEvent(self, event: QPaintEvent):
+        self.codeEditor.lineNumberAreaPaintEvent(event)
+
+
+class CodeEditor(QPlainTextEdit):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.lineNumberArea = LineNumberArea(self)
+
+        # Connect signals to keep line numbers in sync with text
+        self.blockCountChanged.connect(self.updateLineNumberAreaWidth)
+        self.updateRequest.connect(self.updateLineNumberArea)
+        self.cursorPositionChanged.connect(self.highlightCurrentLine)
+
+        self.updateLineNumberAreaWidth(0)
+        self.highlightCurrentLine()
+
+        # Dark theme styling
+        self.setStyleSheet("""
+            QPlainTextEdit {
+                background-color: #1e1e1e;
+                color: #d4d4d4;
+                font-family: 'Consolas', 'Monaco', monospace;
+                font-size: 14px;
+                border: 1px solid #333333;
+                border-radius: 2px;
+            }
+        """)
+
+    def lineNumberAreaWidth(self):
+        digits = 1
+        max_val = max(1, self.blockCount())
+        while max_val >= 10:
+            max_val /= 10
+            digits += 1
+        space = 25 + self.fontMetrics().horizontalAdvance('9') * digits
+        return space
+
+    def updateLineNumberAreaWidth(self, _):
+        # This reserves the blank space on the left side of the editor
+        self.setViewportMargins(self.lineNumberAreaWidth(), 0, 0, 0)
+
+    def updateLineNumberArea(self, rect, dy):
+        if dy:
+            self.lineNumberArea.scroll(0, dy)
+        else:
+            self.lineNumberArea.update(0, rect.y(), self.lineNumberArea.width(), rect.height())
+        if rect.contains(self.viewport().rect()):
+            self.updateLineNumberAreaWidth(0)
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        cr = self.contentsRect()
+        self.lineNumberArea.setGeometry(QRect(cr.left(), cr.top(), self.lineNumberAreaWidth(), cr.height()))
+
+    def highlightCurrentLine(self):
+        extraSelections = []
+        if not self.isReadOnly():
+            selection = QTextEdit.ExtraSelection()
+            lineColor = QColor("#2a2d2e") # VS Code dark gray highlight
+            selection.format.setBackground(lineColor)
+            selection.format.setProperty(QTextFormat.FullWidthSelection, True)
+            selection.cursor = self.textCursor()
+            selection.cursor.clearSelection()
+            extraSelections.append(selection)
+        self.setExtraSelections(extraSelections)
+
+    def lineNumberAreaPaintEvent(self, event: QPaintEvent):
+        painter = QPainter(self.lineNumberArea)
+        
+        # Fill the background of the line number area
+        painter.fillRect(event.rect(), QColor("#1e1e1e"))
+
+        block = self.firstVisibleBlock()
+        blockNumber = block.blockNumber()
+        top = round(self.blockBoundingGeometry(block).translated(self.contentOffset()).top())
+        bottom = top + round(self.blockBoundingRect(block).height())
+
+        while block.isValid() and top <= event.rect().bottom():
+            if block.isVisible() and bottom >= event.rect().top():
+                number = str(blockNumber + 1)
+                painter.setPen(QColor("#858585")) # VS Code dim text for numbers
+                painter.drawText(0, top, self.lineNumberArea.width() - 8, self.fontMetrics().height(),
+                                 Qt.AlignRight, number)
+
+            block = block.next()
+            top = bottom
+            bottom = top + round(self.blockBoundingRect(block).height())
+            blockNumber += 1
+
+        # Draw a subtle separator line between numbers and code
+        painter.setPen(QColor("#333333"))
+        painter.drawLine(event.rect().width() - 1, event.rect().top(), 
+                         event.rect().width() - 1, event.rect().bottom())
+        painter.end()
 
 class CollabEditor(QWidget):
     def __init__(self,roomID):
@@ -14,7 +120,7 @@ class CollabEditor(QWidget):
         self.setWindowTitle("PySide6 Workshop Demo")
         self.resize(800, 600)
        
-        self.editor = QPlainTextEdit()
+        self.editor = CodeEditor()
         
         self.editor.setPlaceholderText("Start coding here...")
         self.status_label = QLabel("Status: Disconnected")
@@ -116,6 +222,6 @@ class PythonHighlighter(QSyntaxHighlighter):
                 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = CollabEditor()
+    window = CollabEditor(11)
     window.show()
     sys.exit(app.exec())

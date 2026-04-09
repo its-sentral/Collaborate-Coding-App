@@ -153,8 +153,8 @@ class RoomPage(QObject):
         self.ui.roomMemberBtn.clicked.connect(self.goToMember)
         self.ui.roomHomeBtn.clicked.connect(self.backToHome)
         self.ui.pushButton.clicked.connect(self.leaveRoom)
+        
         self.ui.workshopImportBtn.clicked.connect(self.handleImport)
-
         self.ui.workshopExportBtn.clicked.connect(self.handleExport)
 
         self.work = CollabEditor(self.room.getRoomID())

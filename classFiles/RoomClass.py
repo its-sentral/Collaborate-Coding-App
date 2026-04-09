@@ -107,7 +107,7 @@ class Workshop(object):
 
     def importCode(self,parentWindow, editorWidget):
         filePath, _ = QFileDialog.getOpenFileName(
-            parentWindow, 
+            parentWindow,
             "Import Script", 
             "", 
             "Python Files (*.py);;Text Files (*.txt);;All Files (*)"

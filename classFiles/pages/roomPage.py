@@ -123,7 +123,6 @@ class LineNumberArea(QWidget):
 
 
 class RoomPage(QObject):
-    
     def __init__(self, user, ui :Ui_Form, window: QMainWindow, room: RoomObj):
         super().__init__(window)
 
@@ -140,6 +139,7 @@ class RoomPage(QObject):
         self.ui.chatHistoryArea.setWidgetResizable(True)
 
         self.callCreated = False
+        self.workshopCreated = False
         self.open_output_windows = []
 
         self.ui.MainPages.setCurrentIndex(5)
@@ -157,8 +157,6 @@ class RoomPage(QObject):
         self.ui.workshopImportBtn.clicked.connect(self.handleImport)
         self.ui.workshopExportBtn.clicked.connect(self.handleExport)
 
-        self.work = CollabEditor(self.room.getRoomID())
-        self.ui.VLWorkShop.addWidget(self.work,stretch=1)
         self.workshop_tool = Workshop()
         self.ui.chatSendTextConfirmBtn.clicked.connect(self.sendChatMessage)
         self.chat_timer = QTimer()
@@ -166,12 +164,9 @@ class RoomPage(QObject):
         
         self.chat_timer.start(3000)
 
-
         self.ui.workshopRunBtn.clicked.connect(self.compile_code)
 
     def leaveRoom(self):
-        if hasattr(self, 'chat_timer'):
-            self.chat_timer.stop()
         leave_data = {
                 "username": self.user.name,
                 "roomID": self.room.getRoomID()
@@ -185,13 +180,12 @@ class RoomPage(QObject):
                 print("Successfully left the room on server.")
             else:
                 print(f"Server error during leave: {response.text}")
-            self.ui.MainPages.setCurrentIndex(2)
-            self.room = None
         except Exception as e:
-            print(f"Error leaving server: {e}")\
+            print(f"Error leaving server: {e}")
 
-
-
+        self.backToHome()
+        self.room = None
+        self.ui.MainPages.setCurrentIndex(2)
 
     def handleImport(self):
         if hasattr(self, 'work') and isValid(self.work.editor):
@@ -309,6 +303,10 @@ class RoomPage(QObject):
         self.ui.SubPages.setCurrentIndex(1)
 
     def goToWorkShop(self):
+        if not self.workshopCreated:
+            self.workshopCreated = True
+            self.work = CollabEditor(self.room.getRoomID())
+            self.ui.VLWorkShop.addWidget(self.work, stretch=1)
         self.ui.SubPages.setCurrentIndex(2)
 
     def goToMember(self):
@@ -349,9 +347,11 @@ class RoomPage(QObject):
             self.callCreated = False
 
         if hasattr(self, 'work') and self.work:
-            self.ui.VLCall.removeWidget(self.work)
+            self.ui.VLWorkShop.removeWidget(self.work)
             self.work.deleteLater()
-            del self.work
+            self.work = None
+            
+        self.workshopCreated = False
 
         try:
             self.ui.roomChatBtn.clicked.disconnect()

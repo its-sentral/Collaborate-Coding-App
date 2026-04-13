@@ -1393,14 +1393,12 @@ class Ui_Form(object):
         self.VLCall.setSpacing(0)
         self.VLCall.setObjectName(u"VLCall")
         self.VLCall.setContentsMargins(40, 40, 40, 40)
-        self.enterOrLeaveCall = QPushButton(self.pageCall)
-        self.enterOrLeaveCall.setObjectName(u"enterOrLeaveCall")
-        sizePolicy1.setHeightForWidth(self.enterOrLeaveCall.sizePolicy().hasHeightForWidth())
-        self.enterOrLeaveCall.setSizePolicy(sizePolicy1)
+        # self.enterOrLeaveCall = QPushButton(self.pageCall)
+        # self.enterOrLeaveCall.setObjectName(u"enterOrLeaveCall")
+        # sizePolicy1.setHeightForWidth(self.enterOrLeaveCall.sizePolicy().hasHeightForWidth())
+        # self.enterOrLeaveCall.setSizePolicy(sizePolicy1)
 
-        self.VLCall.addWidget(self.enterOrLeaveCall)
-
-
+        # self.VLCall.addWidget(self.enterOrLeaveCall)
         self.verticalLayout_9.addLayout(self.VLCall)
 
         self.SubPages.addWidget(self.pageCall)
@@ -1553,7 +1551,7 @@ class Ui_Form(object):
         self.roomMemberBtn.setText(QCoreApplication.translate("Form", u"Members", None))
         self.pushButton.setText(QCoreApplication.translate("Form", u"Leave", None))
         self.chatSendTextConfirmBtn.setText(QCoreApplication.translate("Form", u"<", None))
-        self.enterOrLeaveCall.setText(QCoreApplication.translate("Form", u"Enter Call", None))
+        # self.enterOrLeaveCall.setText(QCoreApplication.translate("Form", u"Enter Call", None))
         self.workshopRunBtn.setText(QCoreApplication.translate("Form", u"Run", None))
         self.workshopImportBtn.setText(QCoreApplication.translate("Form", u"Import", None))
         self.workshopExportBtn.setText(QCoreApplication.translate("Form", u"Export", None))

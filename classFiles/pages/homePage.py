@@ -62,7 +62,7 @@ class Home(QObject):
         self.ui.FrameHomeSearchBar.setStyleSheet(f"background-color: {HomeSearchBarColor}; padding: 5px;")
 
         # Create Room
-        self.ui.FrameCreateRoom.setStyleSheet(f"background-color: {CreateRoomBackGroundColor};")
+        self.ui.FrameCreateRoom.setStyleSheet(f"background-color: {CreateRoomBackGroundColor}; ")
         # self.ui.FrameCreateRoomArea.setStyleSheet(f"background-color: {CreateRoomAreaColor}; border: 2px solid {CreateRoomAreaBorderColor}; border-radius: 10px;")
 
         # Join Room

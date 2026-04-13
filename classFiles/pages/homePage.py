@@ -10,6 +10,21 @@ from classFiles.UserClass import Admin
 motherServer = "https://collaborate-coding-app.onrender.com"
 roomServerOne = "https://serveroneroom.onrender.com"
 
+# Colors
+HomeBackGroundColor = "#1E1E2F"
+HomeRoomListColor = "#2E2E3E"
+HomeSearchBarColor = "#3E3E4E"
+
+CreateRoomBackGroundColor = "#1E1E2F"
+CreateRoomAreaColor = "#2E2E3E"
+CreateRoomAreaBorderColor = "#555"
+
+JoinRoomBackGroundColor = "#1E1E2F"
+JoinRoomAreaColor = "#2E2E3E"
+JoinRoomAreaBorderColor = "#555"
+
+
+
 UI_COLORS = [
     "#3498db", # Blue
     "#e74c3c", # Red
@@ -39,6 +54,20 @@ class Home(QObject):
         self.server_url = ""
 
         self.filtered_rooms = []
+
+
+        # Home page
+        self.ui.FrameHome.setStyleSheet(f"background-color: {HomeBackGroundColor};")
+        self.ui.FrameHomeRoomList.setStyleSheet(f"background-color: {HomeRoomListColor};")
+        self.ui.FrameHomeSearchBar.setStyleSheet(f"background-color: {HomeSearchBarColor}; padding: 5px;")
+
+        # Create Room
+        self.ui.FrameCreateRoom.setStyleSheet(f"background-color: {CreateRoomBackGroundColor};")
+        # self.ui.FrameCreateRoomArea.setStyleSheet(f"background-color: {CreateRoomAreaColor}; border: 2px solid {CreateRoomAreaBorderColor}; border-radius: 10px;")
+
+        # Join Room
+        self.ui.FrameJoinRoom.setStyleSheet(f"background-color: {JoinRoomBackGroundColor};")
+        # self.ui.FrameJoinRoomArea.setStyleSheet(f"background-color: {JoinRoomAreaColor}; border: 2px solid {JoinRoomAreaBorderColor}; border-radius: 10px;")
 
 
         # Connect search bar to trigger search on every text change

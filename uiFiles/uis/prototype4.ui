@@ -35,6 +35,9 @@
    <property name="leftMargin">
     <number>0</number>
    </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
    <property name="rightMargin">
     <number>0</number>
    </property>
@@ -43,6 +46,9 @@
    </property>
    <item>
     <layout class="QVBoxLayout" name="forStretchVerticalLayout" stretch="0">
+     <property name="spacing">
+      <number>0</number>
+     </property>
      <item>
       <widget class="QStackedWidget" name="MainPages">
        <property name="sizePolicy">
@@ -51,8 +57,11 @@
          <verstretch>1</verstretch>
         </sizepolicy>
        </property>
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
        <property name="currentIndex">
-        <number>4</number>
+        <number>5</number>
        </property>
        <widget class="QWidget" name="pageLogin">
         <property name="sizePolicy">
@@ -1961,8 +1970,14 @@ li.checked::marker { content: &quot;\2612&quot;; }
                     <widget class="QLabel" name="homeUserName">
                      <property name="minimumSize">
                       <size>
-                       <width>0</width>
+                       <width>40</width>
                        <height>32</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>120</width>
+                       <height>16777215</height>
                       </size>
                      </property>
                      <property name="font">
@@ -1994,6 +2009,12 @@ li.checked::marker { content: &quot;\2612&quot;; }
                    </item>
                    <item>
                     <widget class="QLineEdit" name="homeSearchBar">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
                      <property name="minimumSize">
                       <size>
                        <width>0</width>
@@ -2025,10 +2046,22 @@ li.checked::marker { content: &quot;\2612&quot;; }
                    </item>
                    <item>
                     <widget class="QPushButton" name="homeLogoutBtn">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
                      <property name="minimumSize">
                       <size>
-                       <width>0</width>
+                       <width>33</width>
                        <height>32</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>120</width>
+                       <height>16777215</height>
                       </size>
                      </property>
                      <property name="font">
@@ -2043,10 +2076,22 @@ li.checked::marker { content: &quot;\2612&quot;; }
                    </item>
                    <item>
                     <widget class="QPushButton" name="homeAddRoomBtn">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
                      <property name="minimumSize">
                       <size>
-                       <width>0</width>
+                       <width>33</width>
                        <height>32</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>120</width>
+                       <height>16777215</height>
                       </size>
                      </property>
                      <property name="font">
@@ -2061,10 +2106,22 @@ li.checked::marker { content: &quot;\2612&quot;; }
                    </item>
                    <item>
                     <widget class="QPushButton" name="homeCreateRoomBtn">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
                      <property name="minimumSize">
                       <size>
-                       <width>0</width>
+                       <width>33</width>
                        <height>32</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>120</width>
+                       <height>16777215</height>
                       </size>
                      </property>
                      <property name="font">
@@ -2136,8 +2193,8 @@ li.checked::marker { content: &quot;\2612&quot;; }
                        <rect>
                         <x>0</x>
                         <y>0</y>
-                        <width>570</width>
-                        <height>396</height>
+                        <width>586</width>
+                        <height>412</height>
                        </rect>
                       </property>
                      </widget>
@@ -2297,6 +2354,12 @@ li.checked::marker { content: &quot;\2612&quot;; }
                   <height>300</height>
                  </size>
                 </property>
+                <property name="autoFillBackground">
+                 <bool>false</bool>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true"/>
+                </property>
                 <property name="frameShape">
                  <enum>QFrame::Shape::StyledPanel</enum>
                 </property>
@@ -2306,6 +2369,9 @@ li.checked::marker { content: &quot;\2612&quot;; }
                 <layout class="QVBoxLayout" name="verticalLayout_34">
                  <property name="spacing">
                   <number>0</number>
+                 </property>
+                 <property name="sizeConstraint">
+                  <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
                  </property>
                  <property name="leftMargin">
                   <number>0</number>
@@ -2323,6 +2389,9 @@ li.checked::marker { content: &quot;\2612&quot;; }
                   <layout class="QVBoxLayout" name="verticalLayout_33">
                    <property name="spacing">
                     <number>10</number>
+                   </property>
+                   <property name="sizeConstraint">
+                    <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
                    </property>
                    <property name="leftMargin">
                     <number>40</number>
@@ -2344,7 +2413,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                         <enum>Qt::Orientation::Horizontal</enum>
                        </property>
                        <property name="sizeType">
-                        <enum>QSizePolicy::Policy::Preferred</enum>
+                        <enum>QSizePolicy::Policy::Expanding</enum>
                        </property>
                        <property name="sizeHint" stdset="0">
                         <size>
@@ -2374,6 +2443,9 @@ li.checked::marker { content: &quot;\2612&quot;; }
                          <bold>true</bold>
                         </font>
                        </property>
+                       <property name="styleSheet">
+                        <string notr="true"/>
+                       </property>
                        <property name="text">
                         <string>Create Room</string>
                        </property>
@@ -2385,7 +2457,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                         <enum>Qt::Orientation::Horizontal</enum>
                        </property>
                        <property name="sizeType">
-                        <enum>QSizePolicy::Policy::Preferred</enum>
+                        <enum>QSizePolicy::Policy::Expanding</enum>
                        </property>
                        <property name="sizeHint" stdset="0">
                         <size>
@@ -2754,7 +2826,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                         <enum>Qt::Orientation::Horizontal</enum>
                        </property>
                        <property name="sizeType">
-                        <enum>QSizePolicy::Policy::Preferred</enum>
+                        <enum>QSizePolicy::Policy::Expanding</enum>
                        </property>
                        <property name="sizeHint" stdset="0">
                         <size>
@@ -2789,7 +2861,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                         <enum>Qt::Orientation::Horizontal</enum>
                        </property>
                        <property name="sizeType">
-                        <enum>QSizePolicy::Policy::Preferred</enum>
+                        <enum>QSizePolicy::Policy::Expanding</enum>
                        </property>
                        <property name="sizeHint" stdset="0">
                         <size>
@@ -2996,6 +3068,9 @@ li.checked::marker { content: &quot;\2612&quot;; }
          </property>
          <item>
           <widget class="QFrame" name="FrameRoom">
+           <property name="styleSheet">
+            <string notr="true">background-color: #1E1E2F</string>
+           </property>
            <property name="frameShape">
             <enum>QFrame::Shape::StyledPanel</enum>
            </property>
@@ -3179,7 +3254,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                  <number>0</number>
                 </property>
                 <item>
-                 <widget class="QFrame" name="FrameRoomSectionBtn">
+                 <widget class="QFrame" name="FrameRoomSectionBtnArea">
                   <property name="minimumSize">
                    <size>
                     <width>50</width>
@@ -3318,7 +3393,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                       </spacer>
                      </item>
                      <item>
-                      <widget class="QPushButton" name="pushButton">
+                      <widget class="QPushButton" name="roomLeaveBtn">
                        <property name="font">
                         <font>
                          <pointsize>10</pointsize>
@@ -3339,7 +3414,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                  </widget>
                 </item>
                 <item>
-                 <widget class="QFrame" name="frame_2">
+                 <widget class="QFrame" name="FrameRoomSectionDisplayArea">
                   <property name="frameShape">
                    <enum>QFrame::Shape::StyledPanel</enum>
                   </property>
@@ -3371,7 +3446,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                       </sizepolicy>
                      </property>
                      <property name="currentIndex">
-                      <number>2</number>
+                      <number>0</number>
                      </property>
                      <widget class="QWidget" name="pageChat">
                       <property name="sizePolicy">
@@ -3396,8 +3471,8 @@ li.checked::marker { content: &quot;\2612&quot;; }
                              <rect>
                               <x>0</x>
                               <y>0</y>
-                              <width>66</width>
-                              <height>16</height>
+                              <width>481</width>
+                              <height>315</height>
                              </rect>
                             </property>
                            </widget>

@@ -15,16 +15,16 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QFrame, QHBoxLayout, QLabel,
-    QLayout, QLineEdit, QListView, QPushButton,
-    QScrollArea, QSizePolicy, QSpacerItem, QStackedWidget,
-    QTextEdit, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout,
+    QLabel, QLayout, QLineEdit, QListView,
+    QPushButton, QScrollArea, QSizePolicy, QSpacerItem,
+    QStackedWidget, QTextEdit, QVBoxLayout, QWidget)
 
 class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-        Form.resize(929, 529)
+        Form.resize(600, 480)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         sizePolicy.setHorizontalStretch(1)
         sizePolicy.setVerticalStretch(1)
@@ -33,13 +33,17 @@ class Ui_Form(object):
         Form.setMinimumSize(QSize(600, 480))
         Form.setStyleSheet(u"")
         self.verticalLayout = QVBoxLayout(Form)
+        self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName(u"verticalLayout")
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.forStretchVerticalLayout = QVBoxLayout()
+        self.forStretchVerticalLayout.setSpacing(0)
         self.forStretchVerticalLayout.setObjectName(u"forStretchVerticalLayout")
         self.MainPages = QStackedWidget(Form)
         self.MainPages.setObjectName(u"MainPages")
         sizePolicy.setHeightForWidth(self.MainPages.sizePolicy().hasHeightForWidth())
         self.MainPages.setSizePolicy(sizePolicy)
+        self.MainPages.setStyleSheet(u"")
         self.pageLogin = QWidget()
         self.pageLogin.setObjectName(u"pageLogin")
         sizePolicy.setHeightForWidth(self.pageLogin.sizePolicy().hasHeightForWidth())
@@ -97,7 +101,7 @@ class Ui_Form(object):
         sizePolicy1.setHeightForWidth(self.loginImage.sizePolicy().hasHeightForWidth())
         self.loginImage.setSizePolicy(sizePolicy1)
         self.loginImage.setMinimumSize(QSize(100, 75))
-        self.loginImage.setMaximumSize(QSize(1200, 900))
+        self.loginImage.setMaximumSize(QSize(1350, 900))
 
         self.VLImageContainer.addWidget(self.loginImage)
 
@@ -131,7 +135,7 @@ class Ui_Form(object):
         sizePolicy1.setHeightForWidth(self.FrameLoginArea.sizePolicy().hasHeightForWidth())
         self.FrameLoginArea.setSizePolicy(sizePolicy1)
         self.FrameLoginArea.setMinimumSize(QSize(240, 0))
-        self.FrameLoginArea.setMaximumSize(QSize(350, 16777215))
+        self.FrameLoginArea.setMaximumSize(QSize(333, 16777215))
         self.FrameLoginArea.setFrameShape(QFrame.Shape.StyledPanel)
         self.FrameLoginArea.setFrameShadow(QFrame.Shadow.Raised)
         self.verticalLayout_25 = QVBoxLayout(self.FrameLoginArea)
@@ -285,7 +289,7 @@ class Ui_Form(object):
         sizePolicy4.setHeightForWidth(self.loginRegisterBtn.sizePolicy().hasHeightForWidth())
         self.loginRegisterBtn.setSizePolicy(sizePolicy4)
         self.loginRegisterBtn.setMinimumSize(QSize(70, 0))
-        self.loginRegisterBtn.setMaximumSize(QSize(16777215, 80))
+        self.loginRegisterBtn.setMaximumSize(QSize(16777215, 60))
         font2 = QFont()
         font2.setPointSize(11)
         font2.setBold(True)
@@ -293,7 +297,7 @@ class Ui_Form(object):
 
         self.horizontalLayout_18.addWidget(self.loginRegisterBtn)
 
-        self.horizontalSpacer_31 = QSpacerItem(40, 5, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer_31 = QSpacerItem(20, 5, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_18.addItem(self.horizontalSpacer_31)
 
@@ -302,7 +306,7 @@ class Ui_Form(object):
         sizePolicy4.setHeightForWidth(self.loginConfirmBtn.sizePolicy().hasHeightForWidth())
         self.loginConfirmBtn.setSizePolicy(sizePolicy4)
         self.loginConfirmBtn.setMinimumSize(QSize(70, 0))
-        self.loginConfirmBtn.setMaximumSize(QSize(16777215, 80))
+        self.loginConfirmBtn.setMaximumSize(QSize(16777215, 60))
         font3 = QFont()
         font3.setPointSize(12)
         font3.setBold(True)
@@ -395,7 +399,7 @@ class Ui_Form(object):
         self.registerImage = QLabel(self.FrameRegisterImageContainer)
         self.registerImage.setObjectName(u"registerImage")
         self.registerImage.setMinimumSize(QSize(100, 75))
-        self.registerImage.setMaximumSize(QSize(1200, 900))
+        self.registerImage.setMaximumSize(QSize(1350, 900))
 
         self.verticalLayout_30.addWidget(self.registerImage)
 
@@ -427,7 +431,7 @@ class Ui_Form(object):
         self.FrameRegisterArea = QFrame(self.FrameRegister)
         self.FrameRegisterArea.setObjectName(u"FrameRegisterArea")
         self.FrameRegisterArea.setMinimumSize(QSize(240, 0))
-        self.FrameRegisterArea.setMaximumSize(QSize(350, 16777215))
+        self.FrameRegisterArea.setMaximumSize(QSize(333, 16777215))
         self.FrameRegisterArea.setFrameShape(QFrame.Shape.StyledPanel)
         self.FrameRegisterArea.setFrameShadow(QFrame.Shadow.Raised)
         self.verticalLayout_29 = QVBoxLayout(self.FrameRegisterArea)
@@ -475,25 +479,30 @@ class Ui_Form(object):
         self.horizontalLayout_30.addItem(self.horizontalSpacer_32)
 
         self.verticalLayout_15 = QVBoxLayout()
+        self.verticalLayout_15.setSpacing(0)
         self.verticalLayout_15.setObjectName(u"verticalLayout_15")
         self.verticalLayout_15.setSizeConstraint(QLayout.SizeConstraint.SetFixedSize)
-        self.label_11 = QLabel(self.FrameRegisterArea)
-        self.label_11.setObjectName(u"label_11")
-        self.label_11.setMaximumSize(QSize(16777215, 60))
-        self.label_11.setFont(font1)
+        self.verticalLayout_15.setContentsMargins(-1, -1, -1, 0)
+        self.label_17 = QLabel(self.FrameRegisterArea)
+        self.label_17.setObjectName(u"label_17")
+        self.label_17.setMaximumSize(QSize(16777215, 60))
+        self.label_17.setFont(font1)
 
-        self.verticalLayout_15.addWidget(self.label_11)
+        self.verticalLayout_15.addWidget(self.label_17)
 
-        self.registerUsername = QTextEdit(self.FrameRegisterArea)
-        self.registerUsername.setObjectName(u"registerUsername")
-        sizePolicy3.setHeightForWidth(self.registerUsername.sizePolicy().hasHeightForWidth())
-        self.registerUsername.setSizePolicy(sizePolicy3)
-        self.registerUsername.setMaximumSize(QSize(16777215, 40))
-        self.registerUsername.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        self.registerUsername.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        self.registerUsername.setLineWrapMode(QTextEdit.LineWrapMode.NoWrap)
+        self.registerGmail = QTextEdit(self.FrameRegisterArea)
+        self.registerGmail.setObjectName(u"registerGmail")
+        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Ignored)
+        sizePolicy5.setHorizontalStretch(0)
+        sizePolicy5.setVerticalStretch(0)
+        sizePolicy5.setHeightForWidth(self.registerGmail.sizePolicy().hasHeightForWidth())
+        self.registerGmail.setSizePolicy(sizePolicy5)
+        self.registerGmail.setMaximumSize(QSize(16777215, 40))
+        self.registerGmail.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.registerGmail.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.registerGmail.setLineWrapMode(QTextEdit.LineWrapMode.NoWrap)
 
-        self.verticalLayout_15.addWidget(self.registerUsername)
+        self.verticalLayout_15.addWidget(self.registerGmail)
 
 
         self.horizontalLayout_30.addLayout(self.verticalLayout_15)
@@ -516,16 +525,17 @@ class Ui_Form(object):
         self.verticalLayout_16 = QVBoxLayout()
         self.verticalLayout_16.setSpacing(0)
         self.verticalLayout_16.setObjectName(u"verticalLayout_16")
-        self.verticalLayout_16.setContentsMargins(-1, -1, -1, 0)
+        self.verticalLayout_16.setContentsMargins(0, -1, -1, 0)
         self.horizontalLayout_7 = QHBoxLayout()
         self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
         self.horizontalLayout_7.setSizeConstraint(QLayout.SizeConstraint.SetFixedSize)
-        self.label_17 = QLabel(self.FrameRegisterArea)
-        self.label_17.setObjectName(u"label_17")
-        self.label_17.setMaximumSize(QSize(16777215, 60))
-        self.label_17.setFont(font1)
+        self.horizontalLayout_7.setContentsMargins(0, -1, -1, -1)
+        self.label_11 = QLabel(self.FrameRegisterArea)
+        self.label_11.setObjectName(u"label_11")
+        self.label_11.setMaximumSize(QSize(16777215, 60))
+        self.label_11.setFont(font1)
 
-        self.horizontalLayout_7.addWidget(self.label_17)
+        self.horizontalLayout_7.addWidget(self.label_11)
 
         self.horizontalSpacer_23 = QSpacerItem(20, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
 
@@ -543,19 +553,17 @@ class Ui_Form(object):
 
         self.horizontalLayout_19 = QHBoxLayout()
         self.horizontalLayout_19.setObjectName(u"horizontalLayout_19")
-        self.registerGmail = QTextEdit(self.FrameRegisterArea)
-        self.registerGmail.setObjectName(u"registerGmail")
-        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Ignored)
-        sizePolicy5.setHorizontalStretch(0)
-        sizePolicy5.setVerticalStretch(0)
-        sizePolicy5.setHeightForWidth(self.registerGmail.sizePolicy().hasHeightForWidth())
-        self.registerGmail.setSizePolicy(sizePolicy5)
-        self.registerGmail.setMaximumSize(QSize(16777215, 40))
-        self.registerGmail.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        self.registerGmail.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        self.registerGmail.setLineWrapMode(QTextEdit.LineWrapMode.NoWrap)
+        self.horizontalLayout_19.setContentsMargins(0, -1, -1, -1)
+        self.registerUsername = QTextEdit(self.FrameRegisterArea)
+        self.registerUsername.setObjectName(u"registerUsername")
+        sizePolicy3.setHeightForWidth(self.registerUsername.sizePolicy().hasHeightForWidth())
+        self.registerUsername.setSizePolicy(sizePolicy3)
+        self.registerUsername.setMaximumSize(QSize(16777215, 40))
+        self.registerUsername.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.registerUsername.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.registerUsername.setLineWrapMode(QTextEdit.LineWrapMode.NoWrap)
 
-        self.horizontalLayout_19.addWidget(self.registerGmail)
+        self.horizontalLayout_19.addWidget(self.registerUsername)
 
         self.horizontalSpacer_24 = QSpacerItem(20, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
 
@@ -593,6 +601,7 @@ class Ui_Form(object):
         self.horizontalLayout_28.addItem(self.horizontalSpacer_37)
 
         self.verticalLayout_17 = QVBoxLayout()
+        self.verticalLayout_17.setSpacing(0)
         self.verticalLayout_17.setObjectName(u"verticalLayout_17")
         self.verticalLayout_17.setSizeConstraint(QLayout.SizeConstraint.SetFixedSize)
         self.label_12 = QLabel(self.FrameRegisterArea)
@@ -631,6 +640,7 @@ class Ui_Form(object):
         self.horizontalLayout_26.addItem(self.horizontalSpacer_44)
 
         self.verticalLayout_18 = QVBoxLayout()
+        self.verticalLayout_18.setSpacing(0)
         self.verticalLayout_18.setObjectName(u"verticalLayout_18")
         self.verticalLayout_18.setSizeConstraint(QLayout.SizeConstraint.SetFixedSize)
         self.label_13 = QLabel(self.FrameRegisterArea)
@@ -679,12 +689,12 @@ class Ui_Form(object):
         sizePolicy1.setHeightForWidth(self.registerLoginBtn.sizePolicy().hasHeightForWidth())
         self.registerLoginBtn.setSizePolicy(sizePolicy1)
         self.registerLoginBtn.setMinimumSize(QSize(70, 0))
-        self.registerLoginBtn.setMaximumSize(QSize(16777215, 80))
+        self.registerLoginBtn.setMaximumSize(QSize(16777215, 60))
         self.registerLoginBtn.setFont(font3)
 
         self.horizontalLayout_24.addWidget(self.registerLoginBtn)
 
-        self.horizontalSpacer_22 = QSpacerItem(40, 5, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer_22 = QSpacerItem(20, 5, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_24.addItem(self.horizontalSpacer_22)
 
@@ -693,7 +703,7 @@ class Ui_Form(object):
         sizePolicy1.setHeightForWidth(self.registerConfirmBtn.sizePolicy().hasHeightForWidth())
         self.registerConfirmBtn.setSizePolicy(sizePolicy1)
         self.registerConfirmBtn.setMinimumSize(QSize(70, 0))
-        self.registerConfirmBtn.setMaximumSize(QSize(16777215, 80))
+        self.registerConfirmBtn.setMaximumSize(QSize(16777215, 60))
         self.registerConfirmBtn.setFont(font3)
 
         self.horizontalLayout_24.addWidget(self.registerConfirmBtn)
@@ -773,7 +783,8 @@ class Ui_Form(object):
         self.horizontalLayout.setSizeConstraint(QLayout.SizeConstraint.SetMinimumSize)
         self.homeUserName = QLabel(self.FrameHomeSearchBar)
         self.homeUserName.setObjectName(u"homeUserName")
-        self.homeUserName.setMinimumSize(QSize(0, 32))
+        self.homeUserName.setMinimumSize(QSize(40, 32))
+        self.homeUserName.setMaximumSize(QSize(120, 16777215))
         self.homeUserName.setFont(font3)
 
         self.horizontalLayout.addWidget(self.homeUserName)
@@ -784,6 +795,11 @@ class Ui_Form(object):
 
         self.homeSearchBar = QLineEdit(self.FrameHomeSearchBar)
         self.homeSearchBar.setObjectName(u"homeSearchBar")
+        sizePolicy6 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
+        sizePolicy6.setHorizontalStretch(0)
+        sizePolicy6.setVerticalStretch(0)
+        sizePolicy6.setHeightForWidth(self.homeSearchBar.sizePolicy().hasHeightForWidth())
+        self.homeSearchBar.setSizePolicy(sizePolicy6)
         self.homeSearchBar.setMinimumSize(QSize(0, 32))
         self.homeSearchBar.setFont(font1)
 
@@ -795,7 +811,10 @@ class Ui_Form(object):
 
         self.homeLogoutBtn = QPushButton(self.FrameHomeSearchBar)
         self.homeLogoutBtn.setObjectName(u"homeLogoutBtn")
-        self.homeLogoutBtn.setMinimumSize(QSize(0, 32))
+        sizePolicy6.setHeightForWidth(self.homeLogoutBtn.sizePolicy().hasHeightForWidth())
+        self.homeLogoutBtn.setSizePolicy(sizePolicy6)
+        self.homeLogoutBtn.setMinimumSize(QSize(33, 32))
+        self.homeLogoutBtn.setMaximumSize(QSize(120, 16777215))
         font4 = QFont()
         font4.setBold(True)
         self.homeLogoutBtn.setFont(font4)
@@ -804,14 +823,20 @@ class Ui_Form(object):
 
         self.homeAddRoomBtn = QPushButton(self.FrameHomeSearchBar)
         self.homeAddRoomBtn.setObjectName(u"homeAddRoomBtn")
-        self.homeAddRoomBtn.setMinimumSize(QSize(0, 32))
+        sizePolicy6.setHeightForWidth(self.homeAddRoomBtn.sizePolicy().hasHeightForWidth())
+        self.homeAddRoomBtn.setSizePolicy(sizePolicy6)
+        self.homeAddRoomBtn.setMinimumSize(QSize(33, 32))
+        self.homeAddRoomBtn.setMaximumSize(QSize(120, 16777215))
         self.homeAddRoomBtn.setFont(font4)
 
         self.horizontalLayout.addWidget(self.homeAddRoomBtn)
 
         self.homeCreateRoomBtn = QPushButton(self.FrameHomeSearchBar)
         self.homeCreateRoomBtn.setObjectName(u"homeCreateRoomBtn")
-        self.homeCreateRoomBtn.setMinimumSize(QSize(0, 32))
+        sizePolicy6.setHeightForWidth(self.homeCreateRoomBtn.sizePolicy().hasHeightForWidth())
+        self.homeCreateRoomBtn.setSizePolicy(sizePolicy6)
+        self.homeCreateRoomBtn.setMinimumSize(QSize(33, 32))
+        self.homeCreateRoomBtn.setMaximumSize(QSize(120, 16777215))
         self.homeCreateRoomBtn.setFont(font4)
 
         self.horizontalLayout.addWidget(self.homeCreateRoomBtn)
@@ -835,16 +860,16 @@ class Ui_Form(object):
         self.verticalLayout_36.setObjectName(u"verticalLayout_36")
         self.scrollArea = QScrollArea(self.FrameHomeRoomList)
         self.scrollArea.setObjectName(u"scrollArea")
-        sizePolicy6 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-        sizePolicy6.setHorizontalStretch(0)
-        sizePolicy6.setVerticalStretch(0)
-        sizePolicy6.setHeightForWidth(self.scrollArea.sizePolicy().hasHeightForWidth())
-        self.scrollArea.setSizePolicy(sizePolicy6)
+        sizePolicy7 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        sizePolicy7.setHorizontalStretch(0)
+        sizePolicy7.setVerticalStretch(0)
+        sizePolicy7.setHeightForWidth(self.scrollArea.sizePolicy().hasHeightForWidth())
+        self.scrollArea.setSizePolicy(sizePolicy7)
         self.scrollArea.setSizeIncrement(QSize(1, 1))
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidget = QWidget()
         self.scrollAreaWidget.setObjectName(u"scrollAreaWidget")
-        self.scrollAreaWidget.setGeometry(QRect(0, 0, 899, 445))
+        self.scrollAreaWidget.setGeometry(QRect(0, 0, 586, 412))
         self.scrollArea.setWidget(self.scrollAreaWidget)
 
         self.verticalLayout_36.addWidget(self.scrollArea)
@@ -870,34 +895,66 @@ class Ui_Form(object):
         self.verticalLayout_3.setSpacing(0)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
-        self.frame = QFrame(self.pageCreateRoom)
-        self.frame.setObjectName(u"frame")
-        self.frame.setFrameShape(QFrame.Shape.StyledPanel)
-        self.frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.verticalLayout_38 = QVBoxLayout(self.frame)
-        self.verticalLayout_38.setSpacing(0)
-        self.verticalLayout_38.setObjectName(u"verticalLayout_38")
-        self.verticalLayout_38.setContentsMargins(0, 0, 0, 0)
-        self.VLCreateRoom = QVBoxLayout()
-        self.VLCreateRoom.setSpacing(0)
-        self.VLCreateRoom.setObjectName(u"VLCreateRoom")
-        self.VLCreateRoom.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
-        self.verticalSpacer = QSpacerItem(20, 70, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        self.FrameCreateRoom = QFrame(self.pageCreateRoom)
+        self.FrameCreateRoom.setObjectName(u"FrameCreateRoom")
+        self.FrameCreateRoom.setFrameShape(QFrame.Shape.StyledPanel)
+        self.FrameCreateRoom.setFrameShadow(QFrame.Shadow.Raised)
+        self.gridLayout_3 = QGridLayout(self.FrameCreateRoom)
+        self.gridLayout_3.setSpacing(0)
+        self.gridLayout_3.setObjectName(u"gridLayout_3")
+        self.gridLayout_3.setContentsMargins(0, 0, 0, 0)
+        self.gridLayout_2 = QGridLayout()
+        self.gridLayout_2.setSpacing(0)
+        self.gridLayout_2.setObjectName(u"gridLayout_2")
+        self.gridLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.verticalSpacer_4 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
-        self.VLCreateRoom.addItem(self.verticalSpacer)
+        self.gridLayout_2.addItem(self.verticalSpacer_4, 0, 1, 1, 1)
 
+        self.horizontalSpacer_16 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_2.addItem(self.horizontalSpacer_16, 1, 0, 1, 1)
+
+        self.horizontalSpacer_17 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_2.addItem(self.horizontalSpacer_17, 1, 2, 1, 1)
+
+        self.verticalSpacer_28 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_2.addItem(self.verticalSpacer_28, 2, 1, 1, 1)
+
+        self.FrameCreateRoomArea = QFrame(self.FrameCreateRoom)
+        self.FrameCreateRoomArea.setObjectName(u"FrameCreateRoomArea")
+        sizePolicy1.setHeightForWidth(self.FrameCreateRoomArea.sizePolicy().hasHeightForWidth())
+        self.FrameCreateRoomArea.setSizePolicy(sizePolicy1)
+        self.FrameCreateRoomArea.setMinimumSize(QSize(450, 300))
+        self.FrameCreateRoomArea.setAutoFillBackground(False)
+        self.FrameCreateRoomArea.setStyleSheet(u"")
+        self.FrameCreateRoomArea.setFrameShape(QFrame.Shape.StyledPanel)
+        self.FrameCreateRoomArea.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayout_34 = QVBoxLayout(self.FrameCreateRoomArea)
+        self.verticalLayout_34.setSpacing(0)
+        self.verticalLayout_34.setObjectName(u"verticalLayout_34")
+        self.verticalLayout_34.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
+        self.verticalLayout_34.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_33 = QVBoxLayout()
+        self.verticalLayout_33.setSpacing(10)
+        self.verticalLayout_33.setObjectName(u"verticalLayout_33")
+        self.verticalLayout_33.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
+        self.verticalLayout_33.setContentsMargins(40, 40, 40, 40)
         self.horizontalLayout_2 = QHBoxLayout()
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_2.addItem(self.horizontalSpacer)
 
-        self.label_4 = QLabel(self.frame)
+        self.label_4 = QLabel(self.FrameCreateRoomArea)
         self.label_4.setObjectName(u"label_4")
-        sizePolicy2.setHeightForWidth(self.label_4.sizePolicy().hasHeightForWidth())
-        self.label_4.setSizePolicy(sizePolicy2)
+        sizePolicy1.setHeightForWidth(self.label_4.sizePolicy().hasHeightForWidth())
+        self.label_4.setSizePolicy(sizePolicy1)
         self.label_4.setMaximumSize(QSize(16777215, 16777215))
         self.label_4.setFont(font)
+        self.label_4.setStyleSheet(u"")
 
         self.horizontalLayout_2.addWidget(self.label_4)
 
@@ -906,32 +963,26 @@ class Ui_Form(object):
         self.horizontalLayout_2.addItem(self.horizontalSpacer_2)
 
 
-        self.VLCreateRoom.addLayout(self.horizontalLayout_2)
-
-        self.horizontalLayout_14 = QHBoxLayout()
-        self.horizontalLayout_14.setObjectName(u"horizontalLayout_14")
-        self.horizontalLayout_14.setContentsMargins(-1, 20, -1, -1)
-        self.horizontalSpacer_3 = QSpacerItem(80, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout_14.addItem(self.horizontalSpacer_3)
+        self.verticalLayout_33.addLayout(self.horizontalLayout_2)
 
         self.verticalLayout_19 = QVBoxLayout()
         self.verticalLayout_19.setSpacing(0)
         self.verticalLayout_19.setObjectName(u"verticalLayout_19")
         self.verticalLayout_19.setSizeConstraint(QLayout.SizeConstraint.SetFixedSize)
-        self.label_7 = QLabel(self.frame)
+        self.label_7 = QLabel(self.FrameCreateRoomArea)
         self.label_7.setObjectName(u"label_7")
         self.label_7.setMaximumSize(QSize(16777215, 60))
         self.label_7.setFont(font1)
 
         self.verticalLayout_19.addWidget(self.label_7)
 
-        self.createRoomName = QTextEdit(self.frame)
+        self.createRoomName = QTextEdit(self.FrameCreateRoomArea)
         self.createRoomName.setObjectName(u"createRoomName")
         self.createRoomName.setEnabled(True)
-        sizePolicy5.setHeightForWidth(self.createRoomName.sizePolicy().hasHeightForWidth())
-        self.createRoomName.setSizePolicy(sizePolicy5)
-        self.createRoomName.setMaximumSize(QSize(16777215, 40))
+        sizePolicy1.setHeightForWidth(self.createRoomName.sizePolicy().hasHeightForWidth())
+        self.createRoomName.setSizePolicy(sizePolicy1)
+        self.createRoomName.setMinimumSize(QSize(0, 10))
+        self.createRoomName.setMaximumSize(QSize(16777215, 30))
         self.createRoomName.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.createRoomName.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.createRoomName.setLineWrapMode(QTextEdit.LineWrapMode.NoWrap)
@@ -939,38 +990,25 @@ class Ui_Form(object):
         self.verticalLayout_19.addWidget(self.createRoomName)
 
 
-        self.horizontalLayout_14.addLayout(self.verticalLayout_19)
-
-        self.horizontalSpacer_8 = QSpacerItem(80, 5, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout_14.addItem(self.horizontalSpacer_8)
-
-
-        self.VLCreateRoom.addLayout(self.horizontalLayout_14)
-
-        self.horizontalLayout_12 = QHBoxLayout()
-        self.horizontalLayout_12.setObjectName(u"horizontalLayout_12")
-        self.horizontalLayout_12.setContentsMargins(-1, 20, -1, -1)
-        self.horizontalSpacer_4 = QSpacerItem(80, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout_12.addItem(self.horizontalSpacer_4)
+        self.verticalLayout_33.addLayout(self.verticalLayout_19)
 
         self.verticalLayout_20 = QVBoxLayout()
         self.verticalLayout_20.setSpacing(0)
         self.verticalLayout_20.setObjectName(u"verticalLayout_20")
         self.verticalLayout_20.setSizeConstraint(QLayout.SizeConstraint.SetFixedSize)
-        self.label_8 = QLabel(self.frame)
+        self.label_8 = QLabel(self.FrameCreateRoomArea)
         self.label_8.setObjectName(u"label_8")
         self.label_8.setMaximumSize(QSize(16777215, 60))
         self.label_8.setFont(font1)
 
         self.verticalLayout_20.addWidget(self.label_8)
 
-        self.createRoomDescription = QTextEdit(self.frame)
+        self.createRoomDescription = QTextEdit(self.FrameCreateRoomArea)
         self.createRoomDescription.setObjectName(u"createRoomDescription")
-        sizePolicy3.setHeightForWidth(self.createRoomDescription.sizePolicy().hasHeightForWidth())
-        self.createRoomDescription.setSizePolicy(sizePolicy3)
-        self.createRoomDescription.setMaximumSize(QSize(16777215, 40))
+        sizePolicy1.setHeightForWidth(self.createRoomDescription.sizePolicy().hasHeightForWidth())
+        self.createRoomDescription.setSizePolicy(sizePolicy1)
+        self.createRoomDescription.setMinimumSize(QSize(0, 10))
+        self.createRoomDescription.setMaximumSize(QSize(16777215, 30))
         self.createRoomDescription.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.createRoomDescription.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.createRoomDescription.setLineWrapMode(QTextEdit.LineWrapMode.NoWrap)
@@ -978,33 +1016,16 @@ class Ui_Form(object):
         self.verticalLayout_20.addWidget(self.createRoomDescription)
 
 
-        self.horizontalLayout_12.addLayout(self.verticalLayout_20)
-
-        self.horizontalSpacer_5 = QSpacerItem(80, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout_12.addItem(self.horizontalSpacer_5)
-
-
-        self.VLCreateRoom.addLayout(self.horizontalLayout_12)
-
-        self.verticalSpacer_12 = QSpacerItem(20, 20, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
-
-        self.VLCreateRoom.addItem(self.verticalSpacer_12)
+        self.verticalLayout_33.addLayout(self.verticalLayout_20)
 
         self.horizontalLayout_10 = QHBoxLayout()
+        self.horizontalLayout_10.setSpacing(0)
         self.horizontalLayout_10.setObjectName(u"horizontalLayout_10")
-        self.horizontalLayout_10.setContentsMargins(-1, 10, -1, 10)
-        self.horizontalSpacer_9 = QSpacerItem(80, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout_10.addItem(self.horizontalSpacer_9)
-
-        self.createRoomCancleBtn = QPushButton(self.frame)
+        self.horizontalLayout_10.setContentsMargins(-1, 0, -1, 0)
+        self.createRoomCancleBtn = QPushButton(self.FrameCreateRoomArea)
         self.createRoomCancleBtn.setObjectName(u"createRoomCancleBtn")
-        sizePolicy7 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Preferred)
-        sizePolicy7.setHorizontalStretch(0)
-        sizePolicy7.setVerticalStretch(0)
-        sizePolicy7.setHeightForWidth(self.createRoomCancleBtn.sizePolicy().hasHeightForWidth())
-        self.createRoomCancleBtn.setSizePolicy(sizePolicy7)
+        sizePolicy1.setHeightForWidth(self.createRoomCancleBtn.sizePolicy().hasHeightForWidth())
+        self.createRoomCancleBtn.setSizePolicy(sizePolicy1)
         self.createRoomCancleBtn.setMaximumSize(QSize(16777215, 100))
 
         self.horizontalLayout_10.addWidget(self.createRoomCancleBtn)
@@ -1013,30 +1034,28 @@ class Ui_Form(object):
 
         self.horizontalLayout_10.addItem(self.horizontalSpacer_11)
 
-        self.createRoomConfirmBtn = QPushButton(self.frame)
+        self.createRoomConfirmBtn = QPushButton(self.FrameCreateRoomArea)
         self.createRoomConfirmBtn.setObjectName(u"createRoomConfirmBtn")
-        sizePolicy7.setHeightForWidth(self.createRoomConfirmBtn.sizePolicy().hasHeightForWidth())
-        self.createRoomConfirmBtn.setSizePolicy(sizePolicy7)
+        sizePolicy1.setHeightForWidth(self.createRoomConfirmBtn.sizePolicy().hasHeightForWidth())
+        self.createRoomConfirmBtn.setSizePolicy(sizePolicy1)
         self.createRoomConfirmBtn.setMaximumSize(QSize(16777215, 100))
 
         self.horizontalLayout_10.addWidget(self.createRoomConfirmBtn)
 
-        self.horizontalSpacer_10 = QSpacerItem(80, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
 
-        self.horizontalLayout_10.addItem(self.horizontalSpacer_10)
-
-
-        self.VLCreateRoom.addLayout(self.horizontalLayout_10)
-
-        self.verticalSpacer_2 = QSpacerItem(20, 60, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
-
-        self.VLCreateRoom.addItem(self.verticalSpacer_2)
+        self.verticalLayout_33.addLayout(self.horizontalLayout_10)
 
 
-        self.verticalLayout_38.addLayout(self.VLCreateRoom)
+        self.verticalLayout_34.addLayout(self.verticalLayout_33)
 
 
-        self.verticalLayout_3.addWidget(self.frame)
+        self.gridLayout_2.addWidget(self.FrameCreateRoomArea, 1, 1, 1, 1)
+
+
+        self.gridLayout_3.addLayout(self.gridLayout_2, 0, 0, 1, 1)
+
+
+        self.verticalLayout_3.addWidget(self.FrameCreateRoom)
 
         self.MainPages.addWidget(self.pageCreateRoom)
         self.pageJoinRoom = QWidget()
@@ -1051,28 +1070,47 @@ class Ui_Form(object):
         self.FrameJoinRoom.setObjectName(u"FrameJoinRoom")
         self.FrameJoinRoom.setFrameShape(QFrame.Shape.StyledPanel)
         self.FrameJoinRoom.setFrameShadow(QFrame.Shadow.Raised)
-        self.verticalLayout_34 = QVBoxLayout(self.FrameJoinRoom)
-        self.verticalLayout_34.setSpacing(0)
-        self.verticalLayout_34.setObjectName(u"verticalLayout_34")
-        self.verticalLayout_34.setContentsMargins(0, 0, 0, 0)
-        self.VLJoinRoom = QVBoxLayout()
-        self.VLJoinRoom.setSpacing(0)
-        self.VLJoinRoom.setObjectName(u"VLJoinRoom")
-        self.VLJoinRoom.setContentsMargins(-1, 0, -1, 0)
-        self.verticalSpacer_4 = QSpacerItem(20, 120, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        self.gridLayout_4 = QGridLayout(self.FrameJoinRoom)
+        self.gridLayout_4.setSpacing(0)
+        self.gridLayout_4.setObjectName(u"gridLayout_4")
+        self.gridLayout_4.setContentsMargins(0, 0, 0, 0)
+        self.gridLayout = QGridLayout()
+        self.gridLayout.setSpacing(0)
+        self.gridLayout.setObjectName(u"gridLayout")
+        self.gridLayout.setContentsMargins(0, 0, 0, 0)
+        self.horizontalSpacer_52 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.VLJoinRoom.addItem(self.verticalSpacer_4)
+        self.gridLayout.addItem(self.horizontalSpacer_52, 1, 0, 1, 1)
 
+        self.verticalSpacer_24 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout.addItem(self.verticalSpacer_24, 0, 1, 1, 1)
+
+        self.FrameJoinRoomArea = QFrame(self.FrameJoinRoom)
+        self.FrameJoinRoomArea.setObjectName(u"FrameJoinRoomArea")
+        self.FrameJoinRoomArea.setMinimumSize(QSize(450, 300))
+        self.FrameJoinRoomArea.setFrameShape(QFrame.Shape.StyledPanel)
+        self.FrameJoinRoomArea.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayout_32 = QVBoxLayout(self.FrameJoinRoomArea)
+        self.verticalLayout_32.setSpacing(0)
+        self.verticalLayout_32.setObjectName(u"verticalLayout_32")
+        self.verticalLayout_32.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_21 = QVBoxLayout()
+        self.verticalLayout_21.setSpacing(20)
+        self.verticalLayout_21.setObjectName(u"verticalLayout_21")
+        self.verticalLayout_21.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
+        self.verticalLayout_21.setContentsMargins(40, 40, 40, 40)
         self.horizontalLayout_16 = QHBoxLayout()
+        self.horizontalLayout_16.setSpacing(0)
         self.horizontalLayout_16.setObjectName(u"horizontalLayout_16")
         self.horizontalSpacer_12 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_16.addItem(self.horizontalSpacer_12)
 
-        self.label_15 = QLabel(self.FrameJoinRoom)
+        self.label_15 = QLabel(self.FrameJoinRoomArea)
         self.label_15.setObjectName(u"label_15")
-        sizePolicy2.setHeightForWidth(self.label_15.sizePolicy().hasHeightForWidth())
-        self.label_15.setSizePolicy(sizePolicy2)
+        sizePolicy1.setHeightForWidth(self.label_15.sizePolicy().hasHeightForWidth())
+        self.label_15.setSizePolicy(sizePolicy1)
         self.label_15.setFont(font)
 
         self.horizontalLayout_16.addWidget(self.label_15)
@@ -1082,60 +1120,44 @@ class Ui_Form(object):
         self.horizontalLayout_16.addItem(self.horizontalSpacer_15)
 
 
-        self.VLJoinRoom.addLayout(self.horizontalLayout_16)
+        self.verticalLayout_21.addLayout(self.horizontalLayout_16)
 
-        self.horizontalLayout_17 = QHBoxLayout()
-        self.horizontalLayout_17.setObjectName(u"horizontalLayout_17")
-        self.horizontalLayout_17.setContentsMargins(-1, 15, -1, 15)
-        self.horizontalSpacer_16 = QSpacerItem(80, 5, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout_17.addItem(self.horizontalSpacer_16)
-
-        self.label_16 = QLabel(self.FrameJoinRoom)
+        self.verticalLayout_42 = QVBoxLayout()
+        self.verticalLayout_42.setSpacing(0)
+        self.verticalLayout_42.setObjectName(u"verticalLayout_42")
+        self.verticalLayout_42.setContentsMargins(-1, 0, -1, -1)
+        self.label_16 = QLabel(self.FrameJoinRoomArea)
         self.label_16.setObjectName(u"label_16")
-        sizePolicy8 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Ignored)
-        sizePolicy8.setHorizontalStretch(0)
-        sizePolicy8.setVerticalStretch(0)
-        sizePolicy8.setHeightForWidth(self.label_16.sizePolicy().hasHeightForWidth())
-        self.label_16.setSizePolicy(sizePolicy8)
+        sizePolicy1.setHeightForWidth(self.label_16.sizePolicy().hasHeightForWidth())
+        self.label_16.setSizePolicy(sizePolicy1)
         self.label_16.setFont(font1)
 
-        self.horizontalLayout_17.addWidget(self.label_16)
+        self.verticalLayout_42.addWidget(self.label_16)
 
-        self.horizontalSpacer_50 = QSpacerItem(40, 5, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout_17.addItem(self.horizontalSpacer_50)
-
-        self.joinRoomCode = QTextEdit(self.FrameJoinRoom)
+        self.joinRoomCode = QTextEdit(self.FrameJoinRoomArea)
         self.joinRoomCode.setObjectName(u"joinRoomCode")
-        sizePolicy3.setHeightForWidth(self.joinRoomCode.sizePolicy().hasHeightForWidth())
-        self.joinRoomCode.setSizePolicy(sizePolicy3)
-        self.joinRoomCode.setMaximumSize(QSize(16777215, 60))
+        sizePolicy5.setHeightForWidth(self.joinRoomCode.sizePolicy().hasHeightForWidth())
+        self.joinRoomCode.setSizePolicy(sizePolicy5)
+        self.joinRoomCode.setMinimumSize(QSize(0, 20))
+        self.joinRoomCode.setMaximumSize(QSize(16777215, 30))
         self.joinRoomCode.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.joinRoomCode.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.joinRoomCode.setLineWrapMode(QTextEdit.LineWrapMode.NoWrap)
 
-        self.horizontalLayout_17.addWidget(self.joinRoomCode)
-
-        self.horizontalSpacer_17 = QSpacerItem(80, 5, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout_17.addItem(self.horizontalSpacer_17)
+        self.verticalLayout_42.addWidget(self.joinRoomCode)
 
 
-        self.VLJoinRoom.addLayout(self.horizontalLayout_17)
+        self.verticalLayout_21.addLayout(self.verticalLayout_42)
 
         self.horizontalLayout_15 = QHBoxLayout()
+        self.horizontalLayout_15.setSpacing(0)
         self.horizontalLayout_15.setObjectName(u"horizontalLayout_15")
-        self.horizontalLayout_15.setContentsMargins(-1, 15, -1, 15)
-        self.horizontalSpacer_19 = QSpacerItem(80, 5, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout_15.addItem(self.horizontalSpacer_19)
-
-        self.joinRoomCancleBtn = QPushButton(self.FrameJoinRoom)
+        self.horizontalLayout_15.setContentsMargins(-1, 0, -1, 0)
+        self.joinRoomCancleBtn = QPushButton(self.FrameJoinRoomArea)
         self.joinRoomCancleBtn.setObjectName(u"joinRoomCancleBtn")
-        sizePolicy7.setHeightForWidth(self.joinRoomCancleBtn.sizePolicy().hasHeightForWidth())
-        self.joinRoomCancleBtn.setSizePolicy(sizePolicy7)
-        self.joinRoomCancleBtn.setMaximumSize(QSize(16777215, 100))
+        sizePolicy1.setHeightForWidth(self.joinRoomCancleBtn.sizePolicy().hasHeightForWidth())
+        self.joinRoomCancleBtn.setSizePolicy(sizePolicy1)
+        self.joinRoomCancleBtn.setMaximumSize(QSize(16777215, 60))
 
         self.horizontalLayout_15.addWidget(self.joinRoomCancleBtn)
 
@@ -1143,27 +1165,33 @@ class Ui_Form(object):
 
         self.horizontalLayout_15.addItem(self.horizontalSpacer_20)
 
-        self.joinRoomConfirm = QPushButton(self.FrameJoinRoom)
+        self.joinRoomConfirm = QPushButton(self.FrameJoinRoomArea)
         self.joinRoomConfirm.setObjectName(u"joinRoomConfirm")
-        sizePolicy7.setHeightForWidth(self.joinRoomConfirm.sizePolicy().hasHeightForWidth())
-        self.joinRoomConfirm.setSizePolicy(sizePolicy7)
-        self.joinRoomConfirm.setMaximumSize(QSize(16777215, 100))
+        sizePolicy1.setHeightForWidth(self.joinRoomConfirm.sizePolicy().hasHeightForWidth())
+        self.joinRoomConfirm.setSizePolicy(sizePolicy1)
+        self.joinRoomConfirm.setMaximumSize(QSize(16777215, 60))
 
         self.horizontalLayout_15.addWidget(self.joinRoomConfirm)
 
-        self.horizontalSpacer_18 = QSpacerItem(80, 5, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
 
-        self.horizontalLayout_15.addItem(self.horizontalSpacer_18)
-
-
-        self.VLJoinRoom.addLayout(self.horizontalLayout_15)
-
-        self.verticalSpacer_3 = QSpacerItem(20, 120, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
-
-        self.VLJoinRoom.addItem(self.verticalSpacer_3)
+        self.verticalLayout_21.addLayout(self.horizontalLayout_15)
 
 
-        self.verticalLayout_34.addLayout(self.VLJoinRoom)
+        self.verticalLayout_32.addLayout(self.verticalLayout_21)
+
+
+        self.gridLayout.addWidget(self.FrameJoinRoomArea, 1, 1, 1, 1)
+
+        self.verticalSpacer_27 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout.addItem(self.verticalSpacer_27, 2, 1, 1, 1)
+
+        self.horizontalSpacer_53 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout.addItem(self.horizontalSpacer_53, 1, 2, 1, 1)
+
+
+        self.gridLayout_4.addLayout(self.gridLayout, 0, 0, 1, 1)
 
 
         self.verticalLayout_5.addWidget(self.FrameJoinRoom)
@@ -1204,11 +1232,11 @@ class Ui_Form(object):
         self.horizontalLayout_34.setContentsMargins(5, -1, -1, -1)
         self.roomHomeBtn = QPushButton(self.FrameRoomTopBar)
         self.roomHomeBtn.setObjectName(u"roomHomeBtn")
-        sizePolicy9 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
-        sizePolicy9.setHorizontalStretch(0)
-        sizePolicy9.setVerticalStretch(0)
-        sizePolicy9.setHeightForWidth(self.roomHomeBtn.sizePolicy().hasHeightForWidth())
-        self.roomHomeBtn.setSizePolicy(sizePolicy9)
+        sizePolicy8 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        sizePolicy8.setHorizontalStretch(0)
+        sizePolicy8.setVerticalStretch(0)
+        sizePolicy8.setHeightForWidth(self.roomHomeBtn.sizePolicy().hasHeightForWidth())
+        self.roomHomeBtn.setSizePolicy(sizePolicy8)
         self.roomHomeBtn.setMinimumSize(QSize(80, 32))
         self.roomHomeBtn.setFont(font2)
 
@@ -1220,11 +1248,11 @@ class Ui_Form(object):
 
         self.roomCode = QLabel(self.FrameRoomTopBar)
         self.roomCode.setObjectName(u"roomCode")
-        sizePolicy10 = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Preferred)
-        sizePolicy10.setHorizontalStretch(0)
-        sizePolicy10.setVerticalStretch(0)
-        sizePolicy10.setHeightForWidth(self.roomCode.sizePolicy().hasHeightForWidth())
-        self.roomCode.setSizePolicy(sizePolicy10)
+        sizePolicy9 = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Preferred)
+        sizePolicy9.setHorizontalStretch(0)
+        sizePolicy9.setVerticalStretch(0)
+        sizePolicy9.setHeightForWidth(self.roomCode.sizePolicy().hasHeightForWidth())
+        self.roomCode.setSizePolicy(sizePolicy9)
         font5 = QFont()
         font5.setPointSize(15)
         font5.setBold(True)
@@ -1238,8 +1266,11 @@ class Ui_Form(object):
 
         self.roomName = QLabel(self.FrameRoomTopBar)
         self.roomName.setObjectName(u"roomName")
-        sizePolicy7.setHeightForWidth(self.roomName.sizePolicy().hasHeightForWidth())
-        self.roomName.setSizePolicy(sizePolicy7)
+        sizePolicy10 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Preferred)
+        sizePolicy10.setHorizontalStretch(0)
+        sizePolicy10.setVerticalStretch(0)
+        sizePolicy10.setHeightForWidth(self.roomName.sizePolicy().hasHeightForWidth())
+        self.roomName.setSizePolicy(sizePolicy10)
         self.roomName.setFont(font5)
 
         self.horizontalLayout_34.addWidget(self.roomName)
@@ -1254,12 +1285,12 @@ class Ui_Form(object):
         self.horizontalLayout_32.setSpacing(0)
         self.horizontalLayout_32.setObjectName(u"horizontalLayout_32")
         self.horizontalLayout_32.setContentsMargins(0, -1, 0, -1)
-        self.FrameRoomSectionBtn = QFrame(self.FrameRoom)
-        self.FrameRoomSectionBtn.setObjectName(u"FrameRoomSectionBtn")
-        self.FrameRoomSectionBtn.setMinimumSize(QSize(50, 0))
-        self.FrameRoomSectionBtn.setFrameShape(QFrame.Shape.StyledPanel)
-        self.FrameRoomSectionBtn.setFrameShadow(QFrame.Shadow.Raised)
-        self.verticalLayout_40 = QVBoxLayout(self.FrameRoomSectionBtn)
+        self.FrameRoomSectionBtnArea = QFrame(self.FrameRoom)
+        self.FrameRoomSectionBtnArea.setObjectName(u"FrameRoomSectionBtnArea")
+        self.FrameRoomSectionBtnArea.setMinimumSize(QSize(50, 0))
+        self.FrameRoomSectionBtnArea.setFrameShape(QFrame.Shape.StyledPanel)
+        self.FrameRoomSectionBtnArea.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayout_40 = QVBoxLayout(self.FrameRoomSectionBtnArea)
         self.verticalLayout_40.setSpacing(0)
         self.verticalLayout_40.setObjectName(u"verticalLayout_40")
         self.verticalLayout_40.setContentsMargins(0, 0, 0, 0)
@@ -1267,34 +1298,34 @@ class Ui_Form(object):
         self.verticalLayout_2.setSpacing(20)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.verticalLayout_2.setContentsMargins(5, 20, 5, 20)
-        self.roomChatBtn = QPushButton(self.FrameRoomSectionBtn)
+        self.roomChatBtn = QPushButton(self.FrameRoomSectionBtnArea)
         self.roomChatBtn.setObjectName(u"roomChatBtn")
-        sizePolicy7.setHeightForWidth(self.roomChatBtn.sizePolicy().hasHeightForWidth())
-        self.roomChatBtn.setSizePolicy(sizePolicy7)
+        sizePolicy10.setHeightForWidth(self.roomChatBtn.sizePolicy().hasHeightForWidth())
+        self.roomChatBtn.setSizePolicy(sizePolicy10)
         self.roomChatBtn.setMaximumSize(QSize(80, 80))
 
         self.verticalLayout_2.addWidget(self.roomChatBtn)
 
-        self.roomCallBtn = QPushButton(self.FrameRoomSectionBtn)
+        self.roomCallBtn = QPushButton(self.FrameRoomSectionBtnArea)
         self.roomCallBtn.setObjectName(u"roomCallBtn")
-        sizePolicy7.setHeightForWidth(self.roomCallBtn.sizePolicy().hasHeightForWidth())
-        self.roomCallBtn.setSizePolicy(sizePolicy7)
+        sizePolicy10.setHeightForWidth(self.roomCallBtn.sizePolicy().hasHeightForWidth())
+        self.roomCallBtn.setSizePolicy(sizePolicy10)
         self.roomCallBtn.setMaximumSize(QSize(80, 80))
 
         self.verticalLayout_2.addWidget(self.roomCallBtn)
 
-        self.roomWorkshopBtn = QPushButton(self.FrameRoomSectionBtn)
+        self.roomWorkshopBtn = QPushButton(self.FrameRoomSectionBtnArea)
         self.roomWorkshopBtn.setObjectName(u"roomWorkshopBtn")
-        sizePolicy7.setHeightForWidth(self.roomWorkshopBtn.sizePolicy().hasHeightForWidth())
-        self.roomWorkshopBtn.setSizePolicy(sizePolicy7)
+        sizePolicy10.setHeightForWidth(self.roomWorkshopBtn.sizePolicy().hasHeightForWidth())
+        self.roomWorkshopBtn.setSizePolicy(sizePolicy10)
         self.roomWorkshopBtn.setMaximumSize(QSize(80, 80))
 
         self.verticalLayout_2.addWidget(self.roomWorkshopBtn)
 
-        self.roomMemberBtn = QPushButton(self.FrameRoomSectionBtn)
+        self.roomMemberBtn = QPushButton(self.FrameRoomSectionBtnArea)
         self.roomMemberBtn.setObjectName(u"roomMemberBtn")
-        sizePolicy7.setHeightForWidth(self.roomMemberBtn.sizePolicy().hasHeightForWidth())
-        self.roomMemberBtn.setSizePolicy(sizePolicy7)
+        sizePolicy10.setHeightForWidth(self.roomMemberBtn.sizePolicy().hasHeightForWidth())
+        self.roomMemberBtn.setSizePolicy(sizePolicy10)
         self.roomMemberBtn.setMaximumSize(QSize(80, 80))
 
         self.verticalLayout_2.addWidget(self.roomMemberBtn)
@@ -1303,31 +1334,31 @@ class Ui_Form(object):
 
         self.verticalLayout_2.addItem(self.verticalSpacer_17)
 
-        self.pushButton = QPushButton(self.FrameRoomSectionBtn)
-        self.pushButton.setObjectName(u"pushButton")
+        self.roomLeaveBtn = QPushButton(self.FrameRoomSectionBtnArea)
+        self.roomLeaveBtn.setObjectName(u"roomLeaveBtn")
         font6 = QFont()
         font6.setPointSize(10)
         font6.setWeight(QFont.ExtraBold)
-        self.pushButton.setFont(font6)
-        self.pushButton.setStyleSheet(u"background-color: #941010 ")
+        self.roomLeaveBtn.setFont(font6)
+        self.roomLeaveBtn.setStyleSheet(u"background-color: #941010 ")
 
-        self.verticalLayout_2.addWidget(self.pushButton)
+        self.verticalLayout_2.addWidget(self.roomLeaveBtn)
 
 
         self.verticalLayout_40.addLayout(self.verticalLayout_2)
 
 
-        self.horizontalLayout_32.addWidget(self.FrameRoomSectionBtn)
+        self.horizontalLayout_32.addWidget(self.FrameRoomSectionBtnArea)
 
-        self.frame_2 = QFrame(self.FrameRoom)
-        self.frame_2.setObjectName(u"frame_2")
-        self.frame_2.setFrameShape(QFrame.Shape.StyledPanel)
-        self.frame_2.setFrameShadow(QFrame.Shadow.Raised)
-        self.verticalLayout_41 = QVBoxLayout(self.frame_2)
+        self.FrameRoomSectionDisplayArea = QFrame(self.FrameRoom)
+        self.FrameRoomSectionDisplayArea.setObjectName(u"FrameRoomSectionDisplayArea")
+        self.FrameRoomSectionDisplayArea.setFrameShape(QFrame.Shape.StyledPanel)
+        self.FrameRoomSectionDisplayArea.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayout_41 = QVBoxLayout(self.FrameRoomSectionDisplayArea)
         self.verticalLayout_41.setSpacing(0)
         self.verticalLayout_41.setObjectName(u"verticalLayout_41")
         self.verticalLayout_41.setContentsMargins(0, 0, 0, 0)
-        self.SubPages = QStackedWidget(self.frame_2)
+        self.SubPages = QStackedWidget(self.FrameRoomSectionDisplayArea)
         self.SubPages.setObjectName(u"SubPages")
         sizePolicy.setHeightForWidth(self.SubPages.sizePolicy().hasHeightForWidth())
         self.SubPages.setSizePolicy(sizePolicy)
@@ -1345,7 +1376,7 @@ class Ui_Form(object):
         self.chatHistoryArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents_2 = QWidget()
         self.scrollAreaWidgetContents_2.setObjectName(u"scrollAreaWidgetContents_2")
-        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 794, 348))
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 481, 315))
         self.chatHistoryArea.setWidget(self.scrollAreaWidgetContents_2)
 
         self.VLChat.addWidget(self.chatHistoryArea)
@@ -1369,8 +1400,8 @@ class Ui_Form(object):
 
         self.chatSendTextConfirmBtn = QPushButton(self.pageChat)
         self.chatSendTextConfirmBtn.setObjectName(u"chatSendTextConfirmBtn")
-        sizePolicy7.setHeightForWidth(self.chatSendTextConfirmBtn.sizePolicy().hasHeightForWidth())
-        self.chatSendTextConfirmBtn.setSizePolicy(sizePolicy7)
+        sizePolicy10.setHeightForWidth(self.chatSendTextConfirmBtn.sizePolicy().hasHeightForWidth())
+        self.chatSendTextConfirmBtn.setSizePolicy(sizePolicy10)
         self.chatSendTextConfirmBtn.setMaximumSize(QSize(16777215, 80))
         self.chatSendTextConfirmBtn.setFont(font2)
 
@@ -1476,7 +1507,7 @@ class Ui_Form(object):
         self.verticalLayout_41.addWidget(self.SubPages)
 
 
-        self.horizontalLayout_32.addWidget(self.frame_2)
+        self.horizontalLayout_32.addWidget(self.FrameRoomSectionDisplayArea)
 
 
         self.VLRoom.addLayout(self.horizontalLayout_32)
@@ -1498,7 +1529,7 @@ class Ui_Form(object):
         self.retranslateUi(Form)
 
         self.MainPages.setCurrentIndex(5)
-        self.SubPages.setCurrentIndex(2)
+        self.SubPages.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(Form)
@@ -1514,9 +1545,7 @@ class Ui_Form(object):
         self.loginConfirmBtn.setText(QCoreApplication.translate("Form", u"Login", None))
         self.registerImage.setText(QCoreApplication.translate("Form", u"IMG", None))
         self.label_3.setText(QCoreApplication.translate("Form", u"Register", None))
-        self.label_11.setText(QCoreApplication.translate("Form", u"Username :", None))
         self.label_17.setText(QCoreApplication.translate("Form", u"Gmail :", None))
-        self.label_14.setText(QCoreApplication.translate("Form", u"Phone :", None))
         self.registerGmail.setHtml(QCoreApplication.translate("Form", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -1525,6 +1554,8 @@ class Ui_Form(object):
 "li.checked::marker { content: \"\\2612\"; }\n"
 "</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
+        self.label_11.setText(QCoreApplication.translate("Form", u"Username :", None))
+        self.label_14.setText(QCoreApplication.translate("Form", u"Phone :", None))
         self.label_12.setText(QCoreApplication.translate("Form", u"Password : ", None))
         self.label_13.setText(QCoreApplication.translate("Form", u"Confirm Password :", None))
         self.registerLoginBtn.setText(QCoreApplication.translate("Form", u"Login", None))
@@ -1549,7 +1580,7 @@ class Ui_Form(object):
         self.roomCallBtn.setText(QCoreApplication.translate("Form", u"Call", None))
         self.roomWorkshopBtn.setText(QCoreApplication.translate("Form", u"Workshop", None))
         self.roomMemberBtn.setText(QCoreApplication.translate("Form", u"Members", None))
-        self.pushButton.setText(QCoreApplication.translate("Form", u"Leave", None))
+        self.roomLeaveBtn.setText(QCoreApplication.translate("Form", u"Leave", None))
         self.chatSendTextConfirmBtn.setText(QCoreApplication.translate("Form", u"<", None))
         # self.enterOrLeaveCall.setText(QCoreApplication.translate("Form", u"Enter Call", None))
         self.workshopRunBtn.setText(QCoreApplication.translate("Form", u"Run", None))

@@ -16,6 +16,14 @@ load_dotenv()
 motherServer = "https://collaborate-coding-app.onrender.com"
 
 
+RoomBackGroundColor = "#1E1E2F"
+RoomTopBarColor = "#2E2E3E"
+RoomSectionBtnAreaColor = "#2E2E3E"
+RoomSectionDisplayAreaColor = "#1E1E2F"
+
+
+
+
 class CodeEditor(QPlainTextEdit): # Switched to QPlainTextEdit for stability
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -24,6 +32,7 @@ class CodeEditor(QPlainTextEdit): # Switched to QPlainTextEdit for stability
         self.blockCountChanged.connect(self.updateLineNumberAreaWidth)
         self.updateRequest.connect(self.updateLineNumberArea)
         self.cursorPositionChanged.connect(self.highlightCurrentLine)
+
 
         self.updateLineNumberAreaWidth(0)
         self.highlightCurrentLine()
@@ -145,7 +154,7 @@ class RoomPage(QObject):
         self.ui.MainPages.setCurrentIndex(5)
         self.ui.SubPages.setCurrentIndex(0)
         self.ui.roomName.setText(self.room.getRoomName())
-        self.ui.roomCode.setText(self.room.getRoomID())
+        self.ui.roomCode.setText(self.room.getRoomID() + ":")
 
         self.ui.roomChatBtn.clicked.connect(self.goToChat)
         self.ui.roomCallBtn.clicked.connect(self.goToCall)
@@ -169,6 +178,19 @@ class RoomPage(QObject):
 
 
         self.ui.workshopRunBtn.clicked.connect(self.compile_code)
+
+
+
+        # Room Background Color
+        self.ui.FrameRoom.setStyleSheet(f"background-color: {RoomBackGroundColor};")
+        self.ui.FrameRoomTopBar.setStyleSheet(f"background-color: {RoomTopBarColor};")
+        self.ui.FrameRoomSectionBtnArea.setStyleSheet(f"background-color: {RoomSectionBtnAreaColor};")
+
+        self.ui.FrameRoomSectionDisplayArea.setStyleSheet(f"background-color: {RoomSectionDisplayAreaColor};")
+
+        # Section Colors if we wanna do it later
+
+
 
     def leaveRoom(self):
         if hasattr(self, 'chat_timer'):
@@ -332,6 +354,8 @@ class RoomPage(QObject):
                     display_list.append(f"{prefix}{name}")
                 model.setStringList(display_list)
                 self.ui.listView.setModel(model)
+                self.ui.listView.setEditTriggers(QListView.NoEditTriggers)
+                self.ui.listView.setStyleSheet("font-size: 21px; font-weight: 600;")
             else:
                 print("Failed to fetch members from server")
         except Exception as e:

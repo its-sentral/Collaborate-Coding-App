@@ -1,21 +1,11 @@
-import sys
-import cv2
-import base64
-import pyaudio
-import socketio
-import threading
-import queue
+import sys,cv2,base64,pyaudio,socketio,threading,queue,time
 import numpy as np
-from PySide6.QtCore import QTimer, Signal, QObject, Qt
+from PySide6.QtCore import QTimer, Signal, QObject, Qt, QSize
 from PySide6.QtGui import QImage, QPixmap
-from PySide6.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout, QPushButton, QSizePolicy
-import time
+from PySide6.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QSizePolicy
 
-# --- CONFIGURATION ---
 SERVER_URL = "https://ccp-servertest.onrender.com" 
 
-
-# Lowered for better performance over internet
 RATE = 16000 
 CHUNK = 1024 
 
@@ -36,42 +26,42 @@ class VideoCallApp(QWidget):
         self.setMaximumHeight(16777215)
         self.setMaximumWidth(16777215)
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        
         self.status_label = QLabel("Status: Idle")
         self.status_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        layout.addWidget(self.status_label,stretch=1)
+        layout.addWidget(self.status_label, stretch=1)
 
         self.currentUser = QLabel()
         self.currentUser.setText("Waiting to join")
         self.currentUser.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        layout.addWidget(self.currentUser,stretch=1)
+        layout.addWidget(self.currentUser, stretch=1)
+
+        button_layout = QHBoxLayout() 
+        button_layout.addStretch() 
+        
+        self.btn_toggle_call = QPushButton("Join Room")
+        self.btn_toggle_call.setMinimumSize(QSize(80, 60)) 
+        self.btn_toggle_call.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        self.btn_toggle_call.clicked.connect(self.handle_call_toggle)
+        button_layout.addWidget(self.btn_toggle_call)
 
         self.is_muted = False
-        self.btn_mute = QPushButton("Mute Microphone")
+        self.btn_mute = QPushButton("Mute Mic") 
+        self.btn_mute.setMinimumSize(QSize(80, 60))
+        self.btn_mute.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         self.btn_mute.clicked.connect(self.toggle_mute)
-        self.btn_mute.setEnabled(False)
-        layout.addWidget(self.btn_mute, stretch=1)
-        
-        # self.remote_video_label = QLabel("Waiting for video...")
-        # self.remote_video_label.setAlignment(Qt.AlignCenter)
-        # self.remote_video_label.setStyleSheet("background: black; color: white;")
-        # self.remote_video_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        # layout.addWidget(self.remote_video_label,stretch=1)
-        
-        self.btn_connect = QPushButton("Join Room")
-        self.btn_connect.clicked.connect(self.start_connection)
-        layout.addWidget(self.btn_connect,stretch=1)
+        self.btn_mute.setEnabled(False) # Starts disabled until they join
+        button_layout.addWidget(self.btn_mute)
 
-        self.btn_leave = QPushButton("Leave Call")
-        self.btn_leave.clicked.connect(self.leave_call)
-        self.btn_leave.setEnabled(False)
-        layout.addWidget(self.btn_leave, stretch=1)
+        button_layout.addStretch()
 
+        layout.addLayout(button_layout) 
         self.setLayout(layout)
 
         # --- AUDIO BUFFERING SETUP ---
         self.audio_queue = queue.Queue()
         self.buffer_threshold = 5  # "Bucket" size to prevent gaps
-        
+
         # Network
         self.sio = socketio.Client(
             reconnection_delay=1, 
@@ -90,7 +80,6 @@ class VideoCallApp(QWidget):
             print("✅ CONNECTED")
             # Emit a signal instead of touching the UI directly
             self.signals.update_status.emit("Status: Connected!")
-            
             # Now tell the server we are ready to join and be counted!
             self.sio.emit('join_room', "global_room")
 
@@ -124,10 +113,14 @@ class VideoCallApp(QWidget):
         self.cap = cv2.VideoCapture(0)
         self.is_running = False
 
+    def handle_call_toggle(self):
+        if self.is_running:
+            self.leave_call()
+        else:
+            self.start_connection()
+
     def toggle_mute(self):
-        # Flip the boolean (True becomes False, False becomes True)
         self.is_muted = not self.is_muted 
-        
         if self.is_muted:
             self.btn_mute.setText("Unmute Microphone")
             self.btn_mute.setStyleSheet("background-color: #ff4444; color: white; font-weight: bold;")
@@ -140,22 +133,17 @@ class VideoCallApp(QWidget):
         try:
             self.sio.connect(SERVER_URL, wait_timeout=20) 
             self.is_running = True
-            
             QTimer.singleShot(100, self.send_video_loop) 
             threading.Thread(target=self.send_audio_loop, daemon=True).start()
             threading.Thread(target=self.audio_playback_worker, daemon=True).start()
-            
-            # --- UPDATE YOUR BUTTON STATES HERE ---
-            self.btn_connect.setEnabled(False)
-            self.btn_leave.setEnabled(True)
-            self.btn_mute.setEnabled(True) # If you added the mute button!
-            
+            self.btn_toggle_call.setText("Leave Call")
+            self.btn_toggle_call.setStyleSheet("background-color: #ff4444; color: white; font-weight: bold;")
+            self.btn_mute.setEnabled(True)
         except Exception as e:
             print(f"❌ Connection Failed: {e}")
 
     def leave_call(self):
         print("Leaving call...")
-        
         self.is_running = False 
         
         if self.sio.connected:
@@ -163,19 +151,18 @@ class VideoCallApp(QWidget):
             time.sleep(0.5) 
             self.sio.disconnect()
             
-        self.btn_connect.setEnabled(True)
-        self.btn_leave.setEnabled(False)
+        self.btn_toggle_call.setText("Join Room")
+        self.btn_toggle_call.setStyleSheet("")
         
         if hasattr(self, 'btn_mute'):
             self.btn_mute.setEnabled(False)
             self.is_muted = False
-            self.btn_mute.setText("Mute Microphone")
+            self.btn_mute.setText("Mute Mic")
             self.btn_mute.setStyleSheet("")
-            
+
         self.signals.update_status.emit("Status: Idle")
         self.signals.update_user_count.emit(0)
         self.currentUser.setText("Waiting to join")
-        
 
     def update_user_label(self, count):
         self.currentUser.setText(f"Participants: {count}")
@@ -186,16 +173,14 @@ class VideoCallApp(QWidget):
     def audio_playback_worker(self):
         print("🔊 Playback Worker Active")
         while self.is_running:
-            # If the queue gets too big (backlog), skip ahead to reduce delay
             if self.audio_queue.qsize() > 10:
                 while self.audio_queue.qsize() > 2:
-                    self.audio_queue.get() # Toss old audio to catch up
+                    self.audio_queue.get()
                 print("🚀 Delay detected: Skipping to real-time")
 
             if self.audio_queue.qsize() < self.buffer_threshold:
                 time.sleep(0.01) # Breathe
                 continue 
-                
             try:
                 chunk = self.audio_queue.get_nowait()
                 self.spk.write(chunk)

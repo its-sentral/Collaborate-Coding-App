@@ -161,7 +161,7 @@ class RoomPage(QObject):
         self.ui.roomWorkshopBtn.clicked.connect(self.goToWorkShop)
         self.ui.roomMemberBtn.clicked.connect(self.goToMember)
         self.ui.roomHomeBtn.clicked.connect(self.backToHome)
-        self.ui.pushButton.clicked.connect(self.leaveRoom)
+        self.ui.roomLeaveBtn.clicked.connect(self.leaveRoom)
         
         self.ui.workshopImportBtn.clicked.connect(self.handleImport)
         self.ui.workshopExportBtn.clicked.connect(self.handleExport)

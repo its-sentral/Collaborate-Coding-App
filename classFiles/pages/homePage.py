@@ -90,11 +90,11 @@ class Home(QObject):
 
         # join room
         self.ui.joinRoomConfirm.clicked.connect(self.addNewRoom)
-        self.ui.joinRoomCancleBtn.clicked.connect(self.backToHome)
+        self.ui.joinRoomCancelBtn.clicked.connect(self.backToHome)
 
         # create room
         self.ui.createRoomConfirmBtn.clicked.connect(self.createNewRoom)
-        self.ui.createRoomCancleBtn.clicked.connect(self.backToHome)
+        self.ui.createRoomCancelBtn.clicked.connect(self.backToHome)
         # info_res = requests.get(f"{roomServerOne}/room_info", params={"username": self.user.getName()})
         # if info_res.status_code == 200:
         #     data = info_res.json()
@@ -265,9 +265,9 @@ class Home(QObject):
         self.ui.homeCreateRoomBtn.clicked.disconnect()
         
         self.ui.joinRoomConfirm.clicked.disconnect()
-        self.ui.joinRoomCancleBtn.clicked.disconnect()
+        self.ui.joinRoomCancelBtn.clicked.disconnect()
         self.ui.createRoomConfirmBtn.clicked.disconnect()
-        self.ui.createRoomCancleBtn.clicked.disconnect()
+        self.ui.createRoomCancelBtn.clicked.disconnect()
     
         self.clearGrid()
         

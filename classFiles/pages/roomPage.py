@@ -320,7 +320,7 @@ class RoomPage(QObject):
     def goToCall(self):
         if not self.callCreated:
             self.callCreated = not self.callCreated
-            self.videoWidget = VideoCallApp()
+            self.videoWidget = VideoCallApp(self.user.name)
             self.ui.VLCall.addWidget(self.videoWidget,stretch=1)
         self.ui.SubPages.setCurrentIndex(1)
 

@@ -2,7 +2,7 @@ import sys,cv2,base64,pyaudio,socketio,threading,queue,time
 import numpy as np
 from PySide6.QtCore import QTimer, Signal, QObject, Qt, QSize
 from PySide6.QtGui import QImage, QPixmap
-from PySide6.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QSizePolicy
+from PySide6.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QSizePolicy, QListWidget
 
 SERVER_URL = "https://ccp-servertest.onrender.com" 
 
@@ -11,12 +11,13 @@ CHUNK = 1024
 
 class NetworkSignals(QObject):
     update_video = Signal(str)
-    update_user_count = Signal(int)
+    update_user_list = Signal(list)
     update_status = Signal(str)
 
 class VideoCallApp(QWidget):
-    def __init__(self):
+    def __init__(self,user_name):
         super().__init__()
+        self.name = user_name
         self.resize(600, 500)
         
         layout = QVBoxLayout()
@@ -31,10 +32,19 @@ class VideoCallApp(QWidget):
         self.status_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(self.status_label, stretch=1)
 
-        self.currentUser = QLabel()
-        self.currentUser.setText("Waiting to join")
-        self.currentUser.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        layout.addWidget(self.currentUser, stretch=1)
+        self.user_list_widget = QListWidget()
+        self.user_list_widget.addItem("Waiting to join...")
+        self.user_list_widget.setStyleSheet("""
+            QListWidget {
+                background-color: #1e1e1e;
+                color: #d4d4d4;
+                border: 1px solid #333333;
+                border-radius: 4px;
+                padding: 5px;
+                font-size: 14px;
+            }
+        """)
+        layout.addWidget(self.user_list_widget, stretch=2)
 
         button_layout = QHBoxLayout() 
         button_layout.addStretch() 
@@ -71,22 +81,20 @@ class VideoCallApp(QWidget):
         )
         self.signals = NetworkSignals()
         self.signals.update_video.connect(self.display_remote_frame)
-        self.signals.update_user_count.connect(self.update_user_label)
+        self.signals.update_user_list.connect(self.update_user_list_ui)
         self.signals.update_status.connect(self.update_status_label)
 
         # --- EVENT HANDLERS ---
         @self.sio.on('connect')
         def on_connect():
             print("✅ CONNECTED")
-            # Emit a signal instead of touching the UI directly
             self.signals.update_status.emit("Status: Connected!")
-            # Now tell the server we are ready to join and be counted!
-            self.sio.emit('join_room', "global_room")
+            self.sio.emit('join_room', {'room': 'global_room', 'username': self.name})
 
         @self.sio.on('user_update')
         def on_user_update(data):
-            count = data['count']
-            self.currentUser.setText(f"Users in call: {count}")
+            user_list = data.get('users', [])
+            self.signals.update_user_list.emit(user_list)
 
         @self.sio.on('receive_video')
         def on_video(data):
@@ -161,11 +169,17 @@ class VideoCallApp(QWidget):
             self.btn_mute.setStyleSheet("")
 
         self.signals.update_status.emit("Status: Idle")
-        self.signals.update_user_count.emit(0)
-        self.currentUser.setText("Waiting to join")
+        
+        self.signals.update_user_list.emit([])
 
-    def update_user_label(self, count):
-        self.currentUser.setText(f"Participants: {count}")
+    def update_user_list_ui(self, users):
+        self.user_list_widget.clear()
+        
+        if not users:
+            self.user_list_widget.addItem("Waiting to join...")
+        else:
+            for user in users:
+                self.user_list_widget.addItem(f"👤 {user}")
 
     def update_status_label(self, status_text):
         self.status_label.setText(status_text)
@@ -220,6 +234,6 @@ class VideoCallApp(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    w = VideoCallApp()
+    w = VideoCallApp('Jeff')
     w.show()
     sys.exit(app.exec())

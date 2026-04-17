@@ -57,7 +57,6 @@ class CodeEditor(QPlainTextEdit):
         return space
 
     def updateLineNumberAreaWidth(self, _):
-        # This reserves the blank space on the left side of the editor
         self.setViewportMargins(self.lineNumberAreaWidth(), 0, 0, 0)
 
     def updateLineNumberArea(self, rect, dy):

@@ -1,6 +1,6 @@
 import sys,cv2,base64,pyaudio,socketio,threading,queue,time
 import numpy as np
-from PySide6.QtCore import QTimer, Signal, QObject, Qt, QSize
+from PySide6.QtCore import QTimer, Signal, QObject, Qt, QSize, QThread
 from PySide6.QtGui import QImage, QPixmap
 from PySide6.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QSizePolicy, QListWidget
 
@@ -13,6 +13,21 @@ class NetworkSignals(QObject):
     update_video = Signal(str)
     update_user_list = Signal(list)
     update_status = Signal(str)
+
+class ConnectThread(QThread):
+    connection_result = Signal(bool, str)
+    
+    def __init__(self, sio, url, parent=None):
+        super().__init__(parent)
+        self.sio = sio
+        self.url = url
+        
+    def run(self):
+        try:
+            self.sio.connect(self.url, wait_timeout=20)
+            self.connection_result.emit(True, "Connected")
+        except Exception as e:
+            self.connection_result.emit(False, str(e))
 
 class VideoCallApp(QWidget):
     def __init__(self,user_name):
@@ -60,7 +75,7 @@ class VideoCallApp(QWidget):
         self.btn_mute.setMinimumSize(QSize(80, 60))
         self.btn_mute.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         self.btn_mute.clicked.connect(self.toggle_mute)
-        self.btn_mute.setEnabled(False) # Starts disabled until they join
+        self.btn_mute.setEnabled(False)
         button_layout.addWidget(self.btn_mute)
 
         button_layout.addStretch()
@@ -138,8 +153,18 @@ class VideoCallApp(QWidget):
 
     def start_connection(self):
         if self.is_running: return
-        try:
-            self.sio.connect(SERVER_URL, wait_timeout=20) 
+        
+        self.btn_toggle_call.setText("Connecting...")
+        self.btn_toggle_call.setEnabled(False)
+        
+        self.connect_thread = ConnectThread(self.sio, SERVER_URL)
+        self.connect_thread.connection_result.connect(self.on_connection_finished)
+        self.connect_thread.start()
+
+    def on_connection_finished(self, success, message):
+        self.btn_toggle_call.setEnabled(True)
+        
+        if success:
             self.is_running = True
             QTimer.singleShot(100, self.send_video_loop) 
             threading.Thread(target=self.send_audio_loop, daemon=True).start()
@@ -147,18 +172,14 @@ class VideoCallApp(QWidget):
             self.btn_toggle_call.setText("Leave Call")
             self.btn_toggle_call.setStyleSheet("background-color: #ff4444; color: white; font-weight: bold;")
             self.btn_mute.setEnabled(True)
-        except Exception as e:
-            print(f"❌ Connection Failed: {e}")
+        else:
+            print(f"❌ Connection Failed: {message}")
+            self.btn_toggle_call.setText("Join Room")
 
     def leave_call(self):
         print("Leaving call...")
         self.is_running = False 
         
-        if self.sio.connected:
-            self.sio.emit('manual_leave')
-            time.sleep(0.5) 
-            self.sio.disconnect()
-            
         self.btn_toggle_call.setText("Join Room")
         self.btn_toggle_call.setStyleSheet("")
         
@@ -169,8 +190,19 @@ class VideoCallApp(QWidget):
             self.btn_mute.setStyleSheet("")
 
         self.signals.update_status.emit("Status: Idle")
-        
         self.signals.update_user_list.emit([])
+
+        if self.sio.connected:
+            def background_disconnect(sio_instance):
+                try:
+                    sio_instance.emit('manual_leave')
+                    time.sleep(0.5)
+                    sio_instance.disconnect()
+                    print("✅ Disconnected in background.")
+                except Exception as e:
+                    pass
+
+            threading.Thread(target=background_disconnect, args=(self.sio,), daemon=True).start()
 
     def update_user_list_ui(self, users):
         self.user_list_widget.clear()

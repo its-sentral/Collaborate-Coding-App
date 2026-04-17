@@ -130,6 +130,21 @@ class LineNumberArea(QWidget):
     def paintEvent(self, event):
         self.codeEditor.lineNumberAreaPaintEvent(event)
 
+class ChatFetchThread(QThread):
+    chat_fetched = Signal(list)
+
+    def __init__(self, url, room_id, parent=None):
+        super().__init__(parent)
+        self.url = url
+        self.room_id = room_id
+
+    def run(self):
+        try:
+            res = requests.get(self.url, params={"roomID": self.room_id}, timeout=5)
+            if res.status_code == 200:
+                self.chat_fetched.emit(res.json())
+        except Exception as e:
+            print(f"Background Chat Fetch Error: {e}")
 
 class RoomPage(QObject):
     def __init__(self, user, ui :Ui_Form, window: QMainWindow, room: RoomObj):
@@ -220,28 +235,25 @@ class RoomPage(QObject):
 
     def handleExport(self):
         self.workshop_tool.exportCode(self.work.editor)
+
     def compile_code(self):
         CLIENT_ID = os.getenv("CLIENT_ID")
         CLIENT_SECRET = os.getenv("CLIENT_SECRET")
         
         code = self.work.getText()
 
-        # Disable the run button so the user doesn't spam it while waiting
         self.ui.workshopRunBtn.setEnabled(False)
-        print("Compiling code in the cloud... Please wait.")
+        
+        if hasattr(self, 'output_console'):
+            self.output_console.setPlainText("Compiling code in the cloud... Please wait")
 
-        # Create and start the background thread
         self.compiler_thread = JDoodleCompilerThread(code, CLIENT_ID, CLIENT_SECRET)
         self.compiler_thread.compilation_finished.connect(self.display_code_output)
         self.compiler_thread.start()
         
     def display_code_output(self, result):
-        print("=== EXECUTION OUTPUT ===")
-        print(result)
-        
-        new_window = OutputWindow(result)
-        self.open_output_windows.append(new_window)
-        new_window.show()
+        if hasattr(self, 'output_console'):
+            self.output_console.setPlainText(f"=== EXECUTION OUTPUT ===\n\n{result}")
         self.ui.workshopRunBtn.setEnabled(True)
         
     def sendChatMessage(self):
@@ -272,47 +284,40 @@ class RoomPage(QObject):
                 self.chat_timer.stop()
                 return
         except RuntimeError:
-            print("UI deleted, stopping chat timer.")
             self.chat_timer.stop()
             return
-        try:
-            base_url = self.room.getServerURL()
-            url = f"{base_url}/get_chat"
-            params = {"roomID": self.room.getRoomID()}
-            res = requests.get(url, params=params, timeout=5)
+            
+        base_url = self.room.getServerURL()
+        url = f"{base_url}/get_chat"
+        
+        # Start the background fetcher
+        self.fetch_thread = ChatFetchThread(url, self.room.getRoomID())
+        self.fetch_thread.chat_fetched.connect(self.updateChatUI)
+        self.fetch_thread.start()
 
-            if res.status_code == 200:
-                messages = res.json()
+    def updateChatUI(self, messages):
+        while self.chatLayout.count():
+            item = self.chatLayout.takeAt(0)
+            widget = item.widget()
+            if widget:
+                widget.deleteLater()
+                
+        for msg in messages:
+            chat_text = f"<b>{msg['sender']}</b>: {msg['content']} <br><small style='color:gray'>{msg['time']}</small>"
+            lbl = QLabel(chat_text)
+            lbl.setWordWrap(True)
+            lbl.setStyleSheet("""
+                background-color: #3e3e3e; 
+                color: white; 
+                padding: 8px; 
+                border-radius: 10px; 
+                margin-bottom: 2px;
+            """)
+            self.chatLayout.addWidget(lbl)
 
-               
-                while self.chatLayout.count():
-                    item = self.chatLayout.takeAt(0)
-                    widget = item.widget()
-                    if widget:
-                        widget.deleteLater()
-                for msg in messages:
-                    
-                    chat_text = f"<b>{msg['sender']}</b>: {msg['content']} <br><small style='color:gray'>{msg['time']}</small>"
-                    
-                    lbl = QLabel(chat_text)
-                    lbl.setWordWrap(True) # Wrap long text
-                    lbl.setStyleSheet("""
-                        background-color: #3e3e3e; 
-                        color: white; 
-                        padding: 8px; 
-                        border-radius: 10px; 
-                        margin-bottom: 2px;
-                    """)
-                    
-                    self.chatLayout.addWidget(lbl)
-
-              
-                self.ui.chatHistoryArea.verticalScrollBar().setValue(
-                    self.ui.chatHistoryArea.verticalScrollBar().maximum()
-                )
-
-        except Exception as e:
-            print(f"Chat Refresh Error: {e}")
+        self.ui.chatHistoryArea.verticalScrollBar().setValue(
+            self.ui.chatHistoryArea.verticalScrollBar().maximum()
+        )
 
     def goToChat(self):
         self.ui.SubPages.setCurrentIndex(0)
@@ -327,8 +332,27 @@ class RoomPage(QObject):
     def goToWorkShop(self):
         if not self.workshopCreated:
             self.workshopCreated = True
+            
             self.work = CollabEditor(self.room.getRoomID())
-            self.ui.VLWorkShop.addWidget(self.work, stretch=1)
+            self.ui.VLWorkShop.addWidget(self.work, stretch=3) 
+
+            self.output_console = QPlainTextEdit()
+            self.output_console.setReadOnly(True)
+            self.output_console.setMaximumHeight(150)
+            self.output_console.setStyleSheet("""
+                QPlainTextEdit {
+                    background-color: #11111b; /* Slightly darker than editor */
+                    color: #a6adc8;
+                    font-family: 'Consolas', 'Monaco', monospace;
+                    font-size: 13px;
+                    border: 2px solid #313244;
+                    border-radius: 8px;
+                    padding: 6px;
+                }
+            """)
+            self.output_console.setPlainText("Output console ready...")
+            self.ui.VLWorkShop.addWidget(self.output_console, stretch=1)
+
         self.ui.SubPages.setCurrentIndex(2)
 
     def goToMember(self):
@@ -374,6 +398,11 @@ class RoomPage(QObject):
             self.ui.VLWorkShop.removeWidget(self.work)
             self.work.deleteLater()
             self.work = None
+
+        if hasattr(self, 'output_console') and self.output_console:
+            self.ui.VLWorkShop.removeWidget(self.output_console)
+            self.output_console.deleteLater()
+            self.output_console = None
             
         self.workshopCreated = False
 
@@ -443,24 +472,3 @@ class JDoodleCompilerThread(QThread):
             
         print("[Thread] 4. Emitting result back to main app...")
         self.compilation_finished.emit(result)
-
-class OutputWindow(QWidget):
-    def __init__(self, result_text):
-        super().__init__()
-        self.setWindowTitle("JDoodle Output")
-        self.resize(500, 400)
-        layout = QVBoxLayout(self)
-        self.text_area = QPlainTextEdit()
-        self.text_area.setReadOnly(True)
-        self.text_area.setPlainText(result_text)
-        self.text_area.setStyleSheet("""
-            QPlainTextEdit {
-                background-color: #1e1e1e;
-                color: #d4d4d4;
-                font-family: 'Consolas', 'Monaco', monospace;
-                font-size: 14px;
-                border: 1px solid #333333;
-            }
-        """)
-        
-        layout.addWidget(self.text_area)

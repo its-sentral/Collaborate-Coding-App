@@ -225,14 +225,6 @@ class RoomPage(QObject):
         self.btn_transfer_host.setEnabled(False)
         self.btn_kick_member.setEnabled(False)
 
-        try:
-            self.btn_transfer_host.clicked.disconnect()
-        except Exception:
-            pass 
-        try:
-            self.btn_kick_member.clicked.disconnect()
-        except Exception:
-            pass 
         if self.ui.listView.selectionModel() is not None:
             try:
                 self.ui.listView.selectionModel().selectionChanged.disconnect()
@@ -522,26 +514,50 @@ class RoomPage(QObject):
             self.ui.roomMemberBtn.clicked.disconnect()
             self.ui.roomHomeBtn.clicked.disconnect()
             self.ui.workshopRunBtn.clicked.disconnect()
-        except RuntimeError:
-            pass # Failsafe in case they are already disconnected
+            self.btn_transfer_host.clicked.disconnect()
+            self.btn_kick_member.clicked.disconnect()
+        except Exception:
+            pass 
 
         self.ui.MainPages.setCurrentIndex(2)
 
     def checkIfKicked(self):
         if self.room is None or self.user is None:
             return
-        url = f"{self.room.getServerURL()}/room_info"
-        self.kick_thread = KickCheckThread(url, self.user.name)
+        
+        url = f"{self.room.getServerURL().rstrip('/')}/room_info"
+        self.kick_thread = RoomSyncThread(url, self.user.name)
         self.kick_thread.kicked_signal.connect(self.handle_kicked)
+        self.kick_thread.admin_update_signal.connect(self.handle_admin_update) 
+        
         self.kick_thread.start()
+
+    def handle_admin_update(self, current_admin):
+        if self.room and self.room.getAdmin().getName() != current_admin:
+            print(f"Host transfer detected! New host is: {current_admin}")
+            
+            self.room.getAdmin().name = current_admin
+            is_admin = (self.user.name == current_admin)
+            self.admin_panel.setVisible(is_admin)
+            
+            if self.ui.SubPages.currentIndex() == 3:
+                self.goToMember()
 
     def handle_kicked(self):
         self.kick_timer.stop()
         if hasattr(self, 'chat_timer'):
             self.chat_timer.stop()
-        QMessageBox.warning(self.window, "Disconnected", "You have been kicked from the room by the Admin.")
+            
+        try:
+            if self.room:
+                self.room.leaveRoom() 
+        except Exception as e:
+            print(f"Error removing room locally: {e}")
 
+        self.backToHome()
         self.room = None
+        
+        QMessageBox.warning(self.window, "Disconnected", "You have been kicked from the room by the Admin.")
         self.ui.MainPages.setCurrentIndex(2)
 
 class JDoodleCompilerThread(QThread):
@@ -615,8 +631,9 @@ class AdminActionThread(QThread):
         except Exception as e:
             self.action_finished.emit(False, f"Connection Error: {e}")
 
-class KickCheckThread(QThread):
+class RoomSyncThread(QThread):
     kicked_signal = Signal()
+    admin_update_signal = Signal(str)
 
     def __init__(self, url, username, parent=None):
         super().__init__(parent)
@@ -628,9 +645,11 @@ class KickCheckThread(QThread):
             res = requests.get(self.url, params={"username": self.username}, timeout=3)
             if res.status_code == 200:
                 data = res.json()
+                
                 if data.get("status") == "access_denied":
                     self.kicked_signal.emit()
+                elif "admin_name" in data:
+                    self.admin_update_signal.emit(data["admin_name"])
         except Exception as e:
             pass
-
     

@@ -190,8 +190,6 @@ class RoomPage(QObject):
 
         self.ui.workshopRunBtn.clicked.connect(self.compile_code)
 
-
-
         # Room Background Color
         self.ui.FrameRoom.setStyleSheet(f"background-color: {RoomBackGroundColor};")
         self.ui.FrameRoomTopBar.setStyleSheet(f"background-color: {RoomTopBarColor};")
@@ -199,9 +197,55 @@ class RoomPage(QObject):
 
         self.ui.FrameRoomSectionDisplayArea.setStyleSheet(f"background-color: {RoomSectionDisplayAreaColor};")
 
-        # Section Colors if we wanna do it later
+        if not hasattr(self.ui, 'admin_panel_created'):
+            self.admin_panel = QWidget()
+            admin_layout = QHBoxLayout(self.admin_panel)
+            admin_layout.setContentsMargins(0, 0, 0, 0)
+            
+            self.btn_transfer_host = QPushButton("Transfer Host")
+            self.btn_kick_member = QPushButton("Kick Member")
+            
+            self.btn_transfer_host.setStyleSheet("background-color: #f39c12; color: white; font-weight: bold; padding: 8px;")
+            self.btn_kick_member.setStyleSheet("background-color: #e74c3c; color: white; font-weight: bold; padding: 8px;")
+            
+            admin_layout.addWidget(self.btn_transfer_host)
+            admin_layout.addWidget(self.btn_kick_member)
+            self.ui.listView.parentWidget().layout().addWidget(self.admin_panel)
+            
+            self.ui.admin_panel_widget = self.admin_panel
+            self.ui.btn_transfer = self.btn_transfer_host
+            self.ui.btn_kick = self.btn_kick_member
+            self.ui.admin_panel_created = True
+        
+        self.admin_panel = self.ui.admin_panel_widget
+        self.btn_transfer_host = self.ui.btn_transfer
+        self.btn_kick_member = self.ui.btn_kick
 
+        self.admin_panel.setVisible(False)
+        self.btn_transfer_host.setEnabled(False)
+        self.btn_kick_member.setEnabled(False)
 
+        try:
+            self.btn_transfer_host.clicked.disconnect()
+        except Exception:
+            pass 
+        try:
+            self.btn_kick_member.clicked.disconnect()
+        except Exception:
+            pass 
+        if self.ui.listView.selectionModel() is not None:
+            try:
+                self.ui.listView.selectionModel().selectionChanged.disconnect()
+            except Exception:
+                pass
+
+        # self.ui.listView.selectionModel().selectionChanged.connect(self.on_member_selected)
+        self.btn_transfer_host.clicked.connect(lambda: self.execute_admin_action("transfer_host"))
+        self.btn_kick_member.clicked.connect(lambda: self.execute_admin_action("kick_member"))
+
+        self.kick_timer = QTimer(self)
+        self.kick_timer.timeout.connect(self.checkIfKicked)
+        self.kick_timer.start(3000)
 
     def leaveRoom(self):
         leave_data = {
@@ -222,6 +266,7 @@ class RoomPage(QObject):
 
         self.backToHome()
         self.room = None
+        self.kick_timer.stop()
         self.ui.MainPages.setCurrentIndex(2)
 
     def handleImport(self):
@@ -358,6 +403,10 @@ class RoomPage(QObject):
     def goToMember(self):
         self.ui.SubPages.setCurrentIndex(3)
         self.ui.listView.clearSelection()
+        
+        is_admin = self.user.name == self.room.getAdmin().getName()
+        self.admin_panel.setVisible(is_admin)
+
         try:
             room_id = self.room.getRoomID()
             base_url = self.room.getServerURL()
@@ -366,25 +415,85 @@ class RoomPage(QObject):
             if response.status_code == 200:
                 member_names = response.json().get("members", [])
                 
-                
                 model = QStringListModel()
                 display_list = []
                 for name in member_names:
-                   
                     prefix = "👑 " if name == self.room.getAdmin().getName() else "👤 "
                     display_list.append(f"{prefix}{name}")
+                    
                 model.setStringList(display_list)
                 self.ui.listView.setModel(model)
                 self.ui.listView.setEditTriggers(QListView.NoEditTriggers)
                 self.ui.listView.setStyleSheet("font-size: 21px; font-weight: 600;")
+                
+                self.ui.listView.selectionModel().selectionChanged.connect(self.on_member_selected)
             else:
                 print("Failed to fetch members from server")
         except Exception as e:
             print(f"Error updating member list: {e}")
+
+    def on_member_selected(self, selected, deselected):
+        indexes = self.ui.listView.selectedIndexes()
+        if not indexes:
+            self.btn_transfer_host.setEnabled(False)
+            self.btn_kick_member.setEnabled(False)
+            return
+
+        selected_text = indexes[0].data()
+        target_username = selected_text[2:] 
+
+        if target_username == self.user.name:
+            self.btn_transfer_host.setEnabled(False)
+            self.btn_kick_member.setEnabled(False)
+        else:
+            self.btn_transfer_host.setEnabled(True)
+            self.btn_kick_member.setEnabled(True)
+
+    def execute_admin_action(self, endpoint):
+        indexes = self.ui.listView.selectedIndexes()
+        if not indexes: return
+        
+        target_username = indexes[0].data()[2:]
+        
+        payload = {
+            "roomID": self.room.getRoomID(),
+            "admin": self.user.name,
+            "target": target_username
+        }
+
+        self.btn_transfer_host.setEnabled(False)
+        self.btn_kick_member.setEnabled(False)
+        self.btn_transfer_host.setText("Processing...")
+
+        roomUrl = self.room.getServerURL().rstrip('/')
+        url = f"{roomUrl}/{endpoint}"
+        self.admin_thread = AdminActionThread(url, payload)
+        
+        self.admin_thread.action_finished.connect(
+            lambda success, msg: self.on_admin_action_finished(success, msg, endpoint, target_username)
+        )
+        self.admin_thread.start()
+
+    def on_admin_action_finished(self, success, message, endpoint, target_username):
+        self.btn_transfer_host.setText("Transfer Host")
+        
+        if success:
+            print(f"Admin action successful: {message}")
+            
+            if endpoint == "transfer_host":
+                self.room.getAdmin().name = target_username
+                self.admin_panel.setVisible(False)
+                
+            self.goToMember()
+        else:
+            print(f"Admin action failed: {message}")
     
     def backToHome(self):
+        if hasattr(self, 'kick_timer'):
+            self.kick_timer.stop()
         if hasattr(self, 'chat_timer'):
             self.chat_timer.stop()
+            
         self.user = None
 
         if self.callCreated and hasattr(self, 'videoWidget') and self.videoWidget:
@@ -418,6 +527,23 @@ class RoomPage(QObject):
 
         self.ui.MainPages.setCurrentIndex(2)
 
+    def checkIfKicked(self):
+        if self.room is None or self.user is None:
+            return
+        url = f"{self.room.getServerURL()}/room_info"
+        self.kick_thread = KickCheckThread(url, self.user.name)
+        self.kick_thread.kicked_signal.connect(self.handle_kicked)
+        self.kick_thread.start()
+
+    def handle_kicked(self):
+        self.kick_timer.stop()
+        if hasattr(self, 'chat_timer'):
+            self.chat_timer.stop()
+        QMessageBox.warning(self.window, "Disconnected", "You have been kicked from the room by the Admin.")
+
+        self.room = None
+        self.ui.MainPages.setCurrentIndex(2)
+
 class JDoodleCompilerThread(QThread):
     compilation_finished = Signal(str)
 
@@ -446,7 +572,6 @@ class JDoodleCompilerThread(QThread):
         try:
             print("[Thread] 2. Sending code to JDoodle...")
             
-            # ADDED TIMEOUT: If JDoodle doesn't respond in 15 seconds, force an error!
             response = requests.post(url, json=payload, timeout=15) 
             
             print(f"[Thread] 3. Got response! Status Code: {response.status_code}")
@@ -454,7 +579,6 @@ class JDoodleCompilerThread(QThread):
             try:
                 response_data = response.json()
             except Exception:
-                # If JDoodle crashes and returns HTML instead of JSON
                 self.compilation_finished.emit(f"Server Error. Raw response: {response.text}")
                 return
 
@@ -472,3 +596,41 @@ class JDoodleCompilerThread(QThread):
             
         print("[Thread] 4. Emitting result back to main app...")
         self.compilation_finished.emit(result)
+
+class AdminActionThread(QThread):
+    action_finished = Signal(bool, str)
+    def __init__(self, url, payload, parent=None):
+        super().__init__(parent)
+        self.url = url
+        self.payload = payload
+        print(url)
+
+    def run(self):
+        try:
+            res = requests.post(self.url, json=self.payload, timeout=5)
+            if res.status_code == 200:
+                self.action_finished.emit(True, "Action successful")
+            else:
+                self.action_finished.emit(False, f"Server Error: {res.text}")
+        except Exception as e:
+            self.action_finished.emit(False, f"Connection Error: {e}")
+
+class KickCheckThread(QThread):
+    kicked_signal = Signal()
+
+    def __init__(self, url, username, parent=None):
+        super().__init__(parent)
+        self.url = url
+        self.username = username
+
+    def run(self):
+        try:
+            res = requests.get(self.url, params={"username": self.username}, timeout=3)
+            if res.status_code == 200:
+                data = res.json()
+                if data.get("status") == "access_denied":
+                    self.kicked_signal.emit()
+        except Exception as e:
+            pass
+
+    

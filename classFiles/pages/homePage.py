@@ -231,6 +231,7 @@ class Home(QObject):
                 print(f"Server rejected: {response.text}")
         except Exception as e:
             print(f"Failed to connect to Room Server: {e}")
+    
     def handleLeaveRoom(self, room_to_delete):
                 
         if room_to_delete in self.user.rooms:
@@ -255,7 +256,8 @@ class Home(QObject):
             self.room_controller = None
             
         self.ui.joinRoomIDInput.clear()
-        self.ui.createRoomNameInput.clear()       
+        self.ui.createRoomNameInput.clear()  
+             
     def gotoLogout(self):
 
         if hasattr(self, 'chat_timer'):

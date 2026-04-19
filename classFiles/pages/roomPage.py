@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 import requests, os
 from shiboken6 import isValid
 from PySide6.QtCore import QObject, Signal
+import random
 
 load_dotenv()
 
@@ -240,25 +241,54 @@ class RoomPage(QObject):
         self.kick_timer.start(3000)
 
     def leaveRoom(self):
+        is_admin = (self.user.name == self.room.getAdmin().getName())
+        room_id = self.room.getRoomID()
+        base_url = self.room.getServerURL().rstrip('/')
+
+        if is_admin:
+            try:
+                response = requests.get(f"{base_url}/get_members?roomID={room_id}", timeout=5)
+                
+                if response.status_code == 200:
+                    members = response.json().get("members", [])
+                    
+                    other_members = [m for m in members if m != self.user.name]
+                    
+                    if other_members:
+                        new_host = random.choice(other_members)
+                        print(f"DEBUG: Auto-transferring host to {new_host}")
+                        
+                        transfer_payload = {
+                            "roomID": room_id,
+                            "admin": self.user.name,
+                            "target": new_host
+                        }
+                        requests.post(f"{base_url}/transfer_host", json=transfer_payload, timeout=5)
+                        
+            except Exception as e:
+                print(f"Error during auto-host transfer: {e}")
+
         leave_data = {
-                "username": self.user.name,
-                "roomID": self.room.getRoomID()
-            }
+            "username": self.user.name,
+            "roomID": room_id
+        }
+        
         try:
-            print(f"DEBUG: Leaving room {self.room.getRoomID()}")
-            url = f"{self.room.server_url}/leave_room"
-            response = requests.post(url, json=leave_data)
+            print(f"DEBUG: Leaving room {room_id}")
+            response = requests.post(f"{base_url}/leave_room", json=leave_data, timeout=5)
+            
             if response.status_code == 200:
                 self.room.leaveRoom()
-                print("Successfully left the room on server.")
-            else:
-                print(f"Server error during leave: {response.text}")
+                print("Successfully left the room.")
         except Exception as e:
             print(f"Error leaving server: {e}")
 
         self.backToHome()
         self.room = None
-        self.kick_timer.stop()
+        
+        if hasattr(self, 'kick_timer'):
+            self.kick_timer.stop()
+            
         self.ui.MainPages.setCurrentIndex(2)
 
     def handleImport(self):

@@ -20,6 +20,9 @@ from PySide6.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout,
     QPushButton, QScrollArea, QSizePolicy, QSpacerItem,
     QStackedWidget, QTextEdit, QVBoxLayout, QWidget)
 
+import qtawesome as qta
+from PySide6.QtCore import QSize
+
 class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
@@ -1576,11 +1579,29 @@ class Ui_Form(object):
         self.roomHomeBtn.setText(QCoreApplication.translate("Form", u"Home", None))
         self.roomCode.setText(QCoreApplication.translate("Form", u"Code : ", None))
         self.roomName.setText(QCoreApplication.translate("Form", u"Place Holder", None))
+
+        icon_size = QSize(18, 18)
+        icon_color = "#8b9cc8"
+
         self.roomChatBtn.setText(QCoreApplication.translate("Form", u"Chat", None))
+        self.roomChatBtn.setIcon(qta.icon("mdi6.message-outline", color=icon_color))
+        self.roomChatBtn.setIconSize(icon_size)
+
         self.roomCallBtn.setText(QCoreApplication.translate("Form", u"Call", None))
+        self.roomCallBtn.setIcon(qta.icon("mdi6.phone-outline", color=icon_color))
+        self.roomCallBtn.setIconSize(icon_size)
+
         self.roomWorkshopBtn.setText(QCoreApplication.translate("Form", u"Workshop", None))
+        self.roomWorkshopBtn.setIcon(qta.icon("mdi6.tools", color=icon_color))
+        self.roomWorkshopBtn.setIconSize(icon_size)
+
         self.roomMemberBtn.setText(QCoreApplication.translate("Form", u"Members", None))
+        self.roomMemberBtn.setIcon(qta.icon("mdi6.account-group-outline", color=icon_color))
+        self.roomMemberBtn.setIconSize(icon_size)
+
         self.roomLeaveBtn.setText(QCoreApplication.translate("Form", u"Leave", None))
+        self.roomLeaveBtn.setIcon(qta.icon("mdi6.logout", color="#e74c3c"))
+        self.roomLeaveBtn.setIconSize(icon_size)
         self.chatSendTextConfirmBtn.setText(QCoreApplication.translate("Form", u"<", None))
         # self.enterOrLeaveCall.setText(QCoreApplication.translate("Form", u"Enter Call", None))
         self.workshopRunBtn.setText(QCoreApplication.translate("Form", u"Run", None))

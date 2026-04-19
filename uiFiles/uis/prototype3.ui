@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>970</width>
-    <height>755</height>
+    <width>975</width>
+    <height>561</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -37,7 +37,7 @@
         </sizepolicy>
        </property>
        <property name="currentIndex">
-        <number>1</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="pageLogin">
         <property name="sizePolicy">
@@ -46,7 +46,10 @@
           <verstretch>1</verstretch>
          </sizepolicy>
         </property>
-        <layout class="QVBoxLayout" name="verticalLayout_6">
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <item>
+          <layout class="QVBoxLayout" name="VLLoginImage"/>
+         </item>
          <item>
           <layout class="QVBoxLayout" name="VLLogin">
            <property name="spacing">
@@ -1115,9 +1118,15 @@ li.checked::marker { content: &quot;\2612&quot;; }
              </property>
              <item>
               <widget class="QLabel" name="homeUserName">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>32</height>
+                </size>
+               </property>
                <property name="font">
                 <font>
-                 <pointsize>10</pointsize>
+                 <pointsize>12</pointsize>
                  <bold>true</bold>
                 </font>
                </property>
@@ -1143,7 +1152,19 @@ li.checked::marker { content: &quot;\2612&quot;; }
               </spacer>
              </item>
              <item>
-              <widget class="QLineEdit" name="homeSearchBar"/>
+              <widget class="QLineEdit" name="homeSearchBar">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>32</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>12</pointsize>
+                </font>
+               </property>
+              </widget>
              </item>
              <item>
               <spacer name="horizontalSpacer_13">
@@ -1156,13 +1177,19 @@ li.checked::marker { content: &quot;\2612&quot;; }
                <property name="sizeHint" stdset="0">
                 <size>
                  <width>10</width>
-                 <height>30</height>
+                 <height>44</height>
                 </size>
                </property>
               </spacer>
              </item>
              <item>
               <widget class="QPushButton" name="homeLogoutBtn">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>32</height>
+                </size>
+               </property>
                <property name="font">
                 <font>
                  <bold>true</bold>
@@ -1175,6 +1202,12 @@ li.checked::marker { content: &quot;\2612&quot;; }
              </item>
              <item>
               <widget class="QPushButton" name="homeAddRoomBtn">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>32</height>
+                </size>
+               </property>
                <property name="font">
                 <font>
                  <bold>true</bold>
@@ -1187,6 +1220,12 @@ li.checked::marker { content: &quot;\2612&quot;; }
              </item>
              <item>
               <widget class="QPushButton" name="homeCreateRoomBtn">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>32</height>
+                </size>
+               </property>
                <property name="font">
                 <font>
                  <bold>true</bold>
@@ -1221,8 +1260,8 @@ li.checked::marker { content: &quot;\2612&quot;; }
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>928</width>
-                <height>675</height>
+                <width>933</width>
+                <height>507</height>
                </rect>
               </property>
              </widget>
@@ -2096,7 +2135,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                 </sizepolicy>
                </property>
                <property name="currentIndex">
-                <number>0</number>
+                <number>1</number>
                </property>
                <widget class="QWidget" name="pageChat">
                 <property name="sizePolicy">
@@ -2167,8 +2206,8 @@ li.checked::marker { content: &quot;\2612&quot;; }
                        <rect>
                         <x>0</x>
                         <y>0</y>
-                        <width>810</width>
-                        <height>546</height>
+                        <width>815</width>
+                        <height>392</height>
                        </rect>
                       </property>
                      </widget>

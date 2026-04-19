@@ -25,6 +25,7 @@ class RoomObj(QObject):
         print(f"DEBUG: RoomPage is emitting from RoomObj at Memory ID: {id(self)}")
         self.room_deleted_signal.emit(self)
         print("DEBUG: Signal emitted!")
+        
     def getServerURL(self):
         return self.server_url
     

@@ -38,8 +38,6 @@ class CodeEditor(QPlainTextEdit): # Switched to QPlainTextEdit for stability
         self.updateLineNumberAreaWidth(0)
         self.highlightCurrentLine()
         
-        # VS Code style
-        # Inside CodeEditor.__init__
         self.setStyleSheet("""
             QPlainTextEdit {
                 background-color: #1e1e2e;
@@ -232,7 +230,6 @@ class RoomPage(QObject):
             except Exception:
                 pass
 
-        # self.ui.listView.selectionModel().selectionChanged.connect(self.on_member_selected)
         self.btn_transfer_host.clicked.connect(lambda: self.execute_admin_action("transfer_host"))
         self.btn_kick_member.clicked.connect(lambda: self.execute_admin_action("kick_member"))
 

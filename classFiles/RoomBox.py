@@ -34,8 +34,8 @@ class RoomBox(QFrame):
         desc.setAlignment(Qt.AlignTop | Qt.AlignLeft) # Push text to the top instead of centering
         # Apply rounded corners ONLY to the bottom
         desc.setStyleSheet("""
-            background-color: #313244;
-            color: #cdd6f4;
+            background-color: #c9c9c9;
+            color: #000000;
             font-size: 13px;
             padding: 15px;
             border-bottom-left-radius: 11px;

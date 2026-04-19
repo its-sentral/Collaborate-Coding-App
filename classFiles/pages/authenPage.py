@@ -6,8 +6,8 @@ from classFiles.RoomClass import RoomObj
 from classFiles.UserClass import Admin, User, Member
 from classFiles.SystemClass import LoginSystem, RegisterSystem
 
-mainBackGroundColor = "#2E2E3E"
-authenAreaColor = "#121C2E"
+mainBackGroundColor = "#FFFFFF"
+authenAreaColor = "#333333"
 goToRegisterOrLoginBtnColor = "#4488AA"
 confirmBtnColor = "#44AA88"
 
@@ -113,7 +113,7 @@ class Authen(QMainWindow):
 
 
     def setButton(self, obj, color):
-        obj.setStyleSheet(f"border-radius: 10px; background-color: {color}; color: #000; font-size: 18px; font-weight: bold;")
+        obj.setStyleSheet(f"border-radius: 10px; background-color: {color}; color: #fff; font-size: 18px; font-weight: bold;")
         obj.setCursor(Qt.PointingHandCursor)
         obj.setContentsMargins(5, 5, 5, 5)
 

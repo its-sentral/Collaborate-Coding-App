@@ -107,3 +107,44 @@ def update_user_rooms(data: UpdateRoomRequest):
             user.rooms.append(data.roomID) # Permanent save in ZODB
             transaction.commit()
     return {"status": "updated"}
+
+@app.post("/kick_member")
+async def kick_member(data: AdminActionRequest):
+    room = root_obj.get('active_room')
+    
+    if not room or room.getRoomID() != data.roomID:
+        raise HTTPException(status_code=404, detail="Room not found")
+
+    if room.getAdmin().getName() != data.admin:
+        raise HTTPException(status_code=403, detail="Access denied: Only the admin can kick members")
+
+    if data.target in room.member:
+        room.member.remove(data.target)
+        
+        room._p_changed = True 
+        transaction.commit()
+        return {"status": "success", "message": f"{data.target} was kicked from the room"}
+    
+    return {"status": "error", "message": "Target user was not found in the room"}
+
+
+@app.post("/transfer_host")
+async def transfer_host(data: AdminActionRequest):
+    room = root_obj.get('active_room')
+    
+    if not room or room.getRoomID() != data.roomID:
+        raise HTTPException(status_code=404, detail="Room not found")
+
+    if room.getAdmin().getName() != data.admin:
+        raise HTTPException(status_code=403, detail="Access denied: Only the admin can transfer host")
+
+    if data.target not in room.member:
+        raise HTTPException(status_code=404, detail="Target user must be in the room to become host")
+        
+    room.admin.name = data.target
+    
+    room.admin._p_changed = True
+    room._p_changed = True
+    transaction.commit()
+    
+    return {"status": "success", "message": f"Host successfully transferred to {data.target}"}

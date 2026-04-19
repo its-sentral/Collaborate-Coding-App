@@ -6,8 +6,8 @@ from classFiles.RoomClass import RoomObj
 from classFiles.UserClass import Admin, User, Member
 from classFiles.SystemClass import LoginSystem, RegisterSystem
 
-mainBackGroundColor = "#2550B0"
-authenAreaColor = "#0B1D42"
+mainBackGroundColor = "#2E2E3E"
+authenAreaColor = "#121C2E"
 goToRegisterOrLoginBtnColor = "#4488AA"
 confirmBtnColor = "#44AA88"
 
@@ -54,7 +54,7 @@ class Authen(QMainWindow):
 
 
         # Setup Login Page
-        pixmap = QPixmap("uiFiles\image\AuthenSideImage.jpg")
+        pixmap = QPixmap("uiFiles\image\sa.png")
         pixmap.scaled(4, 3, Qt.KeepAspectRatioByExpanding, Qt.SmoothTransformation)
         self.ui.loginImage.setPixmap(pixmap)
         self.ui.loginImage.setScaledContents(False)
